@@ -38,6 +38,8 @@ public class IMMessage extends BaseInfo {
             uriPrefix = scheme + "://";
         }
 
+
+        
         /**
          * Defines scheme of incoming URI
          *
