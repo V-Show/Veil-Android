@@ -1,0 +1,120 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+
+
+    >
+
+    <!-- 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+     -->
+
+        <include
+            android:id="@+id/activity_register_headerbar"
+            layout="@layout/common_header_bar"
+
+
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/activity_register_headerbar"
+            >
+
+            <TextView
+                android:id="@+id/activity_registration_tv_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_horizontal"
+                android:text="GENDER"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <!-- 性别选择栏   布局 -->
+
+            <LinearLayout
+                android:id="@+id/activity_registration_gender_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_registration_tv_gender"
+                android:layout_marginTop="@dimen/head_margin_top"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:layout_width="@dimen/size_gender_width"
+                    android:layout_height="@dimen/size_gender_height"
+                    android:layout_marginRight="@dimen/gender_margin"
+                    android:background="@mipmap/ic_gender_women" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_gender_width"
+                    android:layout_height="@dimen/size_gender_height"
+                    android:background="@mipmap/ic_gender_men" />
+            </LinearLayout>
+
+            <!-- 头像选择  提示TV -->
+
+            <TextView
+                android:id="@+id/activity_registration_tv_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_registration_gender_layout"
+                android:layout_marginTop="@dimen/gender_margin"
+                android:gravity="center_horizontal"
+                android:text="AVATAR"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/activity_registration_gv_avatar"
+                android:layout_below="@id/activity_registration_tv_avatar"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                >
+                <GridView
+                    android:layout_width="match_parent"
+                    android:layout_height="163dp"
+                    android:columnWidth="45dp"
+                    android:layout_marginTop="@dimen/head_margin_top"
+                    android:gravity="center"
+                    android:verticalSpacing="14dp"
+                    android:stretchMode="columnWidth"
+                    android:horizontalSpacing="19dp"
+                    android:numColumns="4"
+                    android:id="@+id/activity_register_grid_avatar"
+                    >
+                </GridView>
+
+            </LinearLayout>
+
+
+
+            <EditText
+                android:id="@+id/activity_registration_et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_registration_gv_avatar"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginTop="48dp"
+                android:textSize="18sp"
+                android:hint="NAME" />
+        </RelativeLayout>
+        <!-- 
+    </ScrollView>
+         -->
+
+
+
+</RelativeLayout>

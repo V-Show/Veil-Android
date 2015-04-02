@@ -1,0 +1,47 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- 通用间距参数 -->
+    <dimen name="activity_general_margin_left">12dp</dimen>
+    <dimen name="activity_general_margin_right">12dp</dimen>
+    <dimen name="activity_general_margin_top">12dp</dimen>
+    <dimen name="activity_general_margin_bottom">12dp</dimen>
+    
+    <!-- 头像尺寸 -->
+    <dimen name="head_width">40dp</dimen>
+    <dimen name="head_height">40dp</dimen>
+
+    <!-- 头像间距参数 -->
+    <dimen name="head_margin_right">40dp</dimen>
+    <dimen name="head_margin_left">30dp</dimen>
+    <dimen name="head_margin_top">2dp</dimen>
+    
+    <!-- 功能按钮尺寸 -->
+    <dimen name="button_width">35dp</dimen>
+    <dimen name="button_height">35dp</dimen>
+    
+    <!-- 整块功能栏的高度 -->
+    <dimen name="topbar_height">155dp</dimen>
+    
+    <!-- 好友栏 昵称字体 -->
+    <dimen name="text_size_friend">14sp</dimen>
+    
+    <!-- 功能栏当前用户昵称字体 -->
+    <dimen name="text_size_me">17sp</dimen>
+    
+    <!-- 性别标识头像  尺寸-->
+    <dimen name="size_gender_height">70dp</dimen>
+    <dimen name="size_gender_width">70dp</dimen>
+    
+    <!-- 性别标识头像  间距-->
+    <dimen name="gender_margin">40dp</dimen>
+
+    <!-- 头像选择gridview  的左右间距 -->
+    <dimen name="gridview_avatar_margin_right">30dp</dimen>
+    <dimen name="gridview_avatar_margin_left">30dp</dimen>
+    
+    
+</resources>

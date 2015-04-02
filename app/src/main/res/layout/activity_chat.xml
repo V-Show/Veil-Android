@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:id="@+id/activity_chat_user_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f53373"
+        android:minHeight="@dimen/topbar_height"
+        android:orientation="vertical">
+
+        <!-- 功能栏部分 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_general_margin_bottom"
+            android:layout_marginLeft="@dimen/activity_general_margin_left"
+            android:layout_marginRight="@dimen/activity_general_margin_right"
+            android:layout_marginTop="@dimen/activity_general_margin_top">
+
+            <!-- 换人按钮 -->
+
+            <ImageButton
+                android:id="@+id/include_app_topbar_ib_change"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:layout_alignParentLeft="true"
+                android:background="@mipmap/ic_topbar_change" />
+
+            <!-- 当前用户的头像和昵称 -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/include_app_topbar_iv_userhead"
+                    android:layout_width="@dimen/head_width"
+                    android:layout_height="@dimen/head_height"
+                    android:background="@mipmap/ic_chat_avatar_0"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/include_app_topbar_tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:maxEms="6"
+                    android:textSize="@dimen/text_size_me"
+                    android:singleLine="true"
+                    android:text="Coco Anni"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <!-- 菜单按钮 -->
+
+            <ImageButton
+                android:id="@+id/include_app_topbar_ib_menu"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:layout_alignParentRight="true"
+                android:background="@mipmap/ic_topbar_menu" />
+        </RelativeLayout>
+
+        <!--
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_general_margin_top"
+            >
+
+        -->
+
+
+        <!-- 好友 栏   布局 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/head_margin_top"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/head_margin_right"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/include_app_topbar_iv_friendhead1"
+                    android:layout_width="@dimen/head_width"
+                    android:layout_height="@dimen/head_height"
+                    android:background="@mipmap/ic_chat_avatar_2"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/include_app_topbar_tv_friendname1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="end"
+                    android:maxEms="6"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_friend"
+                    android:text="Perter"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/head_margin_right"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/include_app_topbar_iv_friendhead2"
+                    android:layout_width="@dimen/head_width"
+                    android:layout_height="@dimen/head_height"
+                    android:background="@mipmap/ic_chat_avatar_1"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/include_app_topbar_tv_friendname2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="end"
+                    android:maxEms="6"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_friend"
+                    android:text="Joe"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/include_app_topbar_iv_friendhead3"
+                    android:layout_width="@dimen/head_width"
+                    android:layout_height="@dimen/head_height"
+                    android:background="@mipmap/ic_chat_avatar_10"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/include_app_topbar_tv_friendname3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="end"
+                    android:maxEms="6"
+                    android:textSize="@dimen/text_size_friend"
+                    android:singleLine="true"
+                    android:text="AnYe"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 	</HorizontalScrollView>
+         -->
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/activity_chat_talk_bar"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@mipmap/btn_talk"/>
+
+        </LinearLayout>
+    <View
+        android:id="@+id/activity_chat_separate_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/separate_line"
+        android:layout_above="@id/activity_chat_talk_bar"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/activity_chat_user_info_layout"
+        android:layout_above="@id/activity_chat_separate_line"
+        android:background="@color/orange"
+        >
+
+        <ListView
+            android:id="@+id/activity_chat_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/chat_layout_editor"
+            android:cacheColorHint="@color/transparent"
+            android:divider="#00000000"
+            android:dividerHeight="0dip"
+            android:fadingEdge="none"
+            android:listSelector="@drawable/list_selector_transition"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:scrollbars="none"
+            android:scrollingCache="false"
+            >
+
+
+        </ListView>
+
+
+
+    </LinearLayout>
+</RelativeLayout>
+

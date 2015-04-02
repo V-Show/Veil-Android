@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <color name="bg_color">#E8ECE8</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="red">#ffff0000</color>
+    <color name="dark_red">#ff8c1c1c</color>
+    <color name="transparent">#00000000</color>
+    <color name="light_gray">#ffececec</color>
+    <color name="light_yellow">#fffff99e</color>
+    <color name="dark_gray">#ff999999</color>
+    <color name="green">#ff95c81c</color>
+    <color name="orange">#ffefa600</color>
+    <color name="silver">#ffecebe8</color>
+    <color name="gray">#ff7f7f7f</color>
+    <color name="separate_line">#ff7e8b9d</color>
+    <color name="timestampline">#ffe5e1de</color>
+    <color name="font_value">#ff888271</color>
+    <color name="msg_status_sent">#ffeb7837</color>
+    <color name="msg_status_sending">#ff50a5c3</color>
+    <color name="msg_status_read">#ff82c85f</color>
+    <color name="msg_status_failed">#ffe64646</color>
+    <color name="msg_status_new">#fffff2cc</color>
+    <color name="msg_status_new_stroke">#ffff9b2f</color>
+    <color name="msg_status_new_text">#ffc0711b</color>
+    <color name="download_progressbar_bg">#4c000000</color>
+</resources>
