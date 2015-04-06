@@ -1,8 +1,13 @@
 package com.veiljoy.veil.activity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.INotificationSideChannel;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -19,7 +24,9 @@ import com.veiljoy.veil.bean.AvatarInfo;
 import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMUserBase;
 import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.PhotoUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,11 +37,9 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
 
 
     private IMUserBase mIMUserBase;
+    private UserInfo mUserinfo;
 
-     // 0: 男 , 1:女
-     private int mGender=0;
-     private String mName;
-     private int mAvatar;
+    private Bitmap mAvatar;
     //生成动态数组，并且转入数据
     ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
     Integer[] icons= new Integer[]{
@@ -58,10 +63,15 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        init();
         initViews();
         initEvents();
 
+
+    }
+
+    private void init(){
+        mUserinfo=new UserInfo();
 
     }
 
@@ -96,6 +106,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     }
 
     private void initEvents(){
+        mGridview.setOnItemClickListener(new ItemClickListener());
+        mGridview.setSelection(0);
         mTVConfirm.setOnClickListener(this);
     }
 
@@ -103,7 +115,9 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.common_header_right_btn:
-                startActivity(ActivityChat.class,null);
+                //startActivity(ActivityChat.class,null);
+
+                register();
                 break;
         }
     }
@@ -119,22 +133,27 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         ) {
             //在本例中arg2=arg3
             HashMap<String, Object> item=(HashMap<String, Object>) arg0.getItemAtPosition(arg2);
-            //显示所选Item的ItemText
-            setTitle((String)item.get("ItemText"));
+
+
+            mAvatar= BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[arg2]);
+
+
+
+            Log.v("activityRegister","mAvatar "+mAvatar==null?"=null":"!=null");
         }
 
     }
 
     public void register(){
-       UserInfo user=new UserInfo();
-       user.setmName("");
-       user.setmPassword("");
-       user.setmGender(0);
-       user.setmAvatar("001");
+
+       mUserinfo.setmName("");
+        mUserinfo.setmPassword("");
+        mUserinfo.setmGender(0);
+        mUserinfo.setmAvatar("001");
 
 
        RegisterTask registerTask = new RegisterTask();
-       registerTask.execute(user);
+       registerTask.execute(mUserinfo);
 
     }
 
@@ -156,15 +175,23 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         protected Integer doInBackground(UserInfo... params) {
 
             UserInfo user=params[0];
-            if(user==null)
-                return Constants.REGISTER_RESULT_ERROR;
-            else return mIMUserBase.login(user.getmName(),user.getmPassword());
+
+            if(mAvatar!=null)
+               mUserinfo.setmAvatar(PhotoUtils.savePhotoToSDCard(mAvatar,Constants.IMAGE_PATH,Bitmap.CompressFormat.PNG));
+
+//            if(user==null)
+//                return Constants.REGISTER_RESULT_ERROR;
+//            else return mIMUserBase.login(user.getmName(),user.getmPassword());
+            return Constants.REGISTER_RESULT_OK;
         }
 
         @Override
         protected void onPostExecute(Integer result){
             switch(result){
                 case Constants.REGISTER_RESULT_OK:
+                    Bundle bundle =new Bundle();
+                    bundle.putString(Constants.USER_AVATAR_FILE_PATH_KEY,mUserinfo.getmAvatar());
+                    startActivity(ActivityChat.class,bundle);
                     break;
                 case Constants.REGISTER_RESULT_ERROR:
                     break;

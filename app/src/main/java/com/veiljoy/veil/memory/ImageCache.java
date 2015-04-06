@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import com.veiljoy.veil.BaseApplication;
 import com.veiljoy.veil.R;
+import com.veiljoy.veil.utils.PhotoUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class ImageCache {
     private static final String AVATAR_DIR = "avatar/";
     public static Map<String, SoftReference<Bitmap>> mAvatarCache = new HashMap<String, SoftReference<Bitmap>>();
 
-    public static Bitmap getAvatar(String imageName) {
+    public static Bitmap getAvatarFromAssets(String imageName) {
         if (mAvatarCache.containsKey(imageName)) {
             Reference<Bitmap> reference = mAvatarCache.get(imageName);
             if (reference.get() == null || reference.get().isRecycled()) {
@@ -62,6 +63,26 @@ public class ImageCache {
             } catch (IOException e) {
 
             }
+        }
+    }
+    public static Bitmap getAvatar(String imageName) {
+        if (mAvatarCache.containsKey(imageName)) {
+            Reference<Bitmap> reference = mAvatarCache.get(imageName);
+            if (reference.get() == null || reference.get().isRecycled()) {
+                mAvatarCache.remove(imageName);
+            } else {
+                return reference.get();
+            }
+        }
+        Bitmap bitmap = null;
+        try {
+            bitmap= PhotoUtils.getBitmapFromFile(imageName);
+            mAvatarCache.put(imageName, new SoftReference<Bitmap>(bitmap));
+            return bitmap;
+        } catch (Exception e) {
+            return mDefaultAvatar;
+        } finally {
+
         }
     }
 }
