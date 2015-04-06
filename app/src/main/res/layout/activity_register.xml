@@ -83,15 +83,15 @@
                 android:paddingRight="40dp"
                 >
                 <GridView
-                    android:layout_width="match_parent"
-                    android:layout_height="163dp"
-                    android:columnWidth="45dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/head_margin_top"
                     android:gravity="center"
                     android:verticalSpacing="14dp"
                     android:stretchMode="columnWidth"
-                    android:horizontalSpacing="19dp"
+                    android:horizontalSpacing="1dp"
                     android:numColumns="4"
+                    android:listSelector="@drawable/bg_register_avatar_selector"
                     android:id="@+id/activity_register_grid_avatar"
                     >
                 </GridView>
@@ -109,6 +109,8 @@
                 android:layout_marginRight="60dp"
                 android:layout_marginTop="48dp"
                 android:textSize="18sp"
+                android:inputType="text"
+                android:singleLine="true"
                 android:hint="NAME" />
         </RelativeLayout>
         <!-- 

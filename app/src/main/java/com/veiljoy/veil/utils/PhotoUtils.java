@@ -32,10 +32,10 @@ import android.util.TypedValue;
 
 public class PhotoUtils {
 	// 图片在SD卡中的缓存路�?
-	private static final String IMAGE_PATH = Environment
-			.getExternalStorageDirectory().toString()
-			+ File.separator
-			+ "ripple" + File.separator + "Images" + File.separator;
+    public static final String IMAGE_PATH = Environment
+            .getExternalStorageDirectory().toString()
+            + File.separator
+            + "VeilApp" + File.separator + "Images" + File.separator;
 	// 相册的RequestCode
 	public static final int INTENT_REQUEST_CODE_ALBUM = 0;
 	// 照相的RequestCode
@@ -268,7 +268,76 @@ public class PhotoUtils {
 		}
 		return newFilePath;
 	}
+    /**
+     * 保存图片到SD�?
+     *
+     * @param bitmap
+     *            图片的bitmap对象
+     * @return
+     */
+    public static String savePhotoToSDCard(Bitmap bitmap,String path) {
+        if (!FileUtils.isSdcardExist()) {
+            return null;
+        }
+        FileOutputStream fileOutputStream = null;
+        FileUtils.createDirFile(path);
 
+        String fileName = UUID.randomUUID().toString() + ".jpg";
+        String newFilePath = path + fileName;
+        File file = FileUtils.createNewFile(newFilePath);
+        if (file == null) {
+            return null;
+        }
+        try {
+            fileOutputStream = new FileOutputStream(newFilePath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+        } catch (FileNotFoundException e1) {
+            return null;
+        } finally {
+            try {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return newFilePath;
+    }
+    /**
+     * 保存图片到SD�?
+     *
+     * @param bitmap
+     *            图片的bitmap对象
+     * @return
+     */
+    public static String savePhotoToSDCard(Bitmap bitmap,String path,Bitmap.CompressFormat type) {
+        if (!FileUtils.isSdcardExist()) {
+            return null;
+        }
+        FileOutputStream fileOutputStream = null;
+        FileUtils.createDirFile(path);
+
+        String fileName = UUID.randomUUID().toString() + ".jpg";
+        String newFilePath = path + fileName;
+        File file = FileUtils.createNewFile(newFilePath);
+        if (file == null) {
+            return null;
+        }
+        try {
+            fileOutputStream = new FileOutputStream(newFilePath);
+            bitmap.compress(type, 100, fileOutputStream);
+        } catch (FileNotFoundException e1) {
+            return null;
+        } finally {
+            try {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return newFilePath;
+    }
 	/**
 	 * 滤镜效果--LOMO
 	 * 

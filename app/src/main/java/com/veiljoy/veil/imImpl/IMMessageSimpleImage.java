@@ -34,7 +34,7 @@ public class IMMessageSimpleImage extends IMMessageItem {
 
     @Override
     protected void onFillMessage() {
-        mBitmap= BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_chat_avatar_10);
+        mBitmap= BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.person0_voice_0);
 
         //mBitmap = PhotoUtils.getBitmapFromFile(mMsg.getmContent());
         mIvImage.setImageBitmap(mBitmap);

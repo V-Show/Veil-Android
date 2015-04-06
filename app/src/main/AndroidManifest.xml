@@ -9,7 +9,9 @@
 
         <activity
             android:name="com.veiljoy.veil.activity.ActivityRegister"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

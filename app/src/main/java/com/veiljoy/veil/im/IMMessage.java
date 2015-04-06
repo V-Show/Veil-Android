@@ -39,7 +39,7 @@ public class IMMessage extends BaseInfo {
         }
 
 
-        
+
         /**
          * Defines scheme of incoming URI
          *
