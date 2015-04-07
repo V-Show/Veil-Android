@@ -107,8 +107,10 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
 
     private void initEvents(){
         mGridview.setOnItemClickListener(new ItemClickListener());
-        mGridview.setSelection(0);
         mTVConfirm.setOnClickListener(this);
+
+
+
     }
 
     @Override

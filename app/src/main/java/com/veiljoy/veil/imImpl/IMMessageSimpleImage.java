@@ -19,6 +19,7 @@ public class IMMessageSimpleImage extends IMMessageItem {
     protected Bitmap mBitmap;
     protected ImageView mIvImage;
 
+
     public IMMessageSimpleImage(IMMessage msg,Context context){
 
         super(msg,context);
@@ -34,7 +35,19 @@ public class IMMessageSimpleImage extends IMMessageItem {
 
     @Override
     protected void onFillMessage() {
-        mBitmap= BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.person0_voice_0);
+
+        int voiceResId=R.mipmap.person0_voice_0;
+        if(mMsg.getmVoiceTimeRange()>10){
+            voiceResId=R.mipmap.person0_voice_2;
+        }
+        else if(mMsg.getmVoiceTimeRange()>5){
+            voiceResId=R.mipmap.person0_voice_1;
+        }
+        else{
+            voiceResId=R.mipmap.person0_voice_0;
+        }
+
+        mBitmap= BitmapFactory.decodeResource(mContext.getResources(), voiceResId);
 
         //mBitmap = PhotoUtils.getBitmapFromFile(mMsg.getmContent());
         mIvImage.setImageBitmap(mBitmap);

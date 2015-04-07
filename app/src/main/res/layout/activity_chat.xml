@@ -191,10 +191,11 @@
         android:gravity="center"
         >
         
-        <ImageView
+        <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/btn_talk"/>
+            android:id="@+id/activity_chat_btn_talk"
+            android:background="@drawable/chat_talk_selector"/>
 
         </LinearLayout>
     <View

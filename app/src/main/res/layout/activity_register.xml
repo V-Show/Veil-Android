@@ -2,30 +2,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="20dp"
+    android:layout_marginBottom="20dp"
 
 
     >
 
-    <!-- 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-     -->
 
-        <include
-            android:id="@+id/activity_register_headerbar"
-            layout="@layout/common_header_bar"
+    <include
+        android:id="@+id/activity_register_headerbar"
+        layout="@layout/common_header_bar"
 
 
-            />
+        />
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/activity_register_headerbar">-->
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:layout_below="@id/activity_register_headerbar"
-            >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_register_headerbar"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:id="@+id/activity_registration_tv_gender"
@@ -46,18 +45,43 @@
                 android:layout_below="@id/activity_registration_tv_gender"
                 android:layout_marginTop="@dimen/head_margin_top"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
-                <ImageButton
-                    android:layout_width="@dimen/size_gender_width"
-                    android:layout_height="@dimen/size_gender_height"
-                    android:layout_marginRight="@dimen/gender_margin"
-                    android:background="@mipmap/ic_gender_women" />
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:layout_width="@dimen/size_gender_width"
-                    android:layout_height="@dimen/size_gender_height"
-                    android:background="@mipmap/ic_gender_men" />
+
+                    <RadioButton
+                        android:id="@+id/activity_register_gender_men"
+                        android:layout_width="@dimen/size_gender_width"
+                        android:layout_height="@dimen/size_gender_height"
+                        android:layout_marginRight="@dimen/gender_margin"
+                        android:background="@drawable/register_gender_men_selector"
+                        android:button="@null"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/activity_register_gender_women"
+                        android:layout_width="@dimen/size_gender_width"
+                        android:layout_height="@dimen/size_gender_height"
+                        android:background="@drawable/register_gender_women_selector"
+                        android:button="@null" />
+                </RadioGroup>
+
+
+                <!--<ImageButton-->
+                <!--android:layout_width="@dimen/size_gender_width"-->
+                <!--android:layout_height="@dimen/size_gender_height"-->
+                <!--android:layout_marginRight="@dimen/gender_margin"-->
+                <!--android:background="@mipmap/ic_gender_women" />-->
+
+                <!--<ImageButton-->
+                <!--android:layout_width="@dimen/size_gender_width"-->
+                <!--android:layout_height="@dimen/size_gender_height"-->
+                <!--android:background="@mipmap/ic_gender_men" />-->
             </LinearLayout>
 
             <!-- 头像选择  提示TV -->
@@ -74,30 +98,29 @@
                 android:textSize="20sp" />
 
             <LinearLayout
+                android:id="@+id/activity_registration_gv_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:id="@+id/activity_registration_gv_avatar"
                 android:layout_below="@id/activity_registration_tv_avatar"
+                android:gravity="center_horizontal"
                 android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                >
+                android:paddingRight="40dp">
+
                 <GridView
+                    android:id="@+id/activity_register_grid_avatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/head_margin_top"
                     android:gravity="center"
-                    android:verticalSpacing="14dp"
-                    android:stretchMode="columnWidth"
                     android:horizontalSpacing="1dp"
-                    android:numColumns="4"
                     android:listSelector="@drawable/bg_register_avatar_selector"
-                    android:id="@+id/activity_register_grid_avatar"
-                    >
-                </GridView>
+                    android:numColumns="4"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="14dp">
+
+                    </GridView>
 
             </LinearLayout>
-
 
 
             <EditText
@@ -108,15 +131,15 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="60dp"
                 android:layout_marginTop="48dp"
-                android:textSize="18sp"
+                android:hint="NAME"
                 android:inputType="text"
                 android:singleLine="true"
-                android:hint="NAME" />
+                android:textSize="18sp" />
         </RelativeLayout>
-        <!-- 
-    </ScrollView>
-         -->
 
+
+
+    <!--</ScrollView>-->
 
 
 </RelativeLayout>
