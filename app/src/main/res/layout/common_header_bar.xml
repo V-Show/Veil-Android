@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="50dp"
     android:background="@color/orange"
+    android:gravity="center_vertical"
     >
 
 
@@ -18,15 +19,15 @@
 
     <TextView
         android:id="@+id/common_header_right_btn"
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="4dp"
         android:gravity="center"
         android:layout_gravity="right"
-        android:text="@string/confirm"
         android:textColor="@color/white"
         android:layout_alignParentRight="true"
         android:clickable="true"
-        android:background="@mipmap/ic_already_read" />
+        android:background="@drawable/register_confirm_selector" />
 
 </RelativeLayout>

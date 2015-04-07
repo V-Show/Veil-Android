@@ -18,6 +18,8 @@ public class IMMessage extends BaseInfo {
     private String mUri;
 
 
+    private int mVoiceTimeRange;
+
     private String mAvatar;
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
@@ -161,4 +163,13 @@ public class IMMessage extends BaseInfo {
     public void setmUri(String mUri) {
         this.mUri = mUri;
     }
+
+    public int getmVoiceTimeRange() {
+        return mVoiceTimeRange;
+    }
+
+    public void setmVoiceTimeRange(int mVoiceTimeRange) {
+        this.mVoiceTimeRange = mVoiceTimeRange;
+    }
+
 }
