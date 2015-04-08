@@ -6,7 +6,9 @@
     android:minHeight="40dip"
     android:orientation="vertical"
     android:paddingBottom="4dip"
-    android:paddingTop="4dip" >
+    android:paddingTop="4dip"
+    android:descendantFocusability="blocksDescendants"
+    >
 
     <include layout="@layout/message_timestamp" />
 
@@ -61,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_toRightOf="@id/left_margin_view"
-                android:clickable="true"
+
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:padding="10dip" />

@@ -2,8 +2,10 @@ package com.veiljoy.veil.im;
 
 import android.content.Context;
 
-import com.veiljoy.veil.imImpl.IMMessageVoice;
-import com.veiljoy.veil.imImpl.IMMessageSimpleImage;
+import com.veiljoy.veil.imImpl.IMMessageImageBaseItem;
+import com.veiljoy.veil.imImpl.IMMessageItem;
+import com.veiljoy.veil.imImpl.IMMessageSimpleImageItem;
+import com.veiljoy.veil.imImpl.IMMessageVoiceItem;
 
 /**
  * Created by zhongqihong on 15/4/2.
@@ -42,16 +44,16 @@ public class IMMessageFactory {
             case FILE:
                 break;
             case IMAGE:
-                message=new IMMessageSimpleImage(msg,context);
+                message=new IMMessageSimpleImageItem(msg,context);
                 break;
             case VOICE:
-               message=new IMMessageVoice(msg,context);
+               message=new IMMessageVoiceItem(msg,context);
                 break;
             case UNKNOWN: throw  new RuntimeException("Unknown type of uri: "+uri);
         }
 
 
-        message.init(msg.getmMessageType());
+        message.init(msg.getmMessageSource());
 
 
 

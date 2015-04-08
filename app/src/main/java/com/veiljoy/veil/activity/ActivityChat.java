@@ -1,10 +1,10 @@
 package com.veiljoy.veil.activity;
 
 import android.os.Bundle;
-import android.renderscript.BaseObj;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -14,7 +14,9 @@ import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.bean.BaseInfo;
 import com.veiljoy.veil.im.IMMessage;
+import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.VoiceUtils;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,12 +28,15 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
 
 
     ChatAdapter mChatAdapter;
-    ArrayList<BaseInfo> objs;
+    ArrayList<BaseInfo> objs=null;
     BaseApplication application;
     ListView mLVChat;
     Button mBtnTalk;
     private boolean isTalking;
     String avatarPath;
+    private String currMsgType;
+    private String mVoiceFileName =null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +56,20 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
 
         objs=new ArrayList<BaseInfo>();
 
-        for(int i=0;i<10;i++){
+
+        for(int i=0;i<2;i++){
             IMMessage o=new IMMessage();
             o.setmUri(IMMessage.Scheme.IMAGE.wrap(""));
             Random r=new Random(    System.currentTimeMillis());
-            o.setmMessageType(Math.abs(r.nextInt()%2));
+            o.setmMessageSource(Math.abs(r.nextInt() % 2));
             o.setmAvatar(avatarPath);
-            o.setmVoiceTimeRange(Math.abs(r.nextInt()%20));
             Log.v("activityChat","avatar "+avatarPath);
-            //o.setmMessageType(0);
             objs.add(o);
         }
 
-        mChatAdapter=new ChatAdapter(application,this,objs);
+
+
+        VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
 
 
     }
@@ -71,12 +77,15 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
     private void initEvents(){
         mBtnTalk.setOnLongClickListener(this);
         mBtnTalk.setOnTouchListener(new OnTalkBtnTouch());
+        mLVChat.setOnItemClickListener(new OnChatListItemClick());
     }
 
     private void initViews(){
+        mChatAdapter=new ChatAdapter(application,this,objs);
         mBtnTalk=(Button)this.findViewById(R.id.activity_chat_btn_talk);
         mLVChat=(ListView)this.findViewById(R.id.activity_chat_list);
         mLVChat.setAdapter(mChatAdapter);
+
     }
 
     public void refreshAdapter() {
@@ -89,7 +98,14 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
 
         switch(v.getId()){
             case R.id.activity_chat_btn_talk:
-                isTalking=true;
+                if(!isTalking){
+                    Log.v("chatActivity","start record");
+                    isTalking=true;
+                    currMsgType =IMMessage.Scheme.VOICE.wrap("test");
+                    VoiceUtils.getmInstance().startRecord(null);
+                }
+
+
                 break;
         }
 
@@ -105,18 +121,10 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
                 switch(event.getAction()){
                     case MotionEvent.ACTION_UP:
                     {
+                        Log.v("chatActivity","stop record");
                         isTalking=false;
-
-                        IMMessage o=new IMMessage();
-                        o.setmUri(IMMessage.Scheme.IMAGE.wrap(""));
-                        Random r=new Random(    System.currentTimeMillis());
-                        o.setmMessageType(Math.abs(r.nextInt()%2));
-                        o.setmAvatar(avatarPath);
-                        o.setmVoiceTimeRange(Math.abs(r.nextInt()%20));
-                        objs.add(o);
-
-                        mChatAdapter.refreshList(objs);
-                        mLVChat.setSelection(objs.size());
+                        VoiceUtils.getmInstance().stop();
+                        refreshList();
                     }
                     break;
                 }
@@ -125,6 +133,94 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
             }
 
             return false;
+        }
+    }
+
+    public void refreshList(){
+        mChatAdapter.refreshList(objs);
+        mLVChat.setSelection(objs.size());
+    }
+
+    public void makeMessage(){
+
+        IMMessage o=null;
+        IMMessage.Scheme type=IMMessage.Scheme.ofUri(currMsgType);
+        switch (type){
+            case VOICE:
+                o =new IMMessageVoiceEntity();
+                o.setmUri(IMMessage.Scheme.VOICE.wrap(""));
+                Random r=new Random(    System.currentTimeMillis());
+                o.setmMessageSource(Math.abs(r.nextInt() % 2));
+                o.setmAvatar(avatarPath);
+                ((IMMessageVoiceEntity)o).setmVoiceTimeRange(Math.abs(r.nextInt() % 20));
+                ((IMMessageVoiceEntity)o).setmVoiceFileName(mVoiceFileName);
+
+                break;
+        }
+
+        if(o!=null)
+            objs.add(o);
+        refreshList();
+    }
+
+
+
+    class OnVoiceRecordListenerImpl implements VoiceUtils.OnVoiceRecordListener {
+
+        @Override
+        public void onBackgroundRunning() {
+
+            Log.v("chatActivity","onBackgroundRunning");
+        }
+
+        @Override
+        public void onResult(String fileName) {
+
+            Log.v("chatActivity","onResult "+fileName);
+            if(fileName!=null){
+                mVoiceFileName =fileName;
+                makeMessage();
+            }
+
+        }
+
+        @Override
+        public void onPreRecord() {
+            Log.v("chatActivity","onPreRecord ");
+
+        }
+    }
+
+    class OnChatListItemClick implements ListView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+
+            IMMessage msg=(IMMessage)objs.get(position);
+
+            String uri =msg.getmUri();
+
+            switch (IMMessage.Scheme.ofUri(uri)){
+
+                case VOICE:
+
+
+                    IMMessageVoiceEntity voiceEntity=(IMMessageVoiceEntity)msg;
+                    Log.v("chatActivity","OnChatListItemClick "+voiceEntity.getmVoiceFileName());
+                    VoiceUtils.getmInstance().play(voiceEntity.getmVoiceFileName());
+
+
+
+                    break;
+                case IMAGE:
+
+                    break;
+
+            }
+
+
         }
     }
 

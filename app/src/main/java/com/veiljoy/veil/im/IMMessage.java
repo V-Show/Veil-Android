@@ -11,15 +11,12 @@ public class IMMessage extends BaseInfo {
     private String mTo;
     private String mFrom;
     private String mContent;
-    private int mMessageType;
+    private int mMessageSource;
     private String mTime;
     private String mDistance;
     private long mLTime;
+    //消息类型
     private String mUri;
-
-
-    private int mVoiceTimeRange;
-
     private String mAvatar;
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
@@ -101,12 +98,12 @@ public class IMMessage extends BaseInfo {
         this.mContent = mContent;
     }
 
-    public int getmMessageType() {
-        return mMessageType;
+    public int getmMessageSource() {
+        return mMessageSource;
     }
 
-    public void setmMessageType(int mMessageType) {
-        this.mMessageType = mMessageType;
+    public void setmMessageSource(int mMessageSource) {
+        this.mMessageSource = mMessageSource;
     }
 
     public String getmTime() {
@@ -164,12 +161,7 @@ public class IMMessage extends BaseInfo {
         this.mUri = mUri;
     }
 
-    public int getmVoiceTimeRange() {
-        return mVoiceTimeRange;
-    }
 
-    public void setmVoiceTimeRange(int mVoiceTimeRange) {
-        this.mVoiceTimeRange = mVoiceTimeRange;
-    }
+
 
 }

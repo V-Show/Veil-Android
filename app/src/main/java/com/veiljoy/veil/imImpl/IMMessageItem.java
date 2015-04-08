@@ -1,4 +1,4 @@
-package com.veiljoy.veil.im;
+package com.veiljoy.veil.imImpl;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -89,7 +89,6 @@ public abstract  class IMMessageItem {
 
         mLayoutTimeStampContainer = (RelativeLayout) view
                 .findViewById(R.id.message_layout_timecontainer);
-        Log.v("debug", "mLayoutTimeStampContainer: " + mLayoutTimeStampContainer == null ? "mLayoutTimeStampContainer=null" : "mLayoutTimeStampContainer!=null");
         mTVTimeStampTime = (TextView) view
                 .findViewById(R.id.message_timestamp_htv_time);
         mTVTimeStampDistance = (TextView) view
@@ -130,7 +129,7 @@ public abstract  class IMMessageItem {
         if (mMsg.getmDistance() != null) {
             mTVTimeStampDistance.setText(mMsg.getmDistance());
         } else {
-            mTVTimeStampDistance.setText("未知");
+            mTVTimeStampDistance.setText("900 m");
         }
     }
 
