@@ -1,7 +1,6 @@
 package com.veiljoy.veil.imImpl;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -12,12 +11,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.im.IMMessage;
-import com.veiljoy.veil.im.IMMessageItem;
 import com.veiljoy.veil.utils.PhotoUtils;
 
 
@@ -25,7 +22,7 @@ import com.veiljoy.veil.utils.PhotoUtils;
 /**
  * Created by zhongqihong on 15/4/2.
  */
-public class IMMemessageImage extends IMMessageItem implements  OnLongClickListener, OnClickListener{
+public class IMMmessageImageItem extends IMMessageItem implements  OnLongClickListener, OnClickListener{
 
 
     private LinearLayout mLayoutLoading;
@@ -37,7 +34,7 @@ public class IMMemessageImage extends IMMessageItem implements  OnLongClickListe
     protected Bitmap mBitmap;
     protected ImageView mIvImage;
 
-    public IMMemessageImage(IMMessage msg,Context context){
+    public IMMmessageImageItem(IMMessage msg, Context context){
         super(msg,context);
     }
 
