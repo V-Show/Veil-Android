@@ -1,11 +1,16 @@
 package com.veiljoy.veil.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Base64;
 
 
 public class FileUtils {
@@ -132,4 +137,84 @@ public class FileUtils {
 		}
 		return fileSizeString;
 	}
+
+    /**
+     * 将文件转换成base64编码格式
+     *
+     * @param path: 文件的绝对路径
+     *
+     * @return 字节流
+     *
+     */
+
+    public static String encodeFile(String path){
+
+        File file=new File(path);
+        FileInputStream inputStream;
+        byte[]buffer =null;
+        ByteArrayOutputStream arrayOutputStream=null;
+
+        try{
+             inputStream=new FileInputStream(file);
+             arrayOutputStream=new ByteArrayOutputStream();
+             buffer=new byte[1024];
+             int ch=-1;
+             while((ch=inputStream.read(buffer))!=-1){
+                arrayOutputStream.write(buffer,0,ch);
+             }
+
+        }
+        catch(FileNotFoundException e){
+
+        }
+        catch (IOException ioe){
+
+        }
+
+        byte[]data=arrayOutputStream.toByteArray();
+        return  data.toString();
+
+
+    }
+
+
+    /**
+     * <p>将文件转成base64 字符串</p>
+     * @param path 文件路径
+     * @return
+     * @throws Exception
+     */
+    public static String encodeBase64File(String path) throws Exception {
+        File  file = new File(path);
+        FileInputStream inputFile = new FileInputStream(file);
+        byte[] buffer = new byte[(int)file.length()];
+        inputFile.read(buffer);
+        inputFile.close();
+        return Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
+    }
+
+    /**
+     * <p>将base64字符解码保存文件</p>
+     * @param base64Code
+     * @param targetPath
+     * @throws Exception
+     */
+    public static void decoderBase64File(String base64Code,String targetPath) throws Exception {
+        byte[] buffer = Base64.decode(base64Code,base64Code.length());
+        FileOutputStream out = new FileOutputStream(targetPath);
+        out.write(buffer);
+        out.close();
+    }
+    /**
+     * <p>将base64字符保存文本文件</p>
+     * @param base64Code
+     * @param targetPath
+     * @throws Exception
+     */
+    public static void toFile(String base64Code,String targetPath) throws Exception {
+        byte[] buffer = base64Code.getBytes();
+        FileOutputStream out = new FileOutputStream(targetPath);
+        out.write(buffer);
+        out.close();
+    }
 }
