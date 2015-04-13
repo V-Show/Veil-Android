@@ -3,9 +3,30 @@ package com.veiljoy.veil.im;
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public interface IMUserBase {
+public class IMUserBase {
 
-    int register(String name,String psw);
-    int login(String name,String psw);
+
+
+
+    public static interface OnUserLogin{
+
+        void preLogin();
+
+        int onLogin(String name,String psw);
+
+        void onLoginResult(int code);
+    }
+
+    public static interface OnUserRegister{
+
+        void onPreRegister();
+
+        int onRegister(String name,String psw);
+
+        boolean onRegisterResult(int code);
+    }
+
+
+
 
 }
