@@ -2,7 +2,7 @@ package com.veiljoy.veil.bean;
 
 /**
  * Created by zhongqihong on 15/3/31.
- *
+ * <p/>
  * 这个类描述在注册界面个人图像的信息
  */
 public class AvatarInfo {

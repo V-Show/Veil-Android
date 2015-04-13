@@ -13,16 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.utils.PhotoUtils;
 
 
-
 /**
  * Created by zhongqihong on 15/4/2.
  */
-public class IMMmessageImageItem extends IMMessageItem implements  OnLongClickListener, OnClickListener{
+public class IMMmessageImageItem extends IMMessageItem implements OnLongClickListener, OnClickListener {
 
 
     private LinearLayout mLayoutLoading;
@@ -34,8 +34,8 @@ public class IMMmessageImageItem extends IMMessageItem implements  OnLongClickLi
     protected Bitmap mBitmap;
     protected ImageView mIvImage;
 
-    public IMMmessageImageItem(IMMessage msg, Context context){
-        super(msg,context);
+    public IMMmessageImageItem(IMMessage msg, Context context) {
+        super(msg, context);
     }
 
     @Override

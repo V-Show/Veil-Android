@@ -14,29 +14,30 @@ import com.veiljoy.veil.imImpl.IMMessageItem;
 
 public class ChatAdapter extends BaseObjectListAdapter {
 
-	public ChatAdapter(BaseApplication application, Context context,
-			List<? extends BaseInfo> datas) {
-		super(application, context, datas);
-	}
+    public ChatAdapter(BaseApplication application, Context context,
+                       List<? extends BaseInfo> datas) {
+        super(application, context, datas);
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
 
 
-        View view=null;
-        IMMessage msg=(IMMessage)getItem(position);
+        View view = null;
+        IMMessage msg = (IMMessage) getItem(position);
 
-		if(msg!=null){
+        if (msg != null) {
 
-            IMMessageItem msgItem= IMMessageFactory.getInstance().getMessageItem(msg,mContext);
+            IMMessageItem msgItem = IMMessageFactory.getInstance().getMessageItem(msg, mContext);
             msgItem.fillContent();
-            view=msgItem.getRootView();
+            view = msgItem.getRootView();
         }
 
-		return view;
-	}
-	public void refreshList(List<BaseInfo> items) {
-		this.mDatas = items;
-		this.notifyDataSetChanged();
-	}
+        return view;
+    }
+
+    public void refreshList(List<BaseInfo> items) {
+        this.mDatas = items;
+        this.notifyDataSetChanged();
+    }
 }

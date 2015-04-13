@@ -8,8 +8,7 @@ import android.text.format.Time;
  */
 public class TimeUtils {
 
-    public static String now()
-    {
+    public static String now() {
         Time localTime = new Time();
         localTime.setToNow();
         return localTime.format("%Y%m%d%H%M%S");

@@ -24,8 +24,9 @@ public class ImageCache {
 
     private static Bitmap mDefaultAvatar;
     public static Context mContext;
-    public static void init(Context context){
-        mContext=context;
+
+    public static void init(Context context) {
+        mContext = context;
         mDefaultAvatar = BitmapFactory.decodeResource(context.getResources(),
                 R.mipmap.ic_common_header);
     }
@@ -65,6 +66,7 @@ public class ImageCache {
             }
         }
     }
+
     public static Bitmap getAvatar(String imageName) {
         if (mAvatarCache.containsKey(imageName)) {
             Reference<Bitmap> reference = mAvatarCache.get(imageName);
@@ -76,7 +78,7 @@ public class ImageCache {
         }
         Bitmap bitmap = null;
         try {
-            bitmap= PhotoUtils.getBitmapFromFile(imageName);
+            bitmap = PhotoUtils.getBitmapFromFile(imageName);
             mAvatarCache.put(imageName, new SoftReference<Bitmap>(bitmap));
             return bitmap;
         } catch (Exception e) {

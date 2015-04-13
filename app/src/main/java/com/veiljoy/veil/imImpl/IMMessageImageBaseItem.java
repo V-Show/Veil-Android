@@ -12,19 +12,19 @@ import com.veiljoy.veil.im.IMMessage;
 /**
  * Created by zhongqihong on 15/4/2.
  */
-public  abstract  class IMMessageImageBaseItem extends IMMessageItem {
+public abstract class IMMessageImageBaseItem extends IMMessageItem {
 
     protected Bitmap mBitmap;
     protected ImageView mIvImage;
     protected int mVoiceResId;
 
-    public IMMessageImageBaseItem(IMMessage msg, Context context){
+    public IMMessageImageBaseItem(IMMessage msg, Context context) {
 
-        super(msg,context);
+        super(msg, context);
 
     }
 
-    public abstract   void initImages();
+    public abstract void initImages();
 
     @Override
     protected void onInitViews() {
@@ -41,9 +41,7 @@ public  abstract  class IMMessageImageBaseItem extends IMMessageItem {
     protected void onFillMessage() {
 
 
-
-
-        mBitmap= BitmapFactory.decodeResource(mContext.getResources(), mVoiceResId);
+        mBitmap = BitmapFactory.decodeResource(mContext.getResources(), mVoiceResId);
 
         //mBitmap = PhotoUtils.getBitmapFromFile(mMsg.getmContent());
         mIvImage.setImageBitmap(mBitmap);

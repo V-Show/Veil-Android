@@ -2,8 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/activity_chat_user_info_layout"
@@ -179,8 +178,6 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
         android:id="@+id/activity_chat_talk_bar"
         android:layout_width="match_parent"
@@ -188,30 +185,29 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:gravity="center"
-        >
-        
+        android:gravity="center">
+
         <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/activity_chat_btn_talk"
-            android:background="@drawable/chat_talk_selector"/>
+            android:background="@drawable/chat_talk_selector" />
 
-        </LinearLayout>
+    </LinearLayout>
+
     <View
         android:id="@+id/activity_chat_separate_line"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/separate_line"
-        android:layout_above="@id/activity_chat_talk_bar"
-        />
+        android:layout_above="@id/activity_chat_talk_bar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/activity_chat_user_info_layout"
         android:layout_above="@id/activity_chat_separate_line"
-        android:background="@color/orange"
-        >
+        android:background="@color/orange">
 
         <ListView
             android:id="@+id/activity_chat_list"
@@ -226,12 +222,10 @@
             android:paddingLeft="4dip"
             android:paddingRight="4dip"
             android:scrollbars="none"
-            android:scrollingCache="false"
-            >
+            android:scrollingCache="false">
 
 
         </ListView>
-
 
 
     </LinearLayout>

@@ -3,7 +3,7 @@ package com.veiljoy.veil.im;
 /**
  * Created by zhongqihong on 15/4/8.
  */
-public class IMMessageVoiceEntity extends IMMessage{
+public class IMMessageVoiceEntity extends IMMessage {
 
     private int mVoiceTimeRange;
 

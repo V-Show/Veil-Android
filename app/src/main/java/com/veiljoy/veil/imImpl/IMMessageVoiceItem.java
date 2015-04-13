@@ -16,23 +16,22 @@ public class IMMessageVoiceItem extends IMMessageImageBaseItem {
     protected Bitmap mBitmap;
     protected ImageView mIvImage;
     private IMMessageVoiceEntity mVoiceEntity;
-    public IMMessageVoiceItem(IMMessage msg, Context context){
-        super(msg,context);
 
-        mVoiceEntity=(IMMessageVoiceEntity)msg;
+    public IMMessageVoiceItem(IMMessage msg, Context context) {
+        super(msg, context);
+
+        mVoiceEntity = (IMMessageVoiceEntity) msg;
     }
 
     @Override
     public void initImages() {
 
-        if(mVoiceEntity.getmVoiceTimeRange()>10){
-            mVoiceResId=R.mipmap.person0_voice_2;
-        }
-        else if(mVoiceEntity.getmVoiceTimeRange()>5){
-            mVoiceResId=R.mipmap.person0_voice_1;
-        }
-        else{
-            mVoiceResId=R.mipmap.person0_voice_0;
+        if (mVoiceEntity.getmVoiceTimeRange() > 10) {
+            mVoiceResId = R.mipmap.person0_voice_2;
+        } else if (mVoiceEntity.getmVoiceTimeRange() > 5) {
+            mVoiceResId = R.mipmap.person0_voice_1;
+        } else {
+            mVoiceResId = R.mipmap.person0_voice_0;
         }
     }
 

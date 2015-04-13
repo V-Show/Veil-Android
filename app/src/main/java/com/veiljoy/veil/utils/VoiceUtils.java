@@ -26,24 +26,25 @@ import java.io.OutputStream;
 public class VoiceUtils {
 
     private String mAudioDir;
-    private boolean isRecording = false ;
+    private boolean isRecording = false;
     private String mDefFileName;
-    public static VoiceUtils mInstance=null;
+    public static VoiceUtils mInstance = null;
     private OnVoiceRecordListener mOnVoiceRecordListener;
     private AudioRecord audioRecord;
-    private VoiceUtils(){
-        mAudioDir=Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator;
-        mDefFileName ="reverseme.pcm";
+
+    private VoiceUtils() {
+        mAudioDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+        mDefFileName = "reverseme.pcm";
 
 
     }
 
-    public static VoiceUtils getmInstance(){
+    public static VoiceUtils getmInstance() {
 
-        if(mInstance==null){
-            synchronized (VoiceUtils.class){
-                if(mInstance==null){
-                    mInstance=new VoiceUtils();
+        if (mInstance == null) {
+            synchronized (VoiceUtils.class) {
+                if (mInstance == null) {
+                    mInstance = new VoiceUtils();
                 }
             }
         }
@@ -51,19 +52,19 @@ public class VoiceUtils {
         return mInstance;
     }
 
-    private String generateFileName(){
-        mDefFileName = StringUtils.getSequenceId()+".pcm";
+    private String generateFileName() {
+        mDefFileName = StringUtils.getSequenceId() + ".pcm";
         return mDefFileName;
     }
 
 
     public void play(String fileName) {
 
-        Log.v("chatActivity","recordUtil paly");
-        if(fileName==null||fileName.equals(" ")){
-            fileName=mAudioDir+ mDefFileName;
+        Log.v("chatActivity", "recordUtil paly");
+        if (fileName == null || fileName.equals(" ")) {
+            fileName = mAudioDir + mDefFileName;
         }
-        Log.v("chatActivity","play"+fileName);
+        Log.v("chatActivity", "play" + fileName);
 
         // Get the file we want to playback.
         File file = new File(fileName);
@@ -71,7 +72,7 @@ public class VoiceUtils {
         // and create a short array to store the recorded audio.
         int musicLength = (int) (file.length() / 2);
         short[] music = new short[musicLength];
-        Log.v("chatActivity","recordUtil paly11111");
+        Log.v("chatActivity", "recordUtil paly11111");
 
         try {
             // Create a DataInputStream to read the audio data back from the saved file.
@@ -86,7 +87,7 @@ public class VoiceUtils {
                 i++;
             }
 
-            Log.v("chatActivity","recordUtil paly22222");
+            Log.v("chatActivity", "recordUtil paly22222");
             // Close the input streams.
             dis.close();
 
@@ -102,28 +103,28 @@ public class VoiceUtils {
             // Start playback
             audioTrack.play();
 
-            Log.v("chatActivity","recordUtil paly33333");
+            Log.v("chatActivity", "recordUtil paly33333");
             // Write the music buffer to the AudioTrack object
             audioTrack.write(music, 0, musicLength);
 
             audioTrack.stop();
 
-            Log.v("chatActivity","recordUtil paly44444");
+            Log.v("chatActivity", "recordUtil paly44444");
 
         } catch (Throwable t) {
             Log.e("AudioTrack", "Playback Failed");
         }
     }
 
-    public String  record(String fileName) {
+    public String record(String fileName) {
 
 
-        Log.v("chatActivity","recordUtil record");
-        if(fileName==null||fileName.equals(" ")){
-            fileName=generateFileName();
+        Log.v("chatActivity", "recordUtil record");
+        if (fileName == null || fileName.equals(" ")) {
+            fileName = generateFileName();
         }
 
-        String fullName=mAudioDir+fileName;
+        String fullName = mAudioDir + fileName;
 
         int frequency = 11025;
         int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
@@ -131,16 +132,13 @@ public class VoiceUtils {
         File file = new File(fullName);
 
 
-
-        if(!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-        {
+        if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 
             return null;
         }
         // Delete any previous recording.
         if (file.exists())
             file.delete();
-
 
 
         // Create the new file.
@@ -164,8 +162,7 @@ public class VoiceUtils {
             int bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
 
 
-
-             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
                     frequency, channelConfiguration,
                     audioEncoding, bufferSize);
 
@@ -188,25 +185,24 @@ public class VoiceUtils {
             os.close();
 
 
-
         } catch (Throwable t) {
-          return null;
+            return null;
         }
 
         return fullName;
     }
 
-    public String record(){
+    public String record() {
         return record(null);
     }
 
-    public void stop(){
-        isRecording=false;
+    public void stop() {
+        isRecording = false;
     }
 
-    public void startRecord(String fileName){
+    public void startRecord(String fileName) {
 
-        if(isRecording){
+        if (isRecording) {
             stop();
         }
 
@@ -214,8 +210,7 @@ public class VoiceUtils {
     }
 
 
-
-    class RecordTask extends AsyncTask<String,Integer,String>{
+    class RecordTask extends AsyncTask<String, Integer, String> {
 
 
         @Override
@@ -229,7 +224,7 @@ public class VoiceUtils {
 
             mOnVoiceRecordListener.onBackgroundRunning();
 
-            String fileName =params[0];
+            String fileName = params[0];
 
             return record(fileName);
         }
@@ -238,10 +233,9 @@ public class VoiceUtils {
         @Override
         protected void onPostExecute(String fileName) {
 
-            if(fileName==null){
+            if (fileName == null) {
 
-            }
-            else{
+            } else {
 
             }
             mOnVoiceRecordListener.onResult(fileName);
@@ -249,11 +243,11 @@ public class VoiceUtils {
 
     }
 
-    public void setOnVoiceRecordListener(OnVoiceRecordListener l){
-        this.mOnVoiceRecordListener=l;
+    public void setOnVoiceRecordListener(OnVoiceRecordListener l) {
+        this.mOnVoiceRecordListener = l;
     }
 
-    public static interface OnVoiceRecordListener{
+    public static interface OnVoiceRecordListener {
 
         public void onBackgroundRunning();
 

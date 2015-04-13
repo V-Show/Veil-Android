@@ -1,4 +1,5 @@
 package com.veiljoy.veil.imImpl;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -20,7 +21,7 @@ import com.veiljoy.veil.utils.DateUtils;
  * Created by zhongqihong on 15/4/2.
  */
 
-public abstract  class IMMessageItem {
+public abstract class IMMessageItem {
 
     protected Context mContext;
     protected View mRootView;
@@ -56,26 +57,21 @@ public abstract  class IMMessageItem {
     protected int mBackground;
 
 
-
-
     public IMMessageItem(IMMessage msg, Context context) {
         mMsg = msg;
         mContext = context;
         mInflater = LayoutInflater.from(context);
     }
 
-    public void init(int source){
+    public void init(int source) {
 
-       if(source==IMMessage.RECV)
-        {
+        if (source == IMMessage.RECV) {
 
-            mRootView=mInflater.inflate(R.layout.message_recv_template,null);
+            mRootView = mInflater.inflate(R.layout.message_recv_template, null);
             mBackground = R.drawable.bg_message_box_receive;
 
-        }
-        else if(source==IMMessage.SEND)
-        {
-            mRootView=mInflater.inflate(R.layout.message_send_template,null);
+        } else if (source == IMMessage.SEND) {
+            mRootView = mInflater.inflate(R.layout.message_send_template, null);
             mBackground = R.drawable.bg_message_box_send;
 
         }
@@ -109,6 +105,7 @@ public abstract  class IMMessageItem {
         mIvPhotoView = (ImageView) view.findViewById(R.id.message_iv_userphoto);
         onInitViews();
     }
+
     public void fillContent() {
         fillTimeStamp();
         fillStatus();

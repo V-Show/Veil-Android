@@ -9,7 +9,6 @@ import com.veiljoy.veil.im.IMMessage;
 public class IMOFChatImpl implements IMChatBase {
 
 
-
     @Override
     public void send(IMMessage msg) {
 

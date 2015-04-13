@@ -7,22 +7,21 @@
     android:orientation="vertical"
     android:paddingBottom="4dip"
     android:paddingTop="4dip"
-    android:descendantFocusability="blocksDescendants"
-    >
+    android:descendantFocusability="blocksDescendants">
 
     <include layout="@layout/message_timestamp" />
 
     <LinearLayout
         android:id="@+id/message_layout_contentcontainer"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/message_layout_leftcontainer"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="right" >
+            android:gravity="right">
 
             <View
                 android:id="@+id/left_margin_view"
@@ -74,15 +73,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dip"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/message_iv_userphoto"
                 android:layout_width="40dip"
                 android:layout_height="40dip"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_chat_avatar_2"
-                />
+                android:src="@mipmap/ic_chat_avatar_2" />
         </LinearLayout>
     </LinearLayout>
 

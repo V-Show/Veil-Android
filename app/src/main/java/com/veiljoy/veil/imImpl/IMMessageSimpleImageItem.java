@@ -11,14 +11,14 @@ import com.veiljoy.veil.im.IMMessage;
 public class IMMessageSimpleImageItem extends IMMessageImageBaseItem {
 
 
-    public IMMessageSimpleImageItem(IMMessage msg, Context context){
+    public IMMessageSimpleImageItem(IMMessage msg, Context context) {
 
-        super(msg,context);
+        super(msg, context);
 
     }
 
     @Override
     public void initImages() {
-        mVoiceResId= R.mipmap.person0_voice_0;
+        mVoiceResId = R.mipmap.person0_voice_0;
     }
 }
