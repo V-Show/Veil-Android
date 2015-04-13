@@ -6,11 +6,7 @@ package com.veiljoy.veil.im;
 public interface IMMessageBase {
 
 
-
-     boolean send();
-
-
-
+    boolean send();
 
 
 }

@@ -12,49 +12,47 @@ import com.veiljoy.veil.imImpl.IMMessageVoiceItem;
  */
 public class IMMessageFactory {
 
-    public static IMMessageFactory instance=null;
+    public static IMMessageFactory instance = null;
 
 
-
-    private IMMessageFactory(){
+    private IMMessageFactory() {
 
     }
 
-    public static  IMMessageFactory getInstance(){
+    public static IMMessageFactory getInstance() {
 
-        if(instance==null){
-            synchronized (IMMessageFactory.class)
-            {
-                if(instance==null)
-                    instance= new IMMessageFactory();
+        if (instance == null) {
+            synchronized (IMMessageFactory.class) {
+                if (instance == null)
+                    instance = new IMMessageFactory();
             }
         }
-        return  instance;
+        return instance;
     }
 
 
-    public IMMessageItem getMessageItem(IMMessage msg,Context context){
+    public IMMessageItem getMessageItem(IMMessage msg, Context context) {
 
-        IMMessageItem message=null;
-        String uri=msg.getmUri();
+        IMMessageItem message = null;
+        String uri = msg.getmUri();
 
 
-        switch(IMMessage.Scheme.ofUri(uri)){
+        switch (IMMessage.Scheme.ofUri(uri)) {
             case MAP:
             case FILE:
                 break;
             case IMAGE:
-                message=new IMMessageSimpleImageItem(msg,context);
+                message = new IMMessageSimpleImageItem(msg, context);
                 break;
             case VOICE:
-               message=new IMMessageVoiceItem(msg,context);
+                message = new IMMessageVoiceItem(msg, context);
                 break;
-            case UNKNOWN: throw  new RuntimeException("Unknown type of uri: "+uri);
+            case UNKNOWN:
+                throw new RuntimeException("Unknown type of uri: " + uri);
         }
 
 
         message.init(msg.getmMessageSource());
-
 
 
         return message;

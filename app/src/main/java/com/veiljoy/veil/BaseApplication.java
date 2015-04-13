@@ -15,7 +15,7 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-       SharePreferenceUtil. InitPreferenceUtil(this, Constants.USER_USER_PROFILE_PATH_KEY);
+        SharePreferenceUtil.InitPreferenceUtil(this, Constants.USER_USER_PROFILE_PATH_KEY);
         ImageCache.init(this);
     }
 }

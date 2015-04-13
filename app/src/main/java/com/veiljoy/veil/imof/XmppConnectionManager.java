@@ -31,210 +31,198 @@ import android.util.Log;
 
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 
-import  com.veiljoy.veil.utils.Constants;
-/**
- * 
- * XMPP服务器连接工具类.
- * 
+import com.veiljoy.veil.utils.Constants;
 
+/**
+ * XMPP服务器连接工具类.
  */
 public class XmppConnectionManager {
-	private XMPPConnection connection;
-	private static ConnectionConfiguration connectionConfig;
-	private static XmppConnectionManager xmppConnectionManager;
+    private XMPPConnection connection;
+    private static ConnectionConfiguration connectionConfig;
+    private static XmppConnectionManager xmppConnectionManager;
 
-	private XmppConnectionManager() {
+    private XmppConnectionManager() {
 
-	}
+    }
 
-	public static XmppConnectionManager getInstance() {
-		if (xmppConnectionManager == null) {
-			xmppConnectionManager = new XmppConnectionManager();
-		}
-		return xmppConnectionManager;
-	}
+    public static XmppConnectionManager getInstance() {
+        if (xmppConnectionManager == null) {
+            xmppConnectionManager = new XmppConnectionManager();
+        }
+        return xmppConnectionManager;
+    }
 
-	// init
-	public XMPPConnection init(LoginConfig loginConfig) {
-		Connection.DEBUG_ENABLED = false;
-		ProviderManager pm = ProviderManager.getInstance();
-		configure(pm);
+    // init
+    public XMPPConnection init(LoginConfig loginConfig) {
+        Connection.DEBUG_ENABLED = false;
+        ProviderManager pm = ProviderManager.getInstance();
+        configure(pm);
 
-		connectionConfig = new ConnectionConfiguration(
-				loginConfig.getXmppHost(), loginConfig.getXmppPort(),
-				loginConfig.getXmppServiceName());
-		connectionConfig.setSASLAuthenticationEnabled(false);// 不使用SASL验证，设置为false
-		connectionConfig
-				.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
-		// 允许自动连接
-		connectionConfig.setReconnectionAllowed(false);
-		// 允许登陆成功后更新在线状态
-		connectionConfig.setSendPresence(true);
-		// 收到好友邀请后manual表示需要经过同意,accept_all表示不经同意自动为好友
-		Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
-		connection = new XMPPConnection(connectionConfig);
-		try{
-			connection.connect();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		return connection;
-	}
+        connectionConfig = new ConnectionConfiguration(
+                loginConfig.getXmppHost(), loginConfig.getXmppPort(),
+                loginConfig.getXmppServiceName());
+        connectionConfig.setSASLAuthenticationEnabled(false);// 不使用SASL验证，设置为false
+        connectionConfig
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+        // 允许自动连接
+        connectionConfig.setReconnectionAllowed(false);
+        // 允许登陆成功后更新在线状态
+        connectionConfig.setSendPresence(true);
+        // 收到好友邀请后manual表示需要经过同意,accept_all表示不经同意自动为好友
+        Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
+        connection = new XMPPConnection(connectionConfig);
+        try {
+            connection.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
 
-	/**
-	 * 
-	 * 返回一个有效的xmpp连接,如果无效则返回空.
-	 * 
-	 * @return
-	 * @author shimiso
-	 * @update 2012-7-4 下午6:54:31
-	 */
-	public XMPPConnection getConnection() {
+    /**
+     * 返回一个有效的xmpp连接,如果无效则返回空.
+     */
+    public XMPPConnection getConnection() {
 
-		if (connection == null) {
-			init(getLoginConfig());
-			
-			if(connection!=null){
-				try{
-					if(!connection.isConnected())
-						connection.connect();
-					String username = SharePreferenceUtil.getName();
-					String password = SharePreferenceUtil.getPasswd();
-					connection.login(username, password);
-				} catch (Exception xee) {
-					xee.printStackTrace();
-				}
-				
-			}
-			
+        if (connection == null) {
+            init(getLoginConfig());
 
-			Log.v("Yuanyang", "getConnection again ");
-		}
-		return connection;
-	}
+            if (connection != null) {
+                try {
+                    if (!connection.isConnected())
+                        connection.connect();
+//					String username = SharePreferenceUtil.getName();
+//					String password = SharePreferenceUtil.getPasswd();
+//					connection.login(username, password);
+                } catch (Exception xee) {
+                    xee.printStackTrace();
+                }
 
-	/**
-	 * 
-	 * 销毁xmpp连接.
-	 * 
-	 * @author shimiso
-	 * @update 2012-7-4 下午6:55:03
-	 */
-	public void disconnect() {
-		if (connection != null) {
-			connection.disconnect();
-		}
-	}
-
-	public void configure(ProviderManager pm) {
-
-		// Private Data Storage
-		pm.addIQProvider("query", "jabber:iq:private",
-				new PrivateDataManager.PrivateDataIQProvider());
-
-		// Time
-		try {
-			pm.addIQProvider("query", "jabber:iq:time",
-					Class.forName("org.jivesoftware.smackx.packet.Time"));
-		} catch (ClassNotFoundException e) {
-		}
-
-		// XHTML
-		pm.addExtensionProvider("html", "http://jabber.org/protocol/xhtml-im",
-				new XHTMLExtensionProvider());
-
-		// Roster Exchange
-		pm.addExtensionProvider("x", "jabber:x:roster",
-				new RosterExchangeProvider());
-		// Message Events
-		pm.addExtensionProvider("x", "jabber:x:event",
-				new MessageEventProvider());
-		// Chat State
-		pm.addExtensionProvider("active",
-				"http://jabber.org/protocol/chatstates",
-				new ChatStateExtension.Provider());
-		pm.addExtensionProvider("composing",
-				"http://jabber.org/protocol/chatstates",
-				new ChatStateExtension.Provider());
-		pm.addExtensionProvider("paused",
-				"http://jabber.org/protocol/chatstates",
-				new ChatStateExtension.Provider());
-		pm.addExtensionProvider("inactive",
-				"http://jabber.org/protocol/chatstates",
-				new ChatStateExtension.Provider());
-		pm.addExtensionProvider("gone",
-				"http://jabber.org/protocol/chatstates",
-				new ChatStateExtension.Provider());
-
-		// FileTransfer
-		pm.addIQProvider("si", "http://jabber.org/protocol/si",
-				new StreamInitiationProvider());
-
-		// Group Chat Invitations
-		pm.addExtensionProvider("x", "jabber:x:conference",
-				new GroupChatInvitation.Provider());
-		// Service Discovery # Items
-		pm.addIQProvider("query", "http://jabber.org/protocol/disco#items",
-				new DiscoverItemsProvider());
-		// Service Discovery # Info
-		pm.addIQProvider("query", "http://jabber.org/protocol/disco#info",
-				new DiscoverInfoProvider());
-		// Data Forms
-		pm.addExtensionProvider("x", "jabber:x:data", new DataFormProvider());
-		// MUC User
-		pm.addExtensionProvider("x", "http://jabber.org/protocol/muc#user",
-				new MUCUserProvider());
-		// MUC Admin
-		pm.addIQProvider("query", "http://jabber.org/protocol/muc#admin",
-				new MUCAdminProvider());
-		// MUC Owner
-		pm.addIQProvider("query", "http://jabber.org/protocol/muc#owner",
-				new MUCOwnerProvider());
-		// Delayed Delivery
-		pm.addExtensionProvider("x", "jabber:x:delay",
-				new DelayInformationProvider());
-		// Version
-		try {
-			pm.addIQProvider("query", "jabber:iq:version",
-					Class.forName("org.jivesoftware.smackx.packet.Version"));
-		} catch (ClassNotFoundException e) {
-		}
-		// VCard
-		pm.addIQProvider("vCard", "vcard-temp", new VCardProvider());
-		// Offline Message Requests
-		pm.addIQProvider("offline", "http://jabber.org/protocol/offline",
-				new OfflineMessageRequest.Provider());
-		// Offline Message Indicator
-		pm.addExtensionProvider("offline",
-				"http://jabber.org/protocol/offline",
-				new OfflineMessageInfo.Provider());
-		// Last Activity
-		pm.addIQProvider("query", "jabber:iq:last", new LastActivity.Provider());
-		// User Search
-		pm.addIQProvider("query", "jabber:iq:search", new UserSearch.Provider());
-		// SharedGroupsInfo
-		pm.addIQProvider("sharedgroup",
-				"http://www.jivesoftware.org/protocol/sharedgroup",
-				new SharedGroupsInfo.Provider());
-		// JEP-33: Extended Stanza Addressing
-		pm.addExtensionProvider("addresses",
-				"http://jabber.org/protocol/address",
-				new MultipleAddressesProvider());
-
-	}
-	public static LoginConfig getLoginConfig() {
+            }
+//
 
 
+        }
+        return connection;
+    }
 
-		LoginConfig loginConfig = new LoginConfig();
-		String username = SharePreferenceUtil.getName();
-		String password = SharePreferenceUtil.getPasswd();
-		loginConfig.setXmppHost(Constants.XMPP_HOST_IP);
-		loginConfig.setXmppPort(Integer.parseInt(Constants.XMPP_HOST_PORT));
-		loginConfig.setUsername(username);
-		loginConfig.setPassword(password);
-    	loginConfig.setXmppServiceName(Constants.XMPP_HOST_NAME);
+    /**
+     * 销毁xmpp连接.
+     */
+    public void disconnect() {
+        if (connection != null) {
+            connection.disconnect();
+        }
+    }
+
+    public void configure(ProviderManager pm) {
+
+        // Private Data Storage
+        pm.addIQProvider("query", "jabber:iq:private",
+                new PrivateDataManager.PrivateDataIQProvider());
+
+        // Time
+        try {
+            pm.addIQProvider("query", "jabber:iq:time",
+                    Class.forName("org.jivesoftware.smackx.packet.Time"));
+        } catch (ClassNotFoundException e) {
+        }
+
+        // XHTML
+        pm.addExtensionProvider("html", "http://jabber.org/protocol/xhtml-im",
+                new XHTMLExtensionProvider());
+
+        // Roster Exchange
+        pm.addExtensionProvider("x", "jabber:x:roster",
+                new RosterExchangeProvider());
+        // Message Events
+        pm.addExtensionProvider("x", "jabber:x:event",
+                new MessageEventProvider());
+        // Chat State
+        pm.addExtensionProvider("active",
+                "http://jabber.org/protocol/chatstates",
+                new ChatStateExtension.Provider());
+        pm.addExtensionProvider("composing",
+                "http://jabber.org/protocol/chatstates",
+                new ChatStateExtension.Provider());
+        pm.addExtensionProvider("paused",
+                "http://jabber.org/protocol/chatstates",
+                new ChatStateExtension.Provider());
+        pm.addExtensionProvider("inactive",
+                "http://jabber.org/protocol/chatstates",
+                new ChatStateExtension.Provider());
+        pm.addExtensionProvider("gone",
+                "http://jabber.org/protocol/chatstates",
+                new ChatStateExtension.Provider());
+
+        // FileTransfer
+        pm.addIQProvider("si", "http://jabber.org/protocol/si",
+                new StreamInitiationProvider());
+
+        // Group Chat Invitations
+        pm.addExtensionProvider("x", "jabber:x:conference",
+                new GroupChatInvitation.Provider());
+        // Service Discovery # Items
+        pm.addIQProvider("query", "http://jabber.org/protocol/disco#items",
+                new DiscoverItemsProvider());
+        // Service Discovery # Info
+        pm.addIQProvider("query", "http://jabber.org/protocol/disco#info",
+                new DiscoverInfoProvider());
+        // Data Forms
+        pm.addExtensionProvider("x", "jabber:x:data", new DataFormProvider());
+        // MUC User
+        pm.addExtensionProvider("x", "http://jabber.org/protocol/muc#user",
+                new MUCUserProvider());
+        // MUC Admin
+        pm.addIQProvider("query", "http://jabber.org/protocol/muc#admin",
+                new MUCAdminProvider());
+        // MUC Owner
+        pm.addIQProvider("query", "http://jabber.org/protocol/muc#owner",
+                new MUCOwnerProvider());
+        // Delayed Delivery
+        pm.addExtensionProvider("x", "jabber:x:delay",
+                new DelayInformationProvider());
+        // Version
+        try {
+            pm.addIQProvider("query", "jabber:iq:version",
+                    Class.forName("org.jivesoftware.smackx.packet.Version"));
+        } catch (ClassNotFoundException e) {
+        }
+        // VCard
+        pm.addIQProvider("vCard", "vcard-temp", new VCardProvider());
+        // Offline Message Requests
+        pm.addIQProvider("offline", "http://jabber.org/protocol/offline",
+                new OfflineMessageRequest.Provider());
+        // Offline Message Indicator
+        pm.addExtensionProvider("offline",
+                "http://jabber.org/protocol/offline",
+                new OfflineMessageInfo.Provider());
+        // Last Activity
+        pm.addIQProvider("query", "jabber:iq:last", new LastActivity.Provider());
+        // User Search
+        pm.addIQProvider("query", "jabber:iq:search", new UserSearch.Provider());
+        // SharedGroupsInfo
+        pm.addIQProvider("sharedgroup",
+                "http://www.jivesoftware.org/protocol/sharedgroup",
+                new SharedGroupsInfo.Provider());
+        // JEP-33: Extended Stanza Addressing
+        pm.addExtensionProvider("addresses",
+                "http://jabber.org/protocol/address",
+                new MultipleAddressesProvider());
+
+    }
+
+    public static LoginConfig getLoginConfig() {
+
+
+        LoginConfig loginConfig = new LoginConfig();
+        String username = SharePreferenceUtil.getName();
+        String password = SharePreferenceUtil.getPasswd();
+        loginConfig.setXmppHost(Constants.XMPP_HOST_IP);
+        loginConfig.setXmppPort(Integer.parseInt(Constants.XMPP_HOST_PORT));
+        loginConfig.setUsername(username);
+        loginConfig.setPassword(password);
+        loginConfig.setXmppServiceName(Constants.XMPP_HOST_NAME);
 //		loginConfig.setAutoLogin(Boolean
 //				.getBoolean(Constants.IS_AUTOLOGIN_VALUE));
 //		loginConfig.setNovisible(Boolean
@@ -243,6 +231,6 @@ public class XmppConnectionManager {
 //				.setRemember(Boolean.getBoolean(Constants.IS_REMEMBER_VALUE));
 //		loginConfig.setFirstStart(Boolean
 //				.getBoolean(Constants.IS_FIRSTSTART_VALUE));
-		return loginConfig;
-	}
+        return loginConfig;
+    }
 }

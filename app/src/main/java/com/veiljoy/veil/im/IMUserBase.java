@@ -6,27 +6,23 @@ package com.veiljoy.veil.im;
 public class IMUserBase {
 
 
-
-
-    public static interface OnUserLogin{
+    public static interface OnUserLogin {
 
         void preLogin();
 
-        int onLogin(String name,String psw);
+        int onLogin(String name, String psw);
 
-        void onLoginResult(int code);
+        boolean onLoginResult(int code);
     }
 
-    public static interface OnUserRegister{
+    public static interface OnUserRegister {
 
         void onPreRegister();
 
-        int onRegister(String name,String psw);
+        int onRegister(String name, String psw);
 
         boolean onRegisterResult(int code);
     }
-
-
 
 
 }

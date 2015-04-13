@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
     android:background="@color/orange"
-    android:gravity="center_vertical"
-    >
-
+    android:gravity="center_vertical">
 
 
     <TextView
@@ -14,8 +13,7 @@
         android:text="@string/register"
         android:gravity="center_vertical"
         android:layout_gravity="center_horizontal"
-        android:layout_centerInParent="true"
-        />
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/common_header_right_btn"

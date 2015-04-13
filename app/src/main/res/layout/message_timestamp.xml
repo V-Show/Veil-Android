@@ -7,7 +7,7 @@
     android:layout_marginBottom="15dip"
     android:layout_marginTop="15dip"
     android:gravity="center"
-    android:visibility="visible" >
+    android:visibility="visible">
 
     <LinearLayout
         android:id="@+id/message_timestamp_layout"
@@ -17,7 +17,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
-        android:gravity="center" >
+        android:gravity="center">
 
         <TextView
             android:id="@+id/message_timestamp_htv_time"

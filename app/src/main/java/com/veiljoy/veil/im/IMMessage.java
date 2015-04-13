@@ -20,13 +20,13 @@ public class IMMessage extends BaseInfo {
     private String mAvatar;
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
-    public static final int RECV=0;
-    public static final int SEND=1;
+    public static final int RECV = 0;
+    public static final int SEND = 1;
 
 
     public enum Scheme {
 
-         MAP("map"), FILE("file"), IMAGE("image"), VOICE("voice"), UNKNOWN("");
+        MAP("map"), FILE("file"), IMAGE("image"), VOICE("voice"), UNKNOWN("");
 
 
         private String scheme;
@@ -36,7 +36,6 @@ public class IMMessage extends BaseInfo {
             this.scheme = scheme;
             uriPrefix = scheme + "://";
         }
-
 
 
         /**
@@ -60,12 +59,16 @@ public class IMMessage extends BaseInfo {
             return uri.startsWith(uriPrefix);
         }
 
-        /** Appends scheme to incoming path */
+        /**
+         * Appends scheme to incoming path
+         */
         public String wrap(String path) {
             return uriPrefix + path;
         }
 
-        /** Removed scheme part ("scheme://") from incoming URI */
+        /**
+         * Removed scheme part ("scheme://") from incoming URI
+         */
         public String crop(String uri) {
             if (!belongsTo(uri)) {
                 throw new IllegalArgumentException(String.format("URI [%1$s] doesn't have expected scheme [%2$s]", uri, scheme));
@@ -145,6 +148,7 @@ public class IMMessage extends BaseInfo {
     public void setmLTime(long mLTime) {
         this.mLTime = mLTime;
     }
+
     public String getmAvatar() {
         return mAvatar;
     }
@@ -160,8 +164,6 @@ public class IMMessage extends BaseInfo {
     public void setmUri(String mUri) {
         this.mUri = mUri;
     }
-
-
 
 
 }
