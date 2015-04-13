@@ -2,4 +2,19 @@
     <string name="app_name">Veil</string>
     <string name="confirm">Confirm</string>
     <string name="register">Register</string>
+
+    <string name="exit_confirm">Exit Confirm</string>
+    <string name="exit_client">Exit Client ?</string>
+    <string name="login_prompt">登陆提示</string>
+    <string name="login_text">正在登陆请稍后...</string>
+    <string name="login_success">登陆成功</string>
+    <string name="login_title">登录设置</string>
+    <string name="save_checkbox">保存账户</string>
+    <!-- 登录提示 -->
+    <string name="message_invalid_username_password">错误的用户名或密码</string>
+    <string name="message_server_unavailable">无法连接到服务器</string>
+    <string name="message_user_disabled">用户被禁用</string>
+    <string name="message_user_expired">账户已过期</string>
+    <string name="message_userip_no_access">IP不合法,已被禁用</string>
+    <string name="unrecoverable_error">发生未知异常,连接失败</string>
 </resources>

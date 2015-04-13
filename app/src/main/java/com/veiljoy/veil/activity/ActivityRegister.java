@@ -1,17 +1,13 @@
 package com.veiljoy.veil.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -20,13 +16,13 @@ import android.widget.Toast;
 import com.veiljoy.veil.BaseActivity;
 
 import com.veiljoy.veil.R;
-import com.veiljoy.veil.bean.AvatarInfo;
 import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMUserBase;
+import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.PhotoUtils;
+import com.veiljoy.veil.utils.SharePreferenceUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,9 +32,9 @@ import java.util.HashMap;
 public class ActivityRegister extends BaseActivity implements View.OnClickListener{
 
 
-    private IMUserBase mIMUserBase;
-    private UserInfo mUserinfo;
 
+    private UserInfo mUserinfo=null;
+    private IMUserBase.OnUserRegister  mUserRegister;
     private Bitmap mAvatar;
     //生成动态数组，并且转入数据
     ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
@@ -72,6 +68,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
 
     private void init(){
         mUserinfo=new UserInfo();
+        mUserRegister= new UserAccessManager(this);
 
     }
 
@@ -117,12 +114,14 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.common_header_right_btn:
-                //startActivity(ActivityChat.class,null);
 
                 register();
                 break;
         }
     }
+
+
+
 
 
     //当AdapterView被单击(触摸屏或者键盘)，则返回的Item单击事件
@@ -153,6 +152,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         mUserinfo.setmGender(0);
         mUserinfo.setmAvatar("001");
 
+        SharePreferenceUtil.setName("AAAAAAAAAA");
+        SharePreferenceUtil.setPasswd("BBBBBBBBB");
 
        RegisterTask registerTask = new RegisterTask();
        registerTask.execute(mUserinfo);
@@ -170,6 +171,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
 
             Toast.makeText(ActivityRegister.this,"signing up...",Toast.LENGTH_LONG);
 
+            mUserRegister.onPreRegister();
+
         }
 
 
@@ -181,28 +184,31 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             if(mAvatar!=null)
                mUserinfo.setmAvatar(PhotoUtils.savePhotoToSDCard(mAvatar,Constants.IMAGE_PATH,Bitmap.CompressFormat.PNG));
 
+
+            return mUserRegister.onRegister(SharePreferenceUtil.getName(), SharePreferenceUtil.getPasswd());
+
+
+
 //            if(user==null)
 //                return Constants.REGISTER_RESULT_ERROR;
 //            else return mIMUserBase.login(user.getmName(),user.getmPassword());
-            return Constants.REGISTER_RESULT_OK;
+
         }
 
         @Override
-        protected void onPostExecute(Integer result){
-            switch(result){
-                case Constants.REGISTER_RESULT_OK:
-                    Bundle bundle =new Bundle();
-                    bundle.putString(Constants.USER_AVATAR_FILE_PATH_KEY,mUserinfo.getmAvatar());
-                    startActivity(ActivityChat.class,bundle);
-                    break;
-                case Constants.REGISTER_RESULT_ERROR:
-                    break;
-                case Constants.REGISTER_RESULT_USER_EXIST:
-                    break;
+        protected void onPostExecute(Integer code){
+
+           boolean rel= mUserRegister.onRegisterResult(code);
+
+
+            if(rel){
+                Bundle bundle =new Bundle();
+                bundle.putString(Constants.USER_AVATAR_FILE_PATH_KEY,mUserinfo.getmAvatar());
+                startActivity(ActivityChat.class,bundle);
 
             }
 
-            Toast.makeText(ActivityRegister.this,"result code:"+result,Toast.LENGTH_LONG);
+
         }
     }
 
