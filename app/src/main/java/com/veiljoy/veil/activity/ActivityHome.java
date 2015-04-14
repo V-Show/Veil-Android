@@ -7,10 +7,13 @@ import android.util.Log;
 import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.im.IMUserBase;
+import com.veiljoy.veil.imof.IMOFChatImpl;
 import com.veiljoy.veil.imof.LoginConfig;
+import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
+import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 /**
  * Created by zhongqihong on 15/3/31.
@@ -20,12 +23,18 @@ public class ActivityHome extends BaseActivity {
 
     IMUserBase.OnUserLogin mUserLoginTask;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        init();
-        enter();
+        MUCHelper.init(XmppConnectionManager.getInstance().getConnection());
+        MUCHelper.createRoom("veilGroup");
+
+        new IMOFChatImpl().testHostRoom();
+
+//        init();
+//        enter();
     }
 
 
@@ -41,7 +50,9 @@ public class ActivityHome extends BaseActivity {
             Log.v("home","verify account pass");
             new UserLoginTask().execute();
 
-        } else {
+        }
+        else
+        {
             startActivity(ActivityRegister.class, null);
         }
     }

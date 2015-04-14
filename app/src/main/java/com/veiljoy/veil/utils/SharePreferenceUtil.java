@@ -145,6 +145,14 @@ public class SharePreferenceUtil {
         editor.putInt("status", status);
         editor.commit();
     }
+    public static void setRoom(String name) {
+        editor.putString("room_name", name);
+        editor.commit();
+    }
+    public static String getRoom() {
+        return sp.getString("room_name", "null");
+    }
+
 
 
 }

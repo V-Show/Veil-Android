@@ -33,7 +33,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center_horizontal"
             android:text="GENDER"
-            android:textColor="@android:color/black"
+            android:textColor="@color/separate_line"
             android:textSize="20sp" />
 
         <!-- 性别选择栏   布局 -->
@@ -95,7 +95,7 @@
             android:layout_marginTop="@dimen/gender_margin"
             android:gravity="center_horizontal"
             android:text="AVATAR"
-            android:textColor="@android:color/black"
+            android:textColor="@color/separate_line"
             android:textSize="20sp" />
 
         <LinearLayout

@@ -8,24 +8,34 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.bean.BaseInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
-import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.VoiceUtils;
+import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class ActivityChat extends BaseActivity implements View.OnLongClickListener {
+public class ActivityChat extends ActivityChatSupport implements View.OnLongClickListener {
 
 
     ChatAdapter mChatAdapter;
@@ -37,6 +47,23 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
     String avatarPath;
     private String currMsgType;
     private String mVoiceFileName = null;
+    MultiUserChat mMultiUserChat;
+
+    /*
+    * 自己的名字和密码
+    * */
+    private String mUserName;
+    private String mPassword;
+    /*
+    * 当前房间的名字
+    * */
+    private String mRoomName;
+
+    /*
+    * XMPP链接
+    *
+    * */
+    private XMPPConnection mXmppConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +75,15 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
         initEvents();
     }
 
+
+
     private void init() {
 
 
+        mUserName=SharePreferenceUtil.getName();
+        mPassword=SharePreferenceUtil.getPasswd();
+        mRoomName=SharePreferenceUtil.getRoom();
+        mXmppConnection= XmppConnectionManager.getInstance().getConnection();
 
         avatarPath = SharePreferenceUtil.getAvatar();
         application = (BaseApplication) getApplication();
@@ -62,7 +95,7 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
             IMMessage o = new IMMessage();
             o.setmUri(IMMessage.Scheme.IMAGE.wrap(""));
             Random r = new Random(System.currentTimeMillis());
-            o.setmMessageSource(Math.abs(r.nextInt() % 2));
+            o.setmMessageType(Math.abs(r.nextInt() % 2));
             o.setmAvatar(avatarPath);
             Log.v("activityChat", "avatar " + avatarPath);
             objs.add(o);
@@ -72,12 +105,19 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
 
 
+        mMultiUserChat=MUCHelper.joinMultiUserChat(mUserName,mPassword,mRoomName,mXmppConnection);
+
+
     }
 
     private void initEvents() {
         mBtnTalk.setOnLongClickListener(this);
         mBtnTalk.setOnTouchListener(new OnTalkBtnTouch());
         mLVChat.setOnItemClickListener(new OnChatListItemClick());
+        if(mMultiUserChat!=null){
+            mMultiUserChat.addMessageListener(new multiListener());
+        }
+
     }
 
     private void initViews() {
@@ -134,10 +174,44 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
             return false;
         }
     }
+    /**
+     * 會議室信息監聽事件
+     *
+     */
+    public class multiListener implements PacketListener {
+        @Override
+        public void processPacket(Packet packet) {
+            Message message = (Message) packet;
+            // 接收来自聊天室的聊天信息
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
+
+
+
+            MucHistory mh = new MucHistory();
+            mh.setUserAccount(account);
+            String from = StringUtils.parseResource(message.getFrom());
+            String fromRoomName = StringUtils.parseName(message.getFrom());
+            mh.setMhRoomName(fromRoomName);
+            mh.setFriendAccount(from);
+            mh.setMhInfo(message.getBody());
+            mh.setMhTime(time);
+            mh.setMhType("left");
+
+        }
+    }
     public void refreshList() {
         mChatAdapter.refreshList(objs);
         mLVChat.setSelection(objs.size());
+    }
+    @Override
+    protected void receiveNewMessage(IMMessage message) {
+
+    }
+
+    @Override
+    protected void refreshMessage(List<IMMessage> messages) {
+
     }
 
     public void makeMessage() {
@@ -149,7 +223,7 @@ public class ActivityChat extends BaseActivity implements View.OnLongClickListen
                 o = new IMMessageVoiceEntity();
                 o.setmUri(IMMessage.Scheme.VOICE.wrap(""));
                 Random r = new Random(System.currentTimeMillis());
-                o.setmMessageSource(Math.abs(r.nextInt() % 2));
+                o.setmMessageType(Math.abs(r.nextInt() % 2));
                 o.setmAvatar(avatarPath);
                 ((IMMessageVoiceEntity) o).setmVoiceTimeRange(Math.abs(r.nextInt() % 20));
                 ((IMMessageVoiceEntity) o).setmVoiceFileName(mVoiceFileName);

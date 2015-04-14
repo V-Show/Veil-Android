@@ -20,6 +20,7 @@ import org.jivesoftware.smack.packet.Registration;
 import org.jivesoftware.smack.packet.XMPPError;
 
 import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 /**
  * Created by zhongqihong on 15/4/11.
