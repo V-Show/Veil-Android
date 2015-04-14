@@ -2,7 +2,6 @@ package com.veiljoy.veil.im;
 
 import android.content.Context;
 
-import com.veiljoy.veil.imImpl.IMMessageImageBaseItem;
 import com.veiljoy.veil.imImpl.IMMessageItem;
 import com.veiljoy.veil.imImpl.IMMessageSimpleImageItem;
 import com.veiljoy.veil.imImpl.IMMessageVoiceItem;
@@ -52,7 +51,7 @@ public class IMMessageFactory {
         }
 
 
-        message.init(msg.getmMessageSource());
+        message.init(msg.getmMessageType());
 
 
         return message;

@@ -3,6 +3,9 @@ package com.veiljoy.veil.utils;
 import android.os.Environment;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by zhongqihong on 15/4/1.
@@ -27,6 +30,21 @@ public class Constants {
     public static final int LOGIN_ERROR_ACCOUNT_PASS = 3;// 账号或者密码错误
     public static final int SERVER_UNAVAILABLE = 4;// 无法连接到服务器
     public static final int LOGIN_ERROR = -1;// 连接失败
+
+
+    /**
+     * 服务器的配置
+     */
+    public static final String LOGIN_SET = "eim_login_set";// 登录设置
+    public static final String USERNAME = "username";// 账户
+    public static final String PASSWORD = "password";// 密码
+    public static final String XMPP_HOST = "xmpp_host";// 地址
+    public static final String XMPP_PORT = "xmpp_port";// 端口
+    public static final String XMPP_SEIVICE_NAME = "xmpp_service_name";// 服务名
+    public static final String IS_AUTOLOGIN = "isAutoLogin";// 是否自动登录
+    public static final String IS_NOVISIBLE = "isNovisible";// 是否隐身
+    public static final String IS_REMEMBER = "isRemember";// 是否记住账户密码
+    public static final String IS_FIRSTSTART = "isFirstStart";// 是否首次启动
 
 
     public static final String XMPP_HOST_IP = "115.28.231.161";
@@ -59,5 +77,17 @@ public class Constants {
     public static final String USER_USER_PROFILE_PATH_KEY = "USER_USER_PROFILE_PATH_KEY";
 
 
+    /**
+     * 用户默认密码
+     */
     public static final String USER_DEFAULT_PASSWORD = "ABCabc123";
+
+
+    /**
+     * 精确到毫秒
+     */
+    public static final String MS_FORMART = "yyyy-MM-dd HH:mm:ss SSS";
+
+
+
 }

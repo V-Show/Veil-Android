@@ -1,8 +1,6 @@
 package com.veiljoy.veil.imImpl;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,11 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.veiljoy.veil.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.activity.ActivityChat;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.memory.ImageCache;
+import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
 
 /**

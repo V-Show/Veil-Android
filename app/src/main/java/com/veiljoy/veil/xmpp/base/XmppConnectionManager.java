@@ -1,4 +1,4 @@
-package com.veiljoy.veil.imof;
+package com.veiljoy.veil.xmpp.base;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -27,8 +27,7 @@ import org.jivesoftware.smackx.provider.VCardProvider;
 import org.jivesoftware.smackx.provider.XHTMLExtensionProvider;
 import org.jivesoftware.smackx.search.UserSearch;
 
-import android.util.Log;
-
+import com.veiljoy.veil.imof.LoginConfig;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 
 import com.veiljoy.veil.utils.Constants;
@@ -91,9 +90,9 @@ public class XmppConnectionManager {
                 try {
                     if (!connection.isConnected())
                         connection.connect();
-//					String username = SharePreferenceUtil.getName();
-//					String password = SharePreferenceUtil.getPasswd();
-//					connection.login(username, password);
+					String username = SharePreferenceUtil.getName();
+					String password = SharePreferenceUtil.getPasswd();
+					connection.login(username, password);
                 } catch (Exception xee) {
                     xee.printStackTrace();
                 }
