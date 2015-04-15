@@ -30,7 +30,7 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
     public static final int RECV = 0;
     public static final int SEND = 1;
     public static final String KEY_TIME = "immessage.time";
-
+    public static final String IMMESSAGE_KEY = "immessage.key";
     @Override
     public int compareTo(IMMessage oth) {
         if (null == this.getmTime() || null == oth.getmTime()) {
@@ -106,7 +106,7 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
 
     public enum Scheme {
 
-        MAP("map"), FILE("file"), IMAGE("image"), VOICE("voice"), UNKNOWN("");
+        TEXT("text"),MAP("map"), FILE("file"), IMAGE("image"), VOICE("voice"), UNKNOWN("");
 
 
         private String scheme;

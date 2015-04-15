@@ -43,6 +43,8 @@ public class MUCHelper {
            return;
         }
         try {
+
+
             // 创建一个MultiUserChat
             MultiUserChat muc = new MultiUserChat(connection, roomName
                     + "@conference." + connection.getServiceName());
@@ -67,7 +69,7 @@ public class MUCHelper {
             owners.add(connection.getUser());// 用户JID
             submitForm.setAnswer("muc#roomconfig_roomowners", owners);
             // 设置聊天室是持久聊天室，即将要被保存下来
-            submitForm.setAnswer("muc#roomconfig_persistentroom", false);
+            submitForm.setAnswer("muc#roomconfig_persistentroom", true);
             // 房间仅对成员开放
             submitForm.setAnswer("muc#roomconfig_membersonly", false);
             // 允许占有者邀请其他人

@@ -1,5 +1,9 @@
 package com.veiljoy.veil.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,8 +19,11 @@ import com.veiljoy.veil.bean.BaseInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.imof.MUCHelper;
+import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.VoiceUtils;
+import com.veiljoy.veil.xmpp.base.MessageManager;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 import org.jivesoftware.smack.PacketListener;
@@ -28,6 +35,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -84,13 +92,10 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mPassword=SharePreferenceUtil.getPasswd();
         mRoomName=SharePreferenceUtil.getRoom();
         mXmppConnection= XmppConnectionManager.getInstance().getConnection();
-
         avatarPath = SharePreferenceUtil.getAvatar();
         application = (BaseApplication) getApplication();
 
         objs = new ArrayList<BaseInfo>();
-
-
         for (int i = 0; i < 2; i++) {
             IMMessage o = new IMMessage();
             o.setmUri(IMMessage.Scheme.IMAGE.wrap(""));
@@ -107,6 +112,14 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         mMultiUserChat=MUCHelper.joinMultiUserChat(mUserName,mPassword,mRoomName,mXmppConnection);
 
+
+    }
+
+    private void registerBroadcast(){
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.NEW_MESSAGE_ACTION);
+        registerReceiver(receiver, filter);
 
     }
 
@@ -132,6 +145,24 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mChatAdapter.notifyDataSetChanged();
     }
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Constants.NEW_MESSAGE_ACTION.equals(action)) {
+                IMMessage message = intent
+                        .getParcelableExtra(IMMessage.IMMESSAGE_KEY);
+
+                message.setmUri(IMMessage.Scheme.TEXT.wrap("test..."));
+                message.setmMessageType(IMMessage.RECV);
+                messagePool.add(message);
+                receiveNewMessage(message);
+                refreshMessage(messagePool);
+            }
+        }
+
+    };
 
     @Override
     public boolean onLongClick(View v) {
@@ -183,23 +214,27 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         public void processPacket(Packet packet) {
             Message message = (Message) packet;
             // 接收来自聊天室的聊天信息
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            if (message != null && message.getBody() != null
+                    && !message.getBody().equals("null")) {
 
+                String time = DateUtils.date2Str(Calendar.getInstance(),
+                        Constants.MS_FORMART);
+                String from = message.getFrom().split("/")[0];
+                IMMessage newMessage = new IMMessage();
+                newMessage.setmMessageType(IMMessage.RECV);
+                newMessage.setmFrom(from);
+                newMessage.setmContent(message.getBody());
+                newMessage.setmTime(time);
 
+                Intent intent = new Intent(Constants.NEW_MESSAGE_ACTION);
+                intent.putExtra(IMMessage.IMMESSAGE_KEY, newMessage);
+                sendBroadcast(intent);
 
-
-            MucHistory mh = new MucHistory();
-            mh.setUserAccount(account);
-            String from = StringUtils.parseResource(message.getFrom());
-            String fromRoomName = StringUtils.parseName(message.getFrom());
-            mh.setMhRoomName(fromRoomName);
-            mh.setFriendAccount(from);
-            mh.setMhInfo(message.getBody());
-            mh.setMhTime(time);
-            mh.setMhType("left");
-
+                Log.v("multi","you hava new msg: "+newMessage.getmContent()+" ,from:"+newMessage.getmFrom());
+            }
         }
     }
+
     public void refreshList() {
         mChatAdapter.refreshList(objs);
         mLVChat.setSelection(objs.size());
