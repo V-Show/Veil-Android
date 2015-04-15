@@ -18,7 +18,7 @@ public class BaseActivity extends Activity {
     /**
      * 含有Bundle通过Class跳转界面 *
      */
-    protected void startActivity(Class<?> cls, Bundle bundle) {
+    public void startActivity(Class<?> cls, Bundle bundle) {
         Intent intent = new Intent();
         intent.setClass(this, cls);
         if (bundle != null) {
@@ -31,7 +31,7 @@ public class BaseActivity extends Activity {
     /**
      * 显示自定义Toast提示(来自res) *
      */
-    protected void showCustomToast(int resId) {
+    public  void showCustomToast(int resId) {
         View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
                 R.layout.common_toast, null);
         ((TextView) toastRoot.findViewById(R.id.toast_text))

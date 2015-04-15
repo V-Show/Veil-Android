@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.im.IMMessage;
+import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
@@ -11,6 +12,7 @@ import com.veiljoy.veil.xmpp.base.MessageManager;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +25,7 @@ import java.util.List;
 public abstract class ActivityChatSupport extends BaseActivity {
 
 
-    protected Chat chat=null;
+    MultiUserChat mMultiUserChat;
     private static int pageSize = 10;
     protected  String to;
      protected List<IMMessage> messagePool;
@@ -32,16 +34,14 @@ public abstract class ActivityChatSupport extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMultiUserChat= AppStates.getMultiUserChat();
 
-        chat = XmppConnectionManager.getInstance().getConnection()
-                .getChatManager().createChat(to, null);
-
-        }
+    }
 
     @Override
     protected void onResume() {
 
-
+        super.onResume();
         // 第一次查询
         messagePool = MessageManager.getInstance(this)
                 .getMessageListByFrom(to, 1, pageSize);
@@ -61,13 +61,13 @@ public abstract class ActivityChatSupport extends BaseActivity {
         Message message = new Message();
         message.setProperty(IMMessage.KEY_TIME, time);
         message.setBody(messageContent);
-        chat.sendMessage(message);
+        mMultiUserChat.sendMessage(message);
 
 
 
         IMMessage newMessage = new IMMessage();
         newMessage.setmMessageType(IMMessage.SEND);
-        newMessage.setmFrom(chat.getParticipant());
+        newMessage.setmFrom(mMultiUserChat.getNickname());
         newMessage.setmContent(messageContent);
         newMessage.setmUri(scheme);
         newMessage.setmTime(time);

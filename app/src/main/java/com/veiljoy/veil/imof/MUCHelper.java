@@ -1,7 +1,12 @@
 package com.veiljoy.veil.imof;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.veiljoy.veil.utils.AppStates;
+import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.SharePreferenceUtil;
+import com.veiljoy.veil.utils.StringUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 import org.jivesoftware.smack.SmackConfiguration;
@@ -9,12 +14,17 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.FormField;
+import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
+import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhongqihong on 15/4/14.
@@ -100,14 +110,13 @@ public class MUCHelper {
 
     /**
      * 加入会议室
-     *
-     * @param user 昵称
-     * @param password 会议室密码
      * @param roomsName 会议室名
-     * @param connection
      */
-    public static MultiUserChat joinMultiUserChat(String user, String password, String roomsName,
-                                                  XMPPConnection connection) {
+    public static MultiUserChat joinMultiUserChat(
+            String roomsName) {
+
+        String user=SharePreferenceUtil.getName();
+        String password=SharePreferenceUtil.getPasswd();
         try {
             // 使用XMPPConnection创建一个MultiUserChat窗口
             MultiUserChat muc = new MultiUserChat(connection, roomsName
@@ -126,6 +135,111 @@ public class MUCHelper {
             return null;
         }
     }
+
+
+
+    public static void fetchHostRoom(List<List<Map<String, String>>> childs){
+
+        //        //服务器最上层的房间
+        List<Map<String, String>> groups = new ArrayList<Map<String, String>>(); // 一级目录组
+
+
+        Map<String, String> group;
+        try {
+
+            XMPPConnection connection ;
+
+            if(!AppStates.isAlreadyLogined()){
+                connection=login();
+            }
+            else
+            {
+                connection=XmppConnectionManager.getInstance()
+                        .getConnection();
+                if (!connection.isConnected())
+                    connection.connect();
+            }
+
+
+            ServiceDiscoveryManager discoManager = new ServiceDiscoveryManager(connection);
+
+            //第一次第二个参数为空，可以获取到系统最上层的房间，包括公共房间等,但是此时获取的房间是不能加入的
+            Collection<HostedRoom> ServiceCollection=MultiUserChat.getHostedRooms(connection, "");
+            //遍历讲上文获取到的房间的Jid传入第二个参数，从而获取子房间
+            //此时获取的房间便能加入
+            for (HostedRoom s : ServiceCollection) {
+                group = new HashMap<String, String>();
+                group.put("group", s.getName());
+                groups.add(group);
+                Log.v("chatimpl", "group name:" +s.getName()+" ,jid:"+s.getJid());
+
+                childs.add(GetRoomFromServers(s.getJid(),connection));
+            }
+
+        } catch (XMPPException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+    }
+    // 根据服务器获取房间列表
+    private static List<Map<String, String>> GetRoomFromServers(String jid,XMPPConnection connection) {
+
+        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+        Map<String, String> result;
+        try {
+
+            Collection<HostedRoom> ServiceCollection = MultiUserChat
+                    .getHostedRooms(connection, jid);
+
+            for (HostedRoom s : ServiceCollection) {
+                result = new HashMap<String, String>();
+                result.put(Constants.MAP_ROOM_NAME_KEY, s.getName());
+                result.put(Constants.MAP_ROOM_JID_KEY, s.getJid());
+                Log.v("chatimpl", "child name:"+s.getName()+" ,jid:"+s.getJid());
+                resultList.add(result);
+            }
+
+        } catch (XMPPException e) {
+
+            e.printStackTrace();
+        }
+        return resultList;
+    }
+
+
+    // 加入一个房间
+    public static MultiUserChat JoinRoom(String jid) {
+
+        if(StringUtils.empty(jid)){
+            jid= Constants.DEFAULT_ROOM_JID;
+        }
+
+        MultiUserChat curmultchat=null;
+        String user=null;
+        try {
+
+            XMPPConnection connection = XmppConnectionManager.getInstance()
+                    .getConnection();
+            if (!connection.isConnected())
+                connection.connect();
+
+
+            MultiUserChat multiUserChat = new MultiUserChat(connection, jid);
+            curmultchat = multiUserChat;
+
+            multiUserChat.join(SharePreferenceUtil.getName()); //user为你传入的用户名
+
+            //RegisterRoomMessageListener();
+        } catch (XMPPException e) {
+
+            e.printStackTrace();
+        }
+
+        return curmultchat;
+    }
+
     /**
     * 查询会议室成员名字
     * @param muc
@@ -141,5 +255,30 @@ public class MUCHelper {
         }
         return listUser;
     }
+
+
+    public static XMPPConnection login() {
+
+        try {
+            XMPPConnection connection = XmppConnectionManager.getInstance()
+                    .getConnection();
+            if (!connection.isConnected())
+                connection.connect();
+            String username = SharePreferenceUtil.getName();
+            String password = SharePreferenceUtil.getPasswd();
+            connection.login(username, password);
+
+            return connection;
+
+        } catch (XMPPException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+
+
+
+    }
+
 
 }

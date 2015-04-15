@@ -10,4 +10,5 @@ public interface IMChatBase {
     public void wrap();
 
     public void receive();
+
 }

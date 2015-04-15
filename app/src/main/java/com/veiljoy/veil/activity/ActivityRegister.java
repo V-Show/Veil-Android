@@ -20,6 +20,7 @@ import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMUserBase;
+import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.PhotoUtils;
@@ -240,12 +241,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             boolean rel = mUserRegister.onRegisterResult(code);
 
             if (rel) {
-
-                startActivity(ActivityChat.class, null);
-
+                new MUCJoinTask(null,ActivityRegister.this).execute("");
             }
-
-
         }
     }
 

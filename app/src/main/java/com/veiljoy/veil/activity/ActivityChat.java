@@ -19,6 +19,7 @@ import com.veiljoy.veil.bean.BaseInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.imof.MUCHelper;
+import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
@@ -55,7 +56,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     String avatarPath;
     private String currMsgType;
     private String mVoiceFileName = null;
-    MultiUserChat mMultiUserChat;
 
     /*
     * 自己的名字和密码
@@ -110,7 +110,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
 
 
-        mMultiUserChat=MUCHelper.joinMultiUserChat(mUserName,mPassword,mRoomName,mXmppConnection);
 
 
     }

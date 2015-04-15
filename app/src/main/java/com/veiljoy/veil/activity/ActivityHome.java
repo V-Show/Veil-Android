@@ -10,12 +10,15 @@ import com.veiljoy.veil.im.IMUserBase;
 import com.veiljoy.veil.imof.IMOFChatImpl;
 import com.veiljoy.veil.imof.LoginConfig;
 import com.veiljoy.veil.imof.MUCHelper;
+import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
+import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
  * Created by zhongqihong on 15/3/31.
@@ -32,45 +35,45 @@ public class ActivityHome extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final XMPPConnection connection=XmppConnectionManager.getInstance().getConnection();
-        MUCHelper.init(connection);
-
-
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (connection != null) {
-                    String username = SharePreferenceUtil.getName();
-                    String password = SharePreferenceUtil.getPasswd();
-                    try {
-                        Log.v("connection", "username " + username + " ,password " + password);
-                        if (!connection.isConnected())
-                            connection.connect();
-
-                        connection.login(username, password);
-                    } catch (Exception xee) {
-                        xee.printStackTrace();
-                        Log.v("connection", "login failed " + username + " ,password " + password);
-                    }
-
-                }
+//        final XMPPConnection connection=XmppConnectionManager.getInstance().getConnection();
+//        MUCHelper.init(connection);
+//
+//
+//
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (connection != null) {
+//                    String username = SharePreferenceUtil.getName();
+//                    String password = SharePreferenceUtil.getPasswd();
+//                    try {
+//                        Log.v("connection", "username " + username + " ,password " + password);
+//                        if (!connection.isConnected())
+//                            connection.connect();
+//
+//                        connection.login(username, password);
+//                    } catch (Exception xee) {
+//                        xee.printStackTrace();
+//                        Log.v("connection", "login failed " + username + " ,password " + password);
+//                    }
+//
+//                }
+////////
+////                MUCHelper.createRoom("veilGroup");
 //////
-//                MUCHelper.createRoom("veilGroup");
-////
-//                new IMOFChatImpl().testHostRoom();
-
-               IMOFChatImpl.JoinRoom("");
-
-
-            }
-        }).start();
+////                new IMOFChatImpl().testHostRoom();
+//
+//               IMOFChatImpl.JoinRoom("");
+//
+//
+//            }
+//        }).start();
 
 
-//        init();
-//        enter();
+        init();
+        enter();
     }
 
 
@@ -78,6 +81,10 @@ public class ActivityHome extends BaseActivity {
 
     public void init() {
         mUserLoginTask = new UserAccessManager(this);
+        final XMPPConnection connection=XmppConnectionManager.getInstance().getConnection();
+        MUCHelper.init(connection);
+
+
     }
 
     public void enter() {
@@ -168,10 +175,13 @@ public class ActivityHome extends BaseActivity {
                 startActivity(ActivityRegister.class, null);
                 finish();
             } else {
-                startActivity(ActivityChat.class, null);
-                finish();
+                AppStates.setAlreadyLogined(true);
+                new MUCJoinTask(null,ActivityHome.this).execute("");
+
             }
 
         }
     }
+
+
 }
