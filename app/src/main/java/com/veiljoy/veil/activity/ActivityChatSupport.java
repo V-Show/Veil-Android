@@ -1,17 +1,27 @@
 package com.veiljoy.veil.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.im.IMMessage;
+import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.utils.AppStates;
+import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.xmpp.base.MessageManager;
 
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.ArrayList;
@@ -24,6 +34,7 @@ import java.util.List;
  */
 public abstract class ActivityChatSupport extends BaseActivity {
 
+    final String TAG=this.getClass().getName();
 
     MultiUserChat mMultiUserChat;
     private static int pageSize = 10;
@@ -35,13 +46,8 @@ public abstract class ActivityChatSupport extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMultiUserChat= AppStates.getMultiUserChat();
+        mMultiUserChat.addMessageListener(new MUCPackageListener());
 
-    }
-
-    @Override
-    protected void onResume() {
-
-        super.onResume();
         // 第一次查询
         messagePool = MessageManager.getInstance(this)
                 .getMessageListByFrom(to, 1, pageSize);
@@ -50,39 +56,139 @@ public abstract class ActivityChatSupport extends BaseActivity {
         if (messagePool == null) {
             messagePool = new ArrayList<IMMessage>();
         }
+    }
+
+    private void registerBroadcast(){
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.NEW_MESSAGE_ACTION);
+        registerReceiver(receiver, filter);
+
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Constants.NEW_MESSAGE_ACTION.equals(action)) {
+
+                Log.v(TAG,"new msg notice...");
+
+                IMMessageVoiceEntity message = AppStates.getImMessageVoiceEntity();
+                //intent.getParcelableExtra(IMMessage.IMMESSAGE_KEY);
+                messagePool.add(message);
+                receiveNewMessage(message);
+                refreshMessage(messagePool);
+            }
+        }
+
+    };
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        registerBroadcast();
 
 
     }
 
-    protected void sendMessage(String messageContent,String scheme) throws Exception {
+    @Override
+    protected void onPause() {
+        unregisterReceiver(receiver);
+        super.onPause();
+    }
+
+    protected void sendMessage()  {
+
+        Log.v("ChatActivity","prepare to send message....");
 
         String time = DateUtils.date2Str(Calendar.getInstance(),
                 Constants.MS_FORMART);
+        IMMessage newMessage=makeMessage();
         Message message = new Message();
         message.setProperty(IMMessage.KEY_TIME, time);
-        message.setBody(messageContent);
-        mMultiUserChat.sendMessage(message);
+        message.setBody(newMessage.getmContent());
+
+        try{
+
+            Log.v("ChatActivity","start  sending....");
+            mMultiUserChat.sendMessage("xxxxxxx");
+            Log.v("ChatActivity","start  sent success!");
+        }
+        catch (XMPPException e){
+            Log.v("ChatActivity",e.getMessage());
+        }
 
 
 
-        IMMessage newMessage = new IMMessage();
+
+
         newMessage.setmMessageType(IMMessage.SEND);
         newMessage.setmFrom(mMultiUserChat.getNickname());
-        newMessage.setmContent(messageContent);
-        newMessage.setmUri(scheme);
         newMessage.setmTime(time);
         messagePool.add(newMessage);
-        MessageManager.getInstance(this).saveIMMessage(newMessage);
+        //MessageManager.getInstance(this).saveIMMessage(newMessage);
         // MChatManager.message_pool.add(newMessage);
 
         // 刷新视图
         refreshMessage(messagePool);
 
     }
+    /**
+     */
+    public class  MUCPackageListener implements PacketListener {
+        @Override
+        public void processPacket(Packet packet) {
+
+
+            Message message = (Message) packet;
+
+            Log.v(TAG,"receive a message: "+message.getBody());
+
+            // 接收来自聊天室的聊天信息
+            if (message != null && message.getBody() != null
+                    && !message.getBody().equals("null")) {
+
+                String from = message.getFrom().split("/")[1];
+                if(SharePreferenceUtil.getName().equals(from)){
+                    Log.v("multi","message sent by myself.."
+                    );
+
+                    return ;
+                }
+
+
+                String time = DateUtils.date2Str(Calendar.getInstance(),
+                        Constants.MS_FORMART);
+
+
+                IMMessageVoiceEntity newMessage = new IMMessageVoiceEntity();
+                newMessage.setmMessageType(IMMessage.RECV);
+                newMessage.setmFrom(from);
+                newMessage.setmContent(message.getBody());
+                newMessage.setmTime(time);
+                newMessage.setmUri(IMMessage.Scheme.VOICE.wrap(""));
+                newMessage.setmAvatar(SharePreferenceUtil.getAvatar());
+                AppStates.setImMessageVoiceEntity(newMessage);
+
+
+                Intent intent = new Intent(Constants.NEW_MESSAGE_ACTION);
+                intent.putExtra(IMMessage.IMMESSAGE_KEY, newMessage);
+                sendBroadcast(intent);
+
+                Log.v("multi","you hava new msg: "+newMessage.getmContent()+" ,from:"+message.getFrom()
+                );
+            }
+        }
+    }
 
     protected abstract void receiveNewMessage(IMMessage message);
 
     protected abstract void refreshMessage(List<IMMessage> messages);
+
+    protected abstract IMMessage makeMessage();
 
     protected List<IMMessage> getMessages() {
         return messagePool;

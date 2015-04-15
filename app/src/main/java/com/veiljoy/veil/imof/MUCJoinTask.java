@@ -23,7 +23,8 @@ import static java.util.Map.*;
  * Created by zhongqihong on 15/4/15.
  */
 public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
-
+    String roomName = null;
+    String roomJid = null;
     OnJoinMUCListener mOnJoinMUCListener;
     BaseActivity mActivity;
     final String TAG = this.getClass().toString();
@@ -41,15 +42,14 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
     @Override
     protected void onPreExecute() {
 
-
+        mActivity.showCustomToast("请求服务器房间号...");
     }
 
     @Override
     protected MultiUserChat doInBackground(String... params) {
         Log.v(TAG, "home,start join...");
         boolean flag = false;
-        String roomName = null;
-        String roomJid = null;
+
         List<List<Map<String, String>>> childs = new ArrayList<List<Map<String, String>>>();
         MUCHelper.fetchHostRoom(childs);
         for (int i = 0; i < childs.size(); i++) {
@@ -90,9 +90,13 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
             mOnJoinMUCListener.onResult(muc);
         else {
             if (muc != null) {
+                mActivity.showCustomToast("获得房间成功，号码："+roomJid);
                 AppStates.setMultiUserChat(muc);
                 mActivity.startActivity(ActivityChat.class, null);
                 mActivity.finish();
+            }
+            else{
+                mActivity.showCustomToast("获得房间异常");
             }
         }
 

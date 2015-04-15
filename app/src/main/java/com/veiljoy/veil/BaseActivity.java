@@ -46,7 +46,7 @@ public class BaseActivity extends Activity {
     /**
      * 显示自定义Toast提示(来自String) *
      */
-    protected void showCustomToast(String text) {
+    public void showCustomToast(String text) {
         View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
                 R.layout.common_toast, null);
         ((TextView) toastRoot.findViewById(R.id.toast_text)).setText(text);

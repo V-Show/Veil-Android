@@ -36,7 +36,7 @@ public class ChatAdapter extends BaseObjectListAdapter {
         return view;
     }
 
-    public void refreshList(List<BaseInfo> items) {
+    public void refreshList(List<IMMessage> items) {
         this.mDatas = items;
         this.notifyDataSetChanged();
     }

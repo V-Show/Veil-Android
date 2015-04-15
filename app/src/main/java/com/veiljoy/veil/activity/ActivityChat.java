@@ -48,7 +48,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
 
     ChatAdapter mChatAdapter;
-    ArrayList<BaseInfo> objs = null;
+
     BaseApplication application;
     ListView mLVChat;
     Button mBtnTalk;
@@ -95,16 +95,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         avatarPath = SharePreferenceUtil.getAvatar();
         application = (BaseApplication) getApplication();
 
-        objs = new ArrayList<BaseInfo>();
-        for (int i = 0; i < 2; i++) {
-            IMMessage o = new IMMessage();
-            o.setmUri(IMMessage.Scheme.IMAGE.wrap(""));
-            Random r = new Random(System.currentTimeMillis());
-            o.setmMessageType(Math.abs(r.nextInt() % 2));
-            o.setmAvatar(avatarPath);
-            Log.v("activityChat", "avatar " + avatarPath);
-            objs.add(o);
-        }
 
 
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
@@ -114,26 +104,17 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
     }
 
-    private void registerBroadcast(){
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.NEW_MESSAGE_ACTION);
-        registerReceiver(receiver, filter);
-
-    }
 
     private void initEvents() {
         mBtnTalk.setOnLongClickListener(this);
         mBtnTalk.setOnTouchListener(new OnTalkBtnTouch());
         mLVChat.setOnItemClickListener(new OnChatListItemClick());
-        if(mMultiUserChat!=null){
-            mMultiUserChat.addMessageListener(new multiListener());
-        }
 
     }
 
     private void initViews() {
-        mChatAdapter = new ChatAdapter(application, this, objs);
+        mChatAdapter = new ChatAdapter(application, this, getMessages());
         mBtnTalk = (Button) this.findViewById(R.id.activity_chat_btn_talk);
         mLVChat = (ListView) this.findViewById(R.id.activity_chat_list);
         mLVChat.setAdapter(mChatAdapter);
@@ -144,24 +125,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mChatAdapter.notifyDataSetChanged();
     }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (Constants.NEW_MESSAGE_ACTION.equals(action)) {
-                IMMessage message = intent
-                        .getParcelableExtra(IMMessage.IMMESSAGE_KEY);
-
-                message.setmUri(IMMessage.Scheme.TEXT.wrap("test..."));
-                message.setmMessageType(IMMessage.RECV);
-                messagePool.add(message);
-                receiveNewMessage(message);
-                refreshMessage(messagePool);
-            }
-        }
-
-    };
 
     @Override
     public boolean onLongClick(View v) {
@@ -193,7 +157,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                         Log.v("chatActivity", "stop record");
                         isTalking = false;
                         VoiceUtils.getmInstance().stop();
-                        refreshList();
+                        sendMessage();
                     }
                     break;
                 }
@@ -204,40 +168,10 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
             return false;
         }
     }
-    /**
-     * 會議室信息監聽事件
-     *
-     */
-    public class multiListener implements PacketListener {
-        @Override
-        public void processPacket(Packet packet) {
-            Message message = (Message) packet;
-            // 接收来自聊天室的聊天信息
-            if (message != null && message.getBody() != null
-                    && !message.getBody().equals("null")) {
 
-                String time = DateUtils.date2Str(Calendar.getInstance(),
-                        Constants.MS_FORMART);
-                String from = message.getFrom().split("/")[0];
-                IMMessage newMessage = new IMMessage();
-                newMessage.setmMessageType(IMMessage.RECV);
-                newMessage.setmFrom(from);
-                newMessage.setmContent(message.getBody());
-                newMessage.setmTime(time);
 
-                Intent intent = new Intent(Constants.NEW_MESSAGE_ACTION);
-                intent.putExtra(IMMessage.IMMESSAGE_KEY, newMessage);
-                sendBroadcast(intent);
 
-                Log.v("multi","you hava new msg: "+newMessage.getmContent()+" ,from:"+newMessage.getmFrom());
-            }
-        }
-    }
 
-    public void refreshList() {
-        mChatAdapter.refreshList(objs);
-        mLVChat.setSelection(objs.size());
-    }
     @Override
     protected void receiveNewMessage(IMMessage message) {
 
@@ -245,12 +179,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
     @Override
     protected void refreshMessage(List<IMMessage> messages) {
-
+        mChatAdapter.refreshList(messagePool);
+        mLVChat.setSelection(messagePool.size());
     }
 
-    public void makeMessage() {
+    public IMMessage makeMessage() {
 
-        IMMessage o = null;
+        IMMessage o=null;
         IMMessage.Scheme type = IMMessage.Scheme.ofUri(currMsgType);
         switch (type) {
             case VOICE:
@@ -265,11 +200,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                 break;
         }
 
-        if (o != null)
-            objs.add(o);
-        refreshList();
+        return o;
+
     }
 
+    /*
+    * 发送语音消息
+    * */
 
     class OnVoiceRecordListenerImpl implements VoiceUtils.OnVoiceRecordListener {
 
@@ -285,7 +222,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
             Log.v("chatActivity", "onResult " + fileName);
             if (fileName != null) {
                 mVoiceFileName = fileName;
-                makeMessage();
+
             }
 
         }
@@ -296,6 +233,10 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         }
     }
+    /*
+    * 播放指定的语音项
+    *
+    * */
 
     class OnChatListItemClick implements ListView.OnItemClickListener {
 
@@ -303,7 +244,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-            IMMessage msg = (IMMessage) objs.get(position);
+            IMMessage msg = (IMMessage) getMessages().get(position);
 
             String uri = msg.getmUri();
 

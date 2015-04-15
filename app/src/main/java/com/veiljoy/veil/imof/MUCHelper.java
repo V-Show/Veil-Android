@@ -229,7 +229,13 @@ public class MUCHelper {
             MultiUserChat multiUserChat = new MultiUserChat(connection, jid);
             curmultchat = multiUserChat;
 
-            multiUserChat.join(SharePreferenceUtil.getName()); //user为你传入的用户名
+
+            // 聊天室服务将会决定要接受的历史记录数量
+            DiscussionHistory history = new DiscussionHistory();
+            history.setMaxStanzas(0);
+
+            multiUserChat.join(SharePreferenceUtil.getName(),SharePreferenceUtil.getPasswd(),
+                    history, SmackConfiguration.getPacketReplyTimeout()); //user为你传入的用户名
 
             //RegisterRoomMessageListener();
         } catch (XMPPException e) {

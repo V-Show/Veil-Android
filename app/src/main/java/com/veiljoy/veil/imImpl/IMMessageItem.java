@@ -124,7 +124,7 @@ public abstract class IMMessageItem {
         if (mMsg.getmDistance() != null) {
             mTVTimeStampDistance.setText(mMsg.getmDistance());
         } else {
-            mTVTimeStampDistance.setText("900 m");
+            mTVTimeStampDistance.setText(mMsg.getmTime());
         }
     }
 

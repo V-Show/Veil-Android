@@ -190,7 +190,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
 
-            Toast.makeText(ActivityRegister.this, "signing up...", Toast.LENGTH_LONG);
+            showCustomToast("正在注册...，账号："+SharePreferenceUtil.getName());
 
             mUserRegister.onPreRegister();
 
@@ -241,8 +241,10 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             boolean rel = mUserRegister.onRegisterResult(code);
 
             if (rel) {
+                showCustomToast("注册成功，账号："+SharePreferenceUtil.getName());
                 new MUCJoinTask(null,ActivityRegister.this).execute("");
             }
+
         }
     }
 

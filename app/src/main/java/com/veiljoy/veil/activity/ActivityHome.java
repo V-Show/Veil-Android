@@ -130,6 +130,8 @@ public class ActivityHome extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
+
+            showCustomToast("正在登录...");
             mUserLoginTask.preLogin();
 
         }

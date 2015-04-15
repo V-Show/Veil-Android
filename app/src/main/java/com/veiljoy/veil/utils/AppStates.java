@@ -1,5 +1,7 @@
 package com.veiljoy.veil.utils;
 
+import com.veiljoy.veil.im.IMMessageVoiceEntity;
+
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
@@ -10,6 +12,16 @@ public class AppStates {
     public static MultiUserChat multiUserChat;
 
     public static boolean alreadyLogined=false;
+
+    public static IMMessageVoiceEntity imMessageVoiceEntity;
+
+    public static IMMessageVoiceEntity getImMessageVoiceEntity() {
+        return imMessageVoiceEntity;
+    }
+
+    public static void setImMessageVoiceEntity(IMMessageVoiceEntity imMessageVoiceEntity) {
+        AppStates.imMessageVoiceEntity = imMessageVoiceEntity;
+    }
 
     public static boolean isAlreadyLogined() {
         return alreadyLogined;
