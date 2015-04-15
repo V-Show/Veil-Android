@@ -15,6 +15,8 @@ import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
+import org.jivesoftware.smack.XMPPConnection;
+
 /**
  * Created by zhongqihong on 15/3/31.
  */
@@ -24,18 +26,54 @@ public class ActivityHome extends BaseActivity {
     IMUserBase.OnUserLogin mUserLoginTask;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MUCHelper.init(XmppConnectionManager.getInstance().getConnection());
-        MUCHelper.createRoom("veilGroup");
+        final XMPPConnection connection=XmppConnectionManager.getInstance().getConnection();
+        MUCHelper.init(connection);
 
-        new IMOFChatImpl().testHostRoom();
+
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if (connection != null) {
+                    String username = SharePreferenceUtil.getName();
+                    String password = SharePreferenceUtil.getPasswd();
+                    try {
+                        Log.v("connection", "username " + username + " ,password " + password);
+                        if (!connection.isConnected())
+                            connection.connect();
+
+                        connection.login(username, password);
+                    } catch (Exception xee) {
+                        xee.printStackTrace();
+                        Log.v("connection", "login failed " + username + " ,password " + password);
+                    }
+
+                }
+//////
+//                MUCHelper.createRoom("veilGroup");
+////
+//                new IMOFChatImpl().testHostRoom();
+
+               IMOFChatImpl.JoinRoom("");
+
+
+            }
+        }).start();
+
 
 //        init();
 //        enter();
     }
+
+
 
 
     public void init() {
@@ -47,12 +85,10 @@ public class ActivityHome extends BaseActivity {
 
         if (verifyAccount()) {
 
-            Log.v("home","verify account pass");
+            Log.v("home", "verify account pass");
             new UserLoginTask().execute();
 
-        }
-        else
-        {
+        } else {
             startActivity(ActivityRegister.class, null);
         }
     }
@@ -65,13 +101,13 @@ public class ActivityHome extends BaseActivity {
             return false;
         }
         //头像检测
-        if(SharePreferenceUtil.getAvatar()==null){
+        if (SharePreferenceUtil.getAvatar() == null) {
 
             return false;
         }
 
         //检测性别
-        if(SharePreferenceUtil.getGender()==-1){
+        if (SharePreferenceUtil.getGender() == -1) {
 
             return false;
         }
@@ -124,16 +160,15 @@ public class ActivityHome extends BaseActivity {
                     break;
             }
 
-            boolean rel= mUserLoginTask.onLoginResult(code);
-            Log.v("home","home rel "+rel);
+            boolean rel = mUserLoginTask.onLoginResult(code);
+            Log.v("home", "home rel " + rel);
 
-            if(!rel){
+            if (!rel) {
 
-                startActivity(ActivityRegister.class,null);
+                startActivity(ActivityRegister.class, null);
                 finish();
-            }
-            else{
-                startActivity(ActivityChat.class,null);
+            } else {
+                startActivity(ActivityChat.class, null);
                 finish();
             }
 

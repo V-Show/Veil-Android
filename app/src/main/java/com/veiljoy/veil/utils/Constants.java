@@ -90,4 +90,25 @@ public class Constants {
 
 
 
+    /**
+     * 收到好友邀请请求
+     */
+    public static final String ROSTER_SUBSCRIPTION = "roster.subscribe";
+    public static final String ROSTER_SUB_FROM = "roster.subscribe.from";
+    public static final String NOTICE_ID = "notice.id";
+
+    public static final String NEW_MESSAGE_ACTION = "roster.newmessage";
+
+    /**
+     * 我的消息
+     */
+    public static final String MY_NEWS = "my.news";
+    public static final String MY_NEWS_DATE = "my.news.date";
+
+    /*
+    * 默认房间jid
+    * */
+
+
+    public static final String DEFAULT_ROOM_JID="veilgroup@conference.veil";
 }

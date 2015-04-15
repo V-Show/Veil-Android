@@ -1,5 +1,7 @@
 package com.veiljoy.veil.xmpp.base;
 
+import android.util.Log;
+
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.Roster;
@@ -73,6 +75,7 @@ public class XmppConnectionManager {
         try {
             connection.connect();
         } catch (Exception e) {
+            Log.v("xmpp","connect "+e.getMessage());
             e.printStackTrace();
         }
         return connection;
@@ -85,20 +88,23 @@ public class XmppConnectionManager {
 
         if (connection == null) {
             init(getLoginConfig());
-
-            if (connection != null) {
-                try {
-                    if (!connection.isConnected())
-                        connection.connect();
-					String username = SharePreferenceUtil.getName();
-					String password = SharePreferenceUtil.getPasswd();
-					connection.login(username, password);
-                } catch (Exception xee) {
-                    xee.printStackTrace();
-                }
-
-            }
+            Log.v("xmpp","connection "+connection==null?"=null":"!=null");
+//            if (connection != null) {
+//                String username = SharePreferenceUtil.getName();
+//                String password = SharePreferenceUtil.getPasswd();
+//                try {
+//                    Log.v("connection","username "+username+" ,password "+password);
+//                    if (!connection.isConnected())
+//                        connection.connect();
 //
+//                    connection.login(username, password);
+//                } catch (Exception xee) {
+//                    xee.printStackTrace();
+//                    Log.v("connection","login failed "+username+" ,password "+password);
+//                }
+//
+//            }
+////
 
 
         }

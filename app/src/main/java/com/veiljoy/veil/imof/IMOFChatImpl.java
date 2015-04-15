@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.veiljoy.veil.im.IMChatBase;
 import com.veiljoy.veil.im.IMMessage;
+import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
+import com.veiljoy.veil.utils.StringUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 import org.jivesoftware.smack.XMPPConnection;
@@ -79,6 +81,8 @@ public class IMOFChatImpl implements IMChatBase {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+
     }
     // 根据服务器获取房间列表
     private static List<Map<String, String>> GetRoomFromServers(String jid,XMPPConnection connection) {
@@ -106,8 +110,14 @@ public class IMOFChatImpl implements IMChatBase {
         return resultList;
     }
 
+
+
     // 加入一个房间
-    public static void JoinRoom(String jid) {
+    public static MultiUserChat JoinRoom(String jid) {
+
+        if(StringUtils.empty(jid)){
+            jid= Constants.DEFAULT_ROOM_JID;
+        }
 
         MultiUserChat curmultchat=null;
         String user=null;
@@ -115,20 +125,25 @@ public class IMOFChatImpl implements IMChatBase {
 
             XMPPConnection connection = XmppConnectionManager.getInstance()
                     .getConnection();
-            Log.v("chatimpl", "connection " + connection == null ? "null" : "!=null");
             if (!connection.isConnected())
                 connection.connect();
+
+//            String username = SharePreferenceUtil.getName();
+//            String password = SharePreferenceUtil.getPasswd();
+//            connection.login(username, password);
 
             MultiUserChat multiUserChat = new MultiUserChat(connection, jid);
             curmultchat = multiUserChat;
 
-            multiUserChat.join(user); //user为你传入的用户名
+            multiUserChat.join(SharePreferenceUtil.getName()); //user为你传入的用户名
 
             //RegisterRoomMessageListener();
         } catch (XMPPException e) {
 
             e.printStackTrace();
         }
+
+        return curmultchat;
     }
 
 
