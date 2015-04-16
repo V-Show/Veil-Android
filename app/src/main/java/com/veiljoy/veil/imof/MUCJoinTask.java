@@ -42,7 +42,7 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
     @Override
     protected void onPreExecute() {
 
-        mActivity.showCustomToast("请求服务器房间号...");
+      //  mActivity.showCustomToast("请求服务器房间号...");
     }
 
     @Override
@@ -90,7 +90,7 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
             mOnJoinMUCListener.onResult(muc);
         else {
             if (muc != null) {
-                mActivity.showCustomToast("获得房间成功，号码："+roomJid);
+               // mActivity.showCustomToast("获得房间成功，号码："+roomJid);
                 AppStates.setMultiUserChat(muc);
                 mActivity.startActivity(ActivityChat.class, null);
                 mActivity.finish();

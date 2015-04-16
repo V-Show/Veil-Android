@@ -118,13 +118,13 @@ public abstract class IMMessageItem {
     protected void fillTimeStamp() {
         mLayoutTimeStampContainer.setVisibility(View.VISIBLE);
         if (mMsg.getmLTime() != 0) {
-            mTVTimeStampTime.setText(DateUtils.formatDate(mContext,
-                    mMsg.getmLTime()));
+            mTVTimeStampTime.setText(
+                    mMsg.getmTime());
         }
         if (mMsg.getmDistance() != null) {
             mTVTimeStampDistance.setText(mMsg.getmDistance());
         } else {
-            mTVTimeStampDistance.setText(mMsg.getmTime());
+            mTVTimeStampDistance.setText("200m");
         }
     }
 

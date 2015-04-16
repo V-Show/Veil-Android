@@ -89,24 +89,6 @@ public class XmppConnectionManager {
         if (connection == null) {
             init(getLoginConfig());
             Log.v("xmpp","connection "+connection==null?"=null":"!=null");
-//            if (connection != null) {
-//                String username = SharePreferenceUtil.getName();
-//                String password = SharePreferenceUtil.getPasswd();
-//                try {
-//                    Log.v("connection","username "+username+" ,password "+password);
-//                    if (!connection.isConnected())
-//                        connection.connect();
-//
-//                    connection.login(username, password);
-//                } catch (Exception xee) {
-//                    xee.printStackTrace();
-//                    Log.v("connection","login failed "+username+" ,password "+password);
-//                }
-//
-//            }
-////
-
-
         }
         return connection;
     }

@@ -3,6 +3,9 @@ package com.veiljoy.veil.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.R;
@@ -12,6 +15,7 @@ import com.veiljoy.veil.imof.LoginConfig;
 import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
+import com.veiljoy.veil.init.InitializationTask;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
@@ -27,59 +31,27 @@ public class ActivityHome extends BaseActivity {
 
 
     IMUserBase.OnUserLogin mUserLoginTask;
+    ImageView ivLoadingLeft;
+    ImageView ivLoadingRight;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_welcome);
 
-//        final XMPPConnection connection=XmppConnectionManager.getInstance().getConnection();
-//        MUCHelper.init(connection);
-//
-//
-//
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                if (connection != null) {
-//                    String username = SharePreferenceUtil.getName();
-//                    String password = SharePreferenceUtil.getPasswd();
-//                    try {
-//                        Log.v("connection", "username " + username + " ,password " + password);
-//                        if (!connection.isConnected())
-//                            connection.connect();
-//
-//                        connection.login(username, password);
-//                    } catch (Exception xee) {
-//                        xee.printStackTrace();
-//                        Log.v("connection", "login failed " + username + " ,password " + password);
-//                    }
-//
-//                }
-////////
-////                MUCHelper.createRoom("veilGroup");
-//////
-////                new IMOFChatImpl().testHostRoom();
-//
-//               IMOFChatImpl.JoinRoom("");
-//
-//
-//            }
-//        }).start();
-
-
+        initViews();
+        showWelcomeAnimation();
         init();
-        enter();
+
     }
 
 
     public void init() {
-        mUserLoginTask = new UserAccessManager(this);
-        final XMPPConnection connection = XmppConnectionManager.getInstance().getConnection();
-        MUCHelper.init(connection);
 
+
+
+        new InitializationTask(new OnInitListener()).execute();
 
     }
 
@@ -127,7 +99,7 @@ public class ActivityHome extends BaseActivity {
         @Override
         protected void onPreExecute() {
 
-            showCustomToast("正在登录...");
+            //showCustomToast("正在登录...");
             mUserLoginTask.preLogin();
 
         }
@@ -152,16 +124,16 @@ public class ActivityHome extends BaseActivity {
             switch (code) {
 
                 case Constants.LOGIN_SUCCESS: // 登录成功
-                    showCustomToast(R.string.login_success);
+                    //showCustomToast(R.string.login_success);
                     break;
                 case Constants.LOGIN_ERROR_ACCOUNT_PASS:// 账户或者密码错误
-                    showCustomToast(R.string.message_invalid_username_password);
+                    //showCustomToast(R.string.message_invalid_username_password);
                     break;
                 case Constants.SERVER_UNAVAILABLE:// 服务器连接失败
-                    showCustomToast(R.string.message_server_unavailable);
+                    //showCustomToast(R.string.message_server_unavailable);
                     break;
                 case Constants.LOGIN_ERROR:// 未知异常
-                    showCustomToast(R.string.unrecoverable_error);
+                    //showCustomToast(R.string.unrecoverable_error);
                     break;
             }
 
@@ -181,5 +153,31 @@ public class ActivityHome extends BaseActivity {
         }
     }
 
+    private  void initViews(){
+        ivLoadingLeft =(ImageView)this.findViewById(R.id.activity_welcome_iv_loading_left);
+        ivLoadingRight =(ImageView)this.findViewById(R.id.activity_welcome_iv_loading_right);
+    }
+    private void showWelcomeAnimation()
+    {
+        Animation animationLeft = AnimationUtils.loadAnimation(ActivityHome.this, R.anim.common_loading_zoom_left);
+
+        ivLoadingLeft.startAnimation(animationLeft);
+
+        Animation animationRight = AnimationUtils.loadAnimation(ActivityHome.this, R.anim.common_loading_zoom_right);
+
+        ivLoadingRight.startAnimation(animationRight);
+    }
+
+   class OnInitListener implements InitializationTask.InitializationListener {
+
+
+       @Override
+       public void onResult(int code) {
+           if(code!=-1){
+               mUserLoginTask = new UserAccessManager(ActivityHome.this);
+               enter();
+           }
+       }
+   }
 
 }

@@ -20,6 +20,7 @@
         </activity>
 
         <activity android:name=".activity.ActivityChat" />
+        <activity android:name=".activity.ActivityWelcome" />
         <activity android:name=".activity.ActivityRegister"
             android:windowSoftInputMode="adjustPan"
             />
