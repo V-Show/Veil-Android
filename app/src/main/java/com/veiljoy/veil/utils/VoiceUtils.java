@@ -25,15 +25,15 @@ import java.io.OutputStream;
  */
 public class VoiceUtils {
 
-    private String mAudioDir;
+
     private boolean isRecording = false;
-    private String mDefFileName;
+    public static String mDefFileName;
     public static VoiceUtils mInstance = null;
     private OnVoiceRecordListener mOnVoiceRecordListener;
     private AudioRecord audioRecord;
-
+    public static final String suffix=".pcm";
     private VoiceUtils() {
-        mAudioDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+
         mDefFileName = "reverseme.pcm";
 
 
@@ -52,7 +52,7 @@ public class VoiceUtils {
         return mInstance;
     }
 
-    private String generateFileName() {
+    public static String generateFileName() {
         mDefFileName = StringUtils.getSequenceId() + ".pcm";
         return mDefFileName;
     }
@@ -62,7 +62,7 @@ public class VoiceUtils {
 
         Log.v("chatActivity", "recordUtil paly");
         if (fileName == null || fileName.equals(" ")) {
-            fileName = mAudioDir + mDefFileName;
+            fileName = Constants.VOICE_AUDIR + mDefFileName;
         }
         Log.v("chatActivity", "play" + fileName);
 
@@ -124,7 +124,7 @@ public class VoiceUtils {
             fileName = generateFileName();
         }
 
-        String fullName = mAudioDir + fileName;
+        String fullName = Constants.VOICE_AUDIR + fileName;
 
         int frequency = 11025;
         int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;

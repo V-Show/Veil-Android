@@ -90,6 +90,7 @@
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="asmack-android-6-0.8.1.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="sun.misc.BASE64Decoder" level="project" />
   </component>
 </module>
 

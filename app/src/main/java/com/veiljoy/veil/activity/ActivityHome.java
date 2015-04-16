@@ -29,8 +29,6 @@ public class ActivityHome extends BaseActivity {
     IMUserBase.OnUserLogin mUserLoginTask;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +75,9 @@ public class ActivityHome extends BaseActivity {
     }
 
 
-
-
     public void init() {
         mUserLoginTask = new UserAccessManager(this);
-        final XMPPConnection connection=XmppConnectionManager.getInstance().getConnection();
+        final XMPPConnection connection = XmppConnectionManager.getInstance().getConnection();
         MUCHelper.init(connection);
 
 
@@ -178,7 +174,7 @@ public class ActivityHome extends BaseActivity {
                 finish();
             } else {
                 AppStates.setAlreadyLogined(true);
-                new MUCJoinTask(null,ActivityHome.this).execute("");
+                new MUCJoinTask(null, ActivityHome.this).execute("");
 
             }
 

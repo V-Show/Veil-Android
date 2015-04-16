@@ -116,4 +116,11 @@ public class Constants {
 
     public static final String MAP_ROOM_NAME_KEY="roomName";
     public static final String MAP_ROOM_JID_KEY="roomJid";
- }
+
+    /*
+    * 语音路径
+    * */
+
+    public final static String VOICE_AUDIR= Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+
+}

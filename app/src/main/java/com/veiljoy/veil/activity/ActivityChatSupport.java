@@ -11,7 +11,9 @@ import com.veiljoy.veil.BaseActivity;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.utils.AppStates;
+import com.veiljoy.veil.utils.CommonUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
+import com.veiljoy.veil.utils.VoiceUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
@@ -34,18 +36,18 @@ import java.util.List;
  */
 public abstract class ActivityChatSupport extends BaseActivity {
 
-    final String TAG=this.getClass().getName();
+    final String TAG = this.getClass().getName();
 
     MultiUserChat mMultiUserChat;
     private static int pageSize = 10;
-    protected  String to;
-     protected List<IMMessage> messagePool;
+    protected String to;
+    protected List<IMMessage> messagePool;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMultiUserChat= AppStates.getMultiUserChat();
+        mMultiUserChat = AppStates.getMultiUserChat();
         mMultiUserChat.addMessageListener(new MUCPackageListener());
 
         // 第一次查询
@@ -58,7 +60,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
         }
     }
 
-    private void registerBroadcast(){
+    private void registerBroadcast() {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.NEW_MESSAGE_ACTION);
@@ -73,7 +75,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
             String action = intent.getAction();
             if (Constants.NEW_MESSAGE_ACTION.equals(action)) {
 
-                Log.v(TAG,"new msg notice...");
+                Log.v(TAG, "new msg notice...");
 
                 IMMessageVoiceEntity message = AppStates.getImMessageVoiceEntity();
                 //intent.getParcelableExtra(IMMessage.IMMESSAGE_KEY);
@@ -100,29 +102,25 @@ public abstract class ActivityChatSupport extends BaseActivity {
         super.onPause();
     }
 
-    protected void sendMessage()  {
+    protected void sendMessage(String content) {
 
-        Log.v("ChatActivity","prepare to send message....");
+        Log.v("ChatActivity", "prepare to send message....");
 
         String time = DateUtils.date2Str(Calendar.getInstance(),
                 Constants.MS_FORMART);
-        IMMessage newMessage=makeMessage();
+        IMMessage newMessage = makeMessage();
         Message message = new Message();
         message.setProperty(IMMessage.KEY_TIME, time);
         message.setBody(newMessage.getmContent());
 
-        try{
+        try {
 
-            Log.v("ChatActivity","start  sending....");
-            mMultiUserChat.sendMessage("xxxxxxx");
-            Log.v("ChatActivity","start  sent success!");
+            Log.v("ChatActivity", "start  sending....");
+            mMultiUserChat.sendMessage(content);
+            Log.v("ChatActivity", "start  sent success!");
+        } catch (XMPPException e) {
+            Log.v("ChatActivity", e.getMessage());
         }
-        catch (XMPPException e){
-            Log.v("ChatActivity",e.getMessage());
-        }
-
-
-
 
 
         newMessage.setmMessageType(IMMessage.SEND);
@@ -136,29 +134,65 @@ public abstract class ActivityChatSupport extends BaseActivity {
         refreshMessage(messagePool);
 
     }
+
     /**
      */
-    public class  MUCPackageListener implements PacketListener {
+    public class MUCPackageListener implements PacketListener {
         @Override
         public void processPacket(Packet packet) {
 
 
             Message message = (Message) packet;
-
-            Log.v(TAG,"receive a message: "+message.getBody());
+             String voiceFileDir=null;
+            Log.v(TAG, "receive a message: " + message.getBody());
 
             // 接收来自聊天室的聊天信息
             if (message != null && message.getBody() != null
                     && !message.getBody().equals("null")) {
 
                 String from = message.getFrom().split("/")[1];
-                if(SharePreferenceUtil.getName().equals(from)){
-                    Log.v("multi","message sent by myself.."
+                if (SharePreferenceUtil.getName().equals(from)) {
+                    Log.v("multi", "message sent by myself.."
                     );
 
-                    return ;
+                    return;
                 }
 
+                if (message.getBody().contains(CommonUtils.VOICE_SIGN)) {
+
+                    String[] strarray;
+                    String voiceFile;
+                    String voiceTime;
+                    int msgViewTime;
+                    boolean result = false;
+                    List<String> list = CommonUtils.getImagePathFromSD();
+                    strarray = message.getBody().split("&");
+                    voiceFile = strarray[0];
+                    voiceTime = strarray[1];
+
+                    msgViewTime = Integer.parseInt(voiceTime);
+                    String msgViewLength = "";
+
+                    Log.v(TAG,"voice time "+msgViewTime);
+//                    voiceTimeView.setVisibility(View.VISIBLE);
+//                    voiceTimeView.setText(voiceTime + "\"");
+                    for (int i = 0; i < msgViewTime; i++) {
+                        msgViewLength += "  ";
+                    }
+                    String voiceArr[] = voiceFile.split(CommonUtils.VOICE_SIGN);
+                    String voiceBrr[] = voiceArr[1].split("@");
+                    String imgFilePath = Constants.VOICE_AUDIR + voiceBrr[1] + VoiceUtils.suffix;
+
+                    result = CommonUtils.judge(list, imgFilePath);
+
+                    if (result) {
+                        voiceFileDir = imgFilePath;
+                    } else {
+                        voiceFileDir = CommonUtils.GenerateVoic(voiceBrr[0],
+                                voiceBrr[1]);
+
+                    }
+                }
 
                 String time = DateUtils.date2Str(Calendar.getInstance(),
                         Constants.MS_FORMART);
@@ -171,6 +205,9 @@ public abstract class ActivityChatSupport extends BaseActivity {
                 newMessage.setmTime(time);
                 newMessage.setmUri(IMMessage.Scheme.VOICE.wrap(""));
                 newMessage.setmAvatar(SharePreferenceUtil.getAvatar());
+                newMessage.setmVoiceFileName(voiceFileDir);
+
+                Log.v(TAG,"voice file name "+newMessage.getmVoiceFileName());
                 AppStates.setImMessageVoiceEntity(newMessage);
 
 
@@ -178,7 +215,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
                 intent.putExtra(IMMessage.IMMESSAGE_KEY, newMessage);
                 sendBroadcast(intent);
 
-                Log.v("multi","you hava new msg: "+newMessage.getmContent()+" ,from:"+message.getFrom()
+                Log.v("multi", "you hava new msg: " + newMessage.getmContent() + " ,from:" + message.getFrom()
                 );
             }
         }

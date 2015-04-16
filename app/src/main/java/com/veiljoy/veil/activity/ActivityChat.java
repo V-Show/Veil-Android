@@ -20,6 +20,7 @@ import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.utils.AppStates;
+import com.veiljoy.veil.utils.CommonUtils;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
@@ -34,6 +35,7 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +58,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     String avatarPath;
     private String currMsgType;
     private String mVoiceFileName = null;
+
+    /*
+    *监控录音时间
+    */
+    long beforeTime;
+    long afterTime;
+    int timeDistance;
 
     /*
     * 自己的名字和密码
@@ -84,26 +93,21 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
 
-
     private void init() {
 
 
-        mUserName=SharePreferenceUtil.getName();
-        mPassword=SharePreferenceUtil.getPasswd();
-        mRoomName=SharePreferenceUtil.getRoom();
-        mXmppConnection= XmppConnectionManager.getInstance().getConnection();
+        mUserName = SharePreferenceUtil.getName();
+        mPassword = SharePreferenceUtil.getPasswd();
+        mRoomName = SharePreferenceUtil.getRoom();
+        mXmppConnection = XmppConnectionManager.getInstance().getConnection();
         avatarPath = SharePreferenceUtil.getAvatar();
         application = (BaseApplication) getApplication();
-
 
 
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
 
 
-
-
     }
-
 
 
     private void initEvents() {
@@ -126,7 +130,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
 
-
     @Override
     public boolean onLongClick(View v) {
 
@@ -134,9 +137,11 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
             case R.id.activity_chat_btn_talk:
                 if (!isTalking) {
                     Log.v("chatActivity", "start record");
+                    beforeTime = System.currentTimeMillis();
                     isTalking = true;
                     currMsgType = IMMessage.Scheme.VOICE.wrap("test");
-                    VoiceUtils.getmInstance().startRecord(null);
+                    mVoiceFileName = VoiceUtils.generateFileName();
+                    VoiceUtils.getmInstance().startRecord(mVoiceFileName);
                 }
 
 
@@ -155,9 +160,9 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_UP: {
                         Log.v("chatActivity", "stop record");
+                        afterTime = System.currentTimeMillis();
                         isTalking = false;
                         VoiceUtils.getmInstance().stop();
-                        sendMessage();
                     }
                     break;
                 }
@@ -168,8 +173,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
             return false;
         }
     }
-
-
 
 
     @Override
@@ -185,7 +188,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
     public IMMessage makeMessage() {
 
-        IMMessage o=null;
+        IMMessage o = null;
         IMMessage.Scheme type = IMMessage.Scheme.ofUri(currMsgType);
         switch (type) {
             case VOICE:
@@ -222,6 +225,18 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
             Log.v("chatActivity", "onResult " + fileName);
             if (fileName != null) {
                 mVoiceFileName = fileName;
+
+                String path = fileName.substring(fileName.lastIndexOf(File.separator), fileName.length());
+
+                String file = path.substring(1, path.lastIndexOf(VoiceUtils.suffix));
+
+                String voiceFile = CommonUtils.VOICE_SIGN
+                        + CommonUtils.GetImageStr(mVoiceFileName) + "@" + file
+                        + CommonUtils.VOICE_SIGN;
+                Log.v(TAG, "voice file name " + file);
+                sendMessage(voiceFile + "&"
+                        + (afterTime - beforeTime) / 1000);
+
 
             }
 
