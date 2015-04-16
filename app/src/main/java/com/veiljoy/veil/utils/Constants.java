@@ -123,4 +123,15 @@ public class Constants {
 
     public final static String VOICE_AUDIR= Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 
-}
+
+    /**
+     * 个人名片属性
+     * **/
+
+    public final static String USER_CARD_FILED_NAME="user_name";
+    public final static String USER_CARD_FILED_AVATAR="user_avatar";
+    public final static String USER_CARD_FILED_GENDER="user_gender";
+    public final static String USER_CARD_FILED_PHONE="user_phone";
+    public final static String USER_CARD_FILED_DESC="user_desc";
+
+ }

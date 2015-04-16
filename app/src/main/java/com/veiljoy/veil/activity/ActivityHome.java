@@ -42,14 +42,20 @@ public class ActivityHome extends BaseActivity {
 
         initViews();
         showWelcomeAnimation();
-        init();
+
 
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LOG("ON RESUME....");
+        init();
+
+    }
+
     public void init() {
-
-
 
         new InitializationTask(new OnInitListener()).execute();
 

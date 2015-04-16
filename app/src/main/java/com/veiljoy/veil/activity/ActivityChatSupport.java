@@ -24,7 +24,9 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +51,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
         super.onCreate(savedInstanceState);
         mMultiUserChat = AppStates.getMultiUserChat();
         mMultiUserChat.addMessageListener(new MUCPackageListener());
-
+        mMultiUserChat.addParticipantStatusListener(new ParticipantStatus());
         // 第一次查询
         messagePool = MessageManager.getInstance(this)
                 .getMessageListByFrom(to, 1, pageSize);
@@ -220,6 +222,99 @@ public abstract class ActivityChatSupport extends BaseActivity {
             }
         }
     }
+    class ParticipantStatus implements ParticipantStatusListener {
+
+        @Override
+        public void adminGranted(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void adminRevoked(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void banned(String arg0, String arg1, String arg2) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void joined(String participant) {
+            System.out.println(StringUtils.parseResource(participant)+ " has joined the room.");
+        }
+
+        @Override
+        public void kicked(String arg0, String arg1, String arg2) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void left(String participant) {
+            // TODO Auto-generated method stub
+            LOG(StringUtils.parseResource(participant)+ " has left the room.");
+
+        }
+
+        @Override
+        public void membershipGranted(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void membershipRevoked(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void moderatorGranted(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void moderatorRevoked(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void nicknameChanged(String participant, String newNickname) {
+            LOG(StringUtils.parseResource(participant)+ " is now known as " + newNickname + ".");
+        }
+
+        @Override
+        public void ownershipGranted(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void ownershipRevoked(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void voiceGranted(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void voiceRevoked(String arg0) {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
 
     protected abstract void receiveNewMessage(IMMessage message);
 

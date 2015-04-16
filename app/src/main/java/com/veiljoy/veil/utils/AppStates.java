@@ -1,5 +1,7 @@
 package com.veiljoy.veil.utils;
 
+import android.graphics.Bitmap;
+
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -14,6 +16,19 @@ public class AppStates {
     public static boolean alreadyLogined=false;
 
     public static IMMessageVoiceEntity imMessageVoiceEntity;
+
+
+    public static Bitmap getUserAvatar() {
+        return userAvatar;
+    }
+
+    public static void setUserAvatar(Bitmap userAvatar) {
+        AppStates.userAvatar = userAvatar;
+    }
+
+    public static Bitmap userAvatar;
+
+
 
     public static IMMessageVoiceEntity getImMessageVoiceEntity() {
         return imMessageVoiceEntity;

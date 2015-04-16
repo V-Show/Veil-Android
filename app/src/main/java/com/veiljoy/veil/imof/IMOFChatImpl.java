@@ -1,20 +1,29 @@
 package com.veiljoy.veil.imof;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.veiljoy.veil.im.IMChatBase;
 import com.veiljoy.veil.im.IMMessage;
+import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.StringUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.packet.VCard;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,40 +55,69 @@ public class IMOFChatImpl implements IMChatBase {
 
 
 
-    // 加入一个房间
-    public static MultiUserChat JoinRoom(String jid) {
-
-        if(StringUtils.empty(jid)){
-            jid= Constants.DEFAULT_ROOM_JID;
-        }
-
-        MultiUserChat curmultchat=null;
-        String user=null;
+    /**
+     * 获取用户头像信息
+     *
+     * @param connection
+     * @param user
+     * @return
+     */
+    public static Drawable getUserImage(XMPPConnection connection, String user) {
+        ByteArrayInputStream bais = null;
         try {
+            VCard vcard = new VCard();
+            // 加入这句代码，解决No VCard for
+            ProviderManager.getInstance().addIQProvider("vCard", "vcard-temp",
+                    new org.jivesoftware.smackx.provider.VCardProvider());
 
-            XMPPConnection connection = XmppConnectionManager.getInstance()
-                    .getConnection();
-            if (!connection.isConnected())
-                connection.connect();
+            vcard.load(connection, user+"@"+connection.getServiceName());
 
-//            String username = SharePreferenceUtil.getName();
-//            String password = SharePreferenceUtil.getPasswd();
-//            connection.login(username, password);
+            if (vcard == null || vcard.getAvatar() == null)
+                return null;
+            bais = new ByteArrayInputStream(vcard.getAvatar());
 
-            MultiUserChat multiUserChat = new MultiUserChat(connection, jid);
-            curmultchat = multiUserChat;
-
-            multiUserChat.join(SharePreferenceUtil.getName()); //user为你传入的用户名
-
-            //RegisterRoomMessageListener();
-        } catch (XMPPException e) {
-
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return curmultchat;
+        if (bais == null)
+            return null;
+        return FormatTools.getInstance().InputStream2Drawable(bais);
     }
 
+    public static void setUserVCard(XMPPConnection connection)
+            throws XMPPException {
+        VCard vCard = new VCard();
+        vCard.load(connection);
+        //vCard.setEmailHome("lulu@sina.com");
+        vCard.setOrganization("Conference");
+        vCard.setNickName(SharePreferenceUtil.getName());
+        vCard.setField(Constants.USER_CARD_FILED_GENDER,SharePreferenceUtil.getGender()+"");
+        vCard.setPhoneWork(Constants.USER_CARD_FILED_PHONE, "110");
+        vCard.setField(Constants.USER_CARD_FILED_DESC, "info about user");
+        vCard.setAvatar(FormatTools.Bitmap2Bytes(AppStates.getUserAvatar()));
+        vCard.save(connection);
+        Log.v("ChatImpl","添加成功");
+    }
+
+    public static Bitmap getUserAvatar(XMPPConnection connection,String userName){
+
+        userName=SharePreferenceUtil.getName();
+        Bitmap bitmap=null;
+        try {
+            System.out.println("获取用户头像信息: " + userName);
+            VCard vcard = new VCard();
+            vcard.load(connection, userName);
+            if (vcard == null || vcard.getAvatar() == null) {
+                return null;
+            }
+           bitmap=BitmapFactory.decodeByteArray(vcard.getAvatar(),0,vcard.getAvatar().length);
+            Log.v("ChatImpl","get user avatar success..");
+        } catch (Exception e) {
+            Log.v("ChatImpl","get user avatar failed.."+e.getMessage());
+        }
+        return bitmap;
+
+    }
 
 
 

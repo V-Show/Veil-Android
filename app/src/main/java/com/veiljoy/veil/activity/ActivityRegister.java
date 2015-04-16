@@ -22,6 +22,7 @@ import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMUserBase;
 import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
+import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.PhotoUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
@@ -145,7 +146,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             mAvatar = BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[arg2]);
 
 
-            Log.v("activityRegister", "mAvatar " + mAvatar == null ? "=null" : "!=null");
+
         }
 
     }
@@ -190,7 +191,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
 
-            showCustomToast("正在注册...，账号：" + SharePreferenceUtil.getName());
+
 
             mUserRegister.onPreRegister();
 
@@ -206,6 +207,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
                 if (fileName != null) {
                     SharePreferenceUtil.setAvatar(fileName);
                 }
+                AppStates.setUserAvatar(mAvatar);
 
             }
             return mUserRegister.onRegister(SharePreferenceUtil.getName(), SharePreferenceUtil.getPasswd());

@@ -4,13 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.veiljoy.veil.BaseApplication;
 import com.veiljoy.veil.R;
@@ -18,7 +21,9 @@ import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.bean.BaseInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
+import com.veiljoy.veil.imof.IMOFChatImpl;
 import com.veiljoy.veil.imof.MUCHelper;
+import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.CommonUtils;
 import com.veiljoy.veil.utils.Constants;
@@ -60,6 +65,11 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     private String mVoiceFileName = null;
 
     /*
+    * info for the girl
+    * */
+    private ImageView mIVGirlAvatar;
+    private TextView mIVGrilName;
+    /*
     *监控录音时间
     */
     long beforeTime;
@@ -90,6 +100,8 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         init();
         initViews();
         initEvents();
+
+        IMOFChatImpl.getUserAvatar(mXmppConnection,mXmppConnection.getUser());
     }
 
 
@@ -118,6 +130,14 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
     private void initViews() {
+        mIVGirlAvatar=(ImageView)this.findViewById(R.id.activity_chat_iv_girl_avatar);
+        mIVGrilName=(TextView)this.findViewById(R.id.activity_chat_tv_girl_name);
+     //   if(SharePreferenceUtil.getGender()==1)
+        {
+            mIVGirlAvatar.setImageBitmap(ImageCache.getAvatar(SharePreferenceUtil.getAvatar()));
+            mIVGirlAvatar.setBackgroundColor(Color.TRANSPARENT);
+            mIVGrilName.setText(SharePreferenceUtil.getName());
+        }
         mChatAdapter = new ChatAdapter(application, this, getMessages());
         mBtnTalk = (Button) this.findViewById(R.id.activity_chat_btn_talk);
         mLVChat = (ListView) this.findViewById(R.id.activity_chat_list);
