@@ -160,6 +160,9 @@ public class MUCHelper {
                     connection.connect();
             }
 
+            //在加入房间之前，先把个人资料上传到服务器
+
+            //IMOFChatImpl.setUserVCard(connection);
 
             ServiceDiscoveryManager discoManager = new ServiceDiscoveryManager(connection);
 

@@ -57,9 +57,7 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
             reg.setType(IQ.Type.SET);
             reg.setUsername(username);
             reg.setPassword(password);
-
             reg.setTo(connection.getServiceName());
-
             PacketFilter filter = new AndFilter(new PacketIDFilter(
                     reg.getPacketID()), new PacketTypeFilter(IQ.class));
             PacketCollector collector = XmppConnectionManager.getInstance()
@@ -69,6 +67,8 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
                     .getPacketReplyTimeout());
             // Stop queuing results
             collector.cancel();// 停止请求results（是否成功的结果）
+
+          
 
             if (result == null) {
                 return Constants.SERVER_UNAVAILABLE;
