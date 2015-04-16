@@ -190,7 +190,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
 
-            showCustomToast("正在注册...，账号："+SharePreferenceUtil.getName());
+            showCustomToast("正在注册...，账号：" + SharePreferenceUtil.getName());
 
             mUserRegister.onPreRegister();
 
@@ -199,7 +199,6 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
 
         @Override
         protected Integer doInBackground(Integer... params) {
-
 
 
             if (mAvatar != null) {
@@ -241,8 +240,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             boolean rel = mUserRegister.onRegisterResult(code);
 
             if (rel) {
-                showCustomToast("注册成功，账号："+SharePreferenceUtil.getName());
-                new MUCJoinTask(null,ActivityRegister.this).execute("");
+                showCustomToast("注册成功，账号：" + SharePreferenceUtil.getName());
+                new MUCJoinTask(null, ActivityRegister.this).execute("");
             }
 
         }

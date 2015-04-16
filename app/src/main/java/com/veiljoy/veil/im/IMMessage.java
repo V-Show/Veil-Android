@@ -22,6 +22,7 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
     private String mTime;
     private String mDistance;
     private long mLTime;
+
     //消息类型
     private String mUri;
     private String mAvatar;
@@ -249,7 +250,6 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
     public void setmUri(String mUri) {
         this.mUri = mUri;
     }
-
 
 
 
