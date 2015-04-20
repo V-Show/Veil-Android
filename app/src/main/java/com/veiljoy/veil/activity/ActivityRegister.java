@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -13,9 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.veiljoy.veil.BaseActivity;
+import com.veiljoy.veil.android.BaseActivity;
 
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.bean.UserInfo;
@@ -30,7 +28,6 @@ import com.veiljoy.veil.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 /**
  * Created by zhongqihong on 15/3/31.
@@ -208,6 +205,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
                     SharePreferenceUtil.setAvatar(fileName);
                 }
                 AppStates.setUserAvatar(mAvatar);
+
+
 
             }
             return mUserRegister.onRegister(SharePreferenceUtil.getName(), SharePreferenceUtil.getPasswd());

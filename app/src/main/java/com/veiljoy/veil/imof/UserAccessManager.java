@@ -149,6 +149,8 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
                 loginConfig.setOnline(true);
 
                 */
+
+           // IMOFChatImpl.setUserVCard(connection);
             return Constants.LOGIN_SUCCESS;
         } catch (Exception xee) {
 

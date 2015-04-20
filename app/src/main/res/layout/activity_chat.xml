@@ -4,8 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:id="@+id/activity_chat_user_info_layout"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f53373"
@@ -15,8 +17,10 @@
         <!-- 功能栏部分 -->
 
         <RelativeLayout
+            android:id="@+id/activity_chat_curr_user_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/orange"
             android:layout_marginBottom="@dimen/activity_general_margin_bottom"
             android:layout_marginLeft="@dimen/activity_general_margin_left"
             android:layout_marginRight="@dimen/activity_general_margin_right"
@@ -207,7 +211,7 @@
         android:layout_height="0dp"
         android:layout_below="@id/activity_chat_user_info_layout"
         android:layout_above="@id/activity_chat_separate_line"
-        android:background="@color/orange">
+       >
 
         <ListView
             android:id="@+id/activity_chat_list"

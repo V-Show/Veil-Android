@@ -99,15 +99,17 @@ public class IMOFChatImpl implements IMChatBase {
         Log.v("ChatImpl","添加成功");
     }
 
-    public static Bitmap getUserAvatar(XMPPConnection connection,String userName){
+    public static Bitmap getUserAvatar(XMPPConnection connection){
 
-        userName=SharePreferenceUtil.getName();
+        String userName=connection.getUser();
         Bitmap bitmap=null;
         try {
-            System.out.println("获取用户头像信息: " + userName);
+            Log.v("ChatImpl","获取用户头像信息: " + userName);
             VCard vcard = new VCard();
-            vcard.load(connection, userName);
+            vcard.load(connection, connection.getUser());
+
             if (vcard == null || vcard.getAvatar() == null) {
+                Log.v("ChatImpl","vcard loaded fail");
                 return null;
             }
            bitmap=BitmapFactory.decodeByteArray(vcard.getAvatar(),0,vcard.getAvatar().length);

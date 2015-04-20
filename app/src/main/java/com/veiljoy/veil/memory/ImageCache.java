@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.veiljoy.veil.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.utils.PhotoUtils;
 
