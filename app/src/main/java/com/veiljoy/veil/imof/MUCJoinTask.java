@@ -3,21 +3,16 @@ package com.veiljoy.veil.imof;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.veiljoy.veil.BaseActivity;
+import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.activity.ActivityChat;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
-import com.veiljoy.veil.utils.StringUtils;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import static java.util.Map.*;
 
 /**
  * Created by zhongqihong on 15/4/15.
@@ -49,6 +44,8 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
     protected MultiUserChat doInBackground(String... params) {
         Log.v(TAG, "home,start join...");
         boolean flag = false;
+
+        MUCHelper.createRoom(Constants.DEFAULT_ROOM_JID);
 
         List<List<Map<String, String>>> childs = new ArrayList<List<Map<String, String>>>();
         MUCHelper.fetchHostRoom(childs);

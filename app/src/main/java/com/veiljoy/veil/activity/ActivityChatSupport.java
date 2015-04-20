@@ -7,19 +7,17 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.veiljoy.veil.BaseActivity;
+import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.CommonUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.VoiceUtils;
-import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.xmpp.base.MessageManager;
 
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;

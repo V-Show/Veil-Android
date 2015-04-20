@@ -49,6 +49,9 @@ public class Constants {
 
     public static final String XMPP_HOST_IP = "115.28.231.161";
     public static final String XMPP_HOST_NAME = "www.veiljoy.com";
+
+//    public static final String XMPP_HOST_IP = "192.168.1.11";
+//    public static final String XMPP_HOST_NAME = "www.veiljoy.com";
     public static final String XMPP_HOST_PORT = "5222";
 
 

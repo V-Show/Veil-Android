@@ -162,7 +162,7 @@ public class MUCHelper {
 
             //在加入房间之前，先把个人资料上传到服务器
 
-            //IMOFChatImpl.setUserVCard(connection);
+
 
             ServiceDiscoveryManager discoManager = new ServiceDiscoveryManager(connection);
 
@@ -178,6 +178,7 @@ public class MUCHelper {
 
                 childs.add(GetRoomFromServers(s.getJid(),connection));
             }
+            IMOFChatImpl.getUserAvatar(connection);
 
         } catch (XMPPException e) {
             // TODO Auto-generated catch block

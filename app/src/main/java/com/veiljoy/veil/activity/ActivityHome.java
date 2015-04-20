@@ -7,22 +7,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.veiljoy.veil.BaseActivity;
+import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.im.IMUserBase;
-import com.veiljoy.veil.imof.IMOFChatImpl;
-import com.veiljoy.veil.imof.LoginConfig;
-import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.init.InitializationTask;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
-import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
-
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
  * Created by zhongqihong on 15/3/31.

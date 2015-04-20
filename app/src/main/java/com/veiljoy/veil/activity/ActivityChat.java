@@ -1,64 +1,51 @@
 package com.veiljoy.veil.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.veiljoy.veil.BaseApplication;
+import android.view.ViewGroup.LayoutParams;
+import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
-import com.veiljoy.veil.bean.BaseInfo;
+import com.veiljoy.veil.android.popupwidows.ChatPopupWindow;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
-import com.veiljoy.veil.imof.IMOFChatImpl;
-import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.memory.ImageCache;
-import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.CommonUtils;
-import com.veiljoy.veil.utils.Constants;
-import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.VoiceUtils;
-import com.veiljoy.veil.xmpp.base.MessageManager;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class ActivityChat extends ActivityChatSupport implements View.OnLongClickListener {
+public class ActivityChat extends ActivityChatSupport implements View.OnLongClickListener,View.OnClickListener{
 
 
     ChatAdapter mChatAdapter;
-
+    RelativeLayout mLayoutHeader;
     BaseApplication application;
     ListView mLVChat;
     Button mBtnTalk;
+    ImageButton mBtnMenu;
     private boolean isTalking;
     String avatarPath;
     private String currMsgType;
@@ -92,7 +79,17 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     * */
     private XMPPConnection mXmppConnection;
 
-    @Override
+    /**/
+    private ChatPopupWindow mChatPopupWindow;
+    private int mWidth;
+    private int mHeaderHeight;
+
+    /*
+    *
+    * */
+
+
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -101,7 +98,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         initViews();
         initEvents();
 
-        IMOFChatImpl.getUserAvatar(mXmppConnection,mXmppConnection.getUser());
+
     }
 
 
@@ -126,10 +123,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mBtnTalk.setOnLongClickListener(this);
         mBtnTalk.setOnTouchListener(new OnTalkBtnTouch());
         mLVChat.setOnItemClickListener(new OnChatListItemClick());
+        mLayoutHeader.setOnClickListener(this);
+        mBtnMenu.setOnClickListener(this);
 
     }
 
     private void initViews() {
+        mLayoutHeader=(RelativeLayout)this.findViewById(R.id.activity_chat_curr_user_layout);
         mIVGirlAvatar=(ImageView)this.findViewById(R.id.activity_chat_iv_girl_avatar);
         mIVGrilName=(TextView)this.findViewById(R.id.activity_chat_tv_girl_name);
      //   if(SharePreferenceUtil.getGender()==1)
@@ -142,7 +142,25 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mBtnTalk = (Button) this.findViewById(R.id.activity_chat_btn_talk);
         mLVChat = (ListView) this.findViewById(R.id.activity_chat_list);
         mLVChat.setAdapter(mChatAdapter);
+        mBtnMenu=(ImageButton)this.findViewById(R.id.include_app_topbar_ib_menu);
 
+        initPopMenu();
+
+    }
+
+    private void initPopMenu(){
+
+        mHeaderHeight = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 25, getResources()
+                        .getDisplayMetrics());
+
+        mWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                133, getResources().getDisplayMetrics());
+        int mHeiht=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                155, getResources().getDisplayMetrics());
+        mChatPopupWindow = new ChatPopupWindow(this, mWidth,
+                mHeiht);
+               // LayoutParams.WRAP_CONTENT);
     }
 
     public void refreshAdapter() {
@@ -172,6 +190,23 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_chat_user_info_layout:
+
+                break;
+            case R.id.include_app_topbar_ib_menu:
+//                 mChatPopupWindow.showAtLocation(mLayoutHeader, Gravity.RIGHT
+//                            | Gravity.TOP, -10, mHeaderHeight );
+
+                mChatPopupWindow.showAtLocation(mLayoutHeader, Gravity.RIGHT
+                        | Gravity.TOP, -10, mHeaderHeight );
+
+                break;
+        }
+    }
+///mHeaderHeight
     class OnTalkBtnTouch implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -303,6 +338,55 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         }
     }
+
+    class OnChatMenuBtnSelectedListenerImpl implements ChatPopupWindow.OnChatMenuBtnSelectedListener{
+
+        @Override
+        public void onPpl0TalkAllowed(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl1TalkAllowed(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl2TalkAllowed(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl0Changed(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl1Changed(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl2Changed(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl0Reserved(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl1Reserved(boolean selected) {
+
+        }
+
+        @Override
+        public void onPpl2Reserved(boolean selected) {
+
+        }
+    }
+
 
 
 }

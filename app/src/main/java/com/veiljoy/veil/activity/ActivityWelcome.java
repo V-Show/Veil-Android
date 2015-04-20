@@ -3,10 +3,9 @@ package com.veiljoy.veil.activity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.veiljoy.veil.BaseActivity;
+import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.R;
 
 /**

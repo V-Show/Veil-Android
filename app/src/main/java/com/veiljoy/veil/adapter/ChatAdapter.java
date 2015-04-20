@@ -6,7 +6,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.veiljoy.veil.BaseApplication;
+import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.bean.BaseInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageFactory;

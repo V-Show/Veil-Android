@@ -1,4 +1,4 @@
-package com.veiljoy.veil;
+package com.veiljoy.veil.android;
 
 import android.app.Application;
 

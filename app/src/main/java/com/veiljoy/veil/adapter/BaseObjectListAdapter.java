@@ -5,16 +5,12 @@ import java.util.List;
 
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.veiljoy.veil.BaseApplication;
-import com.veiljoy.veil.R;
+import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.bean.BaseInfo;
 
 public class BaseObjectListAdapter extends BaseAdapter {

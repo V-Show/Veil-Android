@@ -1,4 +1,4 @@
-package com.veiljoy.veil;
+package com.veiljoy.veil.android;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.veiljoy.veil.R;
 
 /**
  * Created by zhongqihong on 15/3/31.
