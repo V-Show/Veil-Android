@@ -9,10 +9,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
@@ -51,6 +54,34 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     private String currMsgType;
     private String mVoiceFileName = null;
 
+    /*
+    * 好友
+    * */
+
+    private LinearLayout mPpl0Layout;
+    private LinearLayout mPpl1Layout;
+    private LinearLayout mPpl2Layout;
+
+    private ImageButton mIBPpl0Change;
+    private ImageButton mIBPpl1Change;
+    private ImageButton mIBPpl2Change;
+
+
+    private ImageButton mIBPpl0Kick;
+    private ImageButton mIBPpl1Kick;
+    private ImageButton mIBPpl2Kick;
+
+    private ImageButton mIBPpl0Avatar;
+    private ImageButton mIBPpl1Avatar;
+    private ImageButton mIBPpl2Avatar;
+
+    private CheckBox mIBPpl0Voice;
+    private CheckBox mIBPpl1Voice;
+    private CheckBox mIBPpl2Voice;
+
+    private boolean misPplOptionShow;
+    private boolean misPpl1ptionShow;
+    private boolean misPpl2ptionShow;
     /*
     * info for the girl
     * */
@@ -112,6 +143,10 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         avatarPath = SharePreferenceUtil.getAvatar();
         application = (BaseApplication) getApplication();
 
+//        mIsVoiceAllowedPpl0=mIBPpl0Voice.isChecked();
+//        mIsVoiceAllowedPpl1=mIBPpl1Voice.isChecked();
+//        mIsVoiceAllowedPpl2=mIBPpl2Voice.isChecked();
+
 
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
 
@@ -125,7 +160,12 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mLVChat.setOnItemClickListener(new OnChatListItemClick());
         mLayoutHeader.setOnClickListener(this);
         mBtnMenu.setOnClickListener(this);
-
+        mIBPpl0Avatar.setOnClickListener(new OnPpl0AvatarClick());
+        mIBPpl1Avatar.setOnClickListener(new OnPpl1AvatarClick());
+        mIBPpl2Avatar.setOnClickListener(new OnPpl2AvatarClick());
+        mIBPpl0Voice.setOnCheckedChangeListener(new OnPp0VoiceCheckedListener());
+        mIBPpl1Voice.setOnCheckedChangeListener(new OnPp1VoiceCheckedListener());
+        mIBPpl2Voice.setOnCheckedChangeListener(new OnPp2VoiceCheckedListener());
     }
 
     private void initViews() {
@@ -144,27 +184,87 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mLVChat.setAdapter(mChatAdapter);
         mBtnMenu=(ImageButton)this.findViewById(R.id.include_app_topbar_ib_menu);
 
+
+        mPpl0Layout =(LinearLayout)this.findViewById(R.id.include_chat_ppl0);
+        mPpl1Layout =(LinearLayout)this.findViewById(R.id.include_chat_ppl1);
+        mPpl2Layout =(LinearLayout)this.findViewById(R.id.include_chat_ppl2);
+
+
+
+
+        mIBPpl0Change=(ImageButton)mPpl0Layout.findViewById(R.id.include_chat_user_action_change);
+        mIBPpl1Change=(ImageButton)mPpl1Layout.findViewById(R.id.include_chat_user_action_change);
+        mIBPpl2Change=(ImageButton)mPpl2Layout.findViewById(R.id.include_chat_user_action_change);
+
+        mIBPpl0Kick=(ImageButton)mPpl0Layout.findViewById(R.id.include_chat_user_action_kick);
+        mIBPpl1Kick=(ImageButton)mPpl1Layout.findViewById(R.id.include_chat_user_action_kick);
+        mIBPpl2Kick=(ImageButton)mPpl2Layout.findViewById(R.id.include_chat_user_action_kick);
+
+        mIBPpl0Voice=(CheckBox)mPpl0Layout.findViewById(R.id.include_chat_user_action_voice_allowed);
+        mIBPpl1Voice=(CheckBox)mPpl1Layout.findViewById(R.id.include_chat_user_action_voice_allowed);
+        mIBPpl2Voice=(CheckBox)mPpl2Layout.findViewById(R.id.include_chat_user_action_voice_allowed);
+
+
+        mIBPpl0Avatar=(ImageButton)mPpl0Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
+        mIBPpl1Avatar=(ImageButton)mPpl1Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
+        mIBPpl2Avatar=(ImageButton)mPpl2Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
+
         initPopMenu();
+
+
 
     }
 
     private void initPopMenu(){
 
-        mHeaderHeight = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 25, getResources()
-                        .getDisplayMetrics());
+
+
+        int[] location = new int[2];
+        mBtnMenu.getLocationOnScreen(location);
+        mHeaderHeight=location[1]+mBtnMenu.getHeight();
+
+        Log.v(TAG,"mHeaderHeight "+mHeaderHeight);
 
         mWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 133, getResources().getDisplayMetrics());
-        int mHeiht=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                155, getResources().getDisplayMetrics());
-        mChatPopupWindow = new ChatPopupWindow(this, mWidth,
-                mHeiht);
-               // LayoutParams.WRAP_CONTENT);
+
+        mChatPopupWindow = new ChatPopupWindow(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
     public void refreshAdapter() {
         mChatAdapter.notifyDataSetChanged();
+    }
+
+
+    class OnPpl0AvatarClick implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+
+            mIBPpl0Change.setVisibility(View.VISIBLE);
+            mIBPpl0Kick.setVisibility(View.VISIBLE);
+            mIBPpl0Voice.setVisibility(View.VISIBLE);
+        }
+    }
+
+    class OnPpl1AvatarClick implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            mIBPpl1Change.setVisibility(View.VISIBLE);
+            mIBPpl1Kick.setVisibility(View.VISIBLE);
+            mIBPpl1Voice.setVisibility(View.VISIBLE);
+        }
+    }
+
+    class OnPpl2AvatarClick implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            mIBPpl2Change.setVisibility(View.VISIBLE);
+            mIBPpl2Kick.setVisibility(View.VISIBLE);
+            mIBPpl2Voice.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -197,13 +297,12 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
                 break;
             case R.id.include_app_topbar_ib_menu:
-//                 mChatPopupWindow.showAtLocation(mLayoutHeader, Gravity.RIGHT
-//                            | Gravity.TOP, -10, mHeaderHeight );
 
-                mChatPopupWindow.showAtLocation(mLayoutHeader, Gravity.RIGHT
-                        | Gravity.TOP, -10, mHeaderHeight );
+
+                mChatPopupWindow.showAsDropDown(mBtnMenu,0,mHeaderHeight);
 
                 break;
+
         }
     }
 ///mHeaderHeight
@@ -388,5 +487,27 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
 
+    class OnPp0VoiceCheckedListener implements CompoundButton.OnCheckedChangeListener{
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mIBPpl0Voice.setChecked(!isChecked);
+        }
+    }
+
+    class OnPp1VoiceCheckedListener implements CompoundButton.OnCheckedChangeListener{
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mIBPpl1Voice.setChecked(!isChecked);
+        }
+    }
+    class OnPp2VoiceCheckedListener implements CompoundButton.OnCheckedChangeListener{
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mIBPpl2Voice.setChecked(!isChecked);
+        }
+    }
 
 }

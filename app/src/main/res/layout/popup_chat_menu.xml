@@ -1,165 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="133dp" android:layout_height="wrap_content"
+    android:layout_width="32dp" android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#fff76494"
+    android:paddingTop="10dp"
    >
     <!--android:background="@drawable/bg_dropmenu_up"-->
 
 
     <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:background="@mipmap/ic_topbar_menu"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/chat_menu_setting_selector"
         android:layout_gravity="top"
+
       />
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/chat_menu_about_selector"
+        android:layout_gravity="top"
+        />
 
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp"
-        >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="28dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Peter"
-                android:textSize="13sp"
-                android:layout_centerVertical="true"
-                />
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people0_talk"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_toLeftOf="@+id/popup_chat_menu_iv_people0_change"
-                android:background="@drawable/chat_menu_talk_selector"
-                android:layout_centerVertical="true"
-                />
-
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people0_change"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_toLeftOf="@+id/popup_chat_menu_iv_people0_reserve"
-                android:background="@drawable/chat_menu_change_people_selector"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                />
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people0_reserve"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/chat_menu_vacant_selector"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-
-                />
-
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="28dp"
-
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Joy"
-                android:textSize="13sp"
-                android:layout_centerVertical="true"
-                />
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people1_talk"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_toLeftOf="@+id/popup_chat_menu_iv_people1_change"
-                android:background="@drawable/chat_menu_talk_selector"
-                android:layout_centerVertical="true"
-                />
-
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people1_change"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@null"
-                android:src="@drawable/chat_menu_change_people_selector"
-                android:layout_marginLeft="10dp"
-                android:layout_toLeftOf="@+id/popup_chat_menu_iv_people1_reserve"
-                android:layout_centerVertical="true"
-                />
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people1_reserve"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/chat_menu_vacant_selector"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="28dp"
-
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sink"
-                android:textSize="13sp"
-                android:layout_centerVertical="true"
-                />
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people2_talk"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_toLeftOf="@+id/popup_chat_menu_iv_people2_change"
-                android:background="@drawable/chat_menu_talk_selector"
-                android:layout_centerVertical="true"
-                />
-
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people2_change"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_toLeftOf="@+id/popup_chat_menu_iv_people2_reserve"
-                android:background="@null"
-                android:src="@drawable/chat_menu_change_people_selector"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"/>
-
-            <ImageView
-                android:id="@+id/popup_chat_menu_iv_people2_reserve"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/chat_menu_vacant_selector"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-
-                />
-
-        </RelativeLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

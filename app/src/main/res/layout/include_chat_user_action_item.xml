@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:gravity="center_horizontal"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/include_chat_user_action_kick"
+                android:layout_width="@dimen/activity_chat_user_kick_image_size"
+                android:layout_height="@dimen/activity_chat_user_kick_image_size"
+                android:gravity="center"
+                android:background="@drawable/chat_menu_kick_people_selector"
+                android:visibility="invisible"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="bottom|center"
+            android:gravity="center_horizontal">
+
+            <CheckBox
+                android:id="@+id/include_chat_user_action_voice_allowed"
+                android:layout_width="@dimen/activity_chat_user_action_img_common_size"
+                android:layout_height="@dimen/activity_chat_user_action_img_common_size"
+                android:checked="false"
+                android:button="@null"
+                android:visibility="invisible"
+                android:background="@drawable/chat_menu_talk_selector" />
+
+            <include layout="@layout/include_common_user_avatar"
+                android:id="@+id/user_action_item_avatar"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/include_chat_user_action_change"
+                android:layout_width="@dimen/activity_chat_user_action_img_common_size"
+                android:layout_height="@dimen/activity_chat_user_action_img_common_size"
+                android:checked="false"
+                android:button="@null"
+                android:visibility="invisible"
+                android:background="@drawable/chat_menu_change_people_selector" />
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
