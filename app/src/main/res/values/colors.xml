@@ -24,4 +24,11 @@
     <color name="msg_status_new_stroke">#ffff9b2f</color>
     <color name="msg_status_new_text">#ffc0711b</color>
     <color name="download_progressbar_bg">#4c000000</color>
+    <color name="profile_add_avater_pressed">#ff8e8876</color>
+    <color name="profile_add_avater_normal">#ffb2ab93</color>
+    <color name="profile_add_avater_text_color">#ff959595</color>
+    <color name="profile_avater_cover_selected">#7f000000</color>
+    <color name="profile_avater_cover_normal">#00000000</color>
+    <color name="round_corner_filter_green">#ff66ccff</color>
+    <color name="round_corner_filter_border">#ff000000</color>
 </resources>

@@ -11,8 +11,11 @@
     <dimen name="activity_general_margin_bottom">12dp</dimen>
 
     <!-- 头像尺寸 -->
-    <dimen name="head_width">40dp</dimen>
-    <dimen name="head_height">40dp</dimen>
+    <dimen name="head_width">33dp</dimen>
+    <dimen name="head_height">33dp</dimen>
+
+    <dimen name="activity_chat_user_kick_image_size">25dp</dimen>
+    <dimen name="activity_chat_user_action_img_common_size">35dp</dimen>
 
     <!-- 头像间距参数 -->
     <dimen name="head_margin_right">40dp</dimen>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_weight="1"
+    >
+
+    <ImageButton
+        android:id="@+id/userphone_avatar_item_iv"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/user_action_cover"
+        android:focusable="false"
+        android:scaleType="fitXY" />
+
+
+    <ImageButton
+        android:id="@+id/userphoto_avatar_item_iv_cover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_vipavatar_cover"
+        android:clickable="true"
+       />
+
+</RelativeLayout>

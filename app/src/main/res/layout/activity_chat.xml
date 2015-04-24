@@ -3,11 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
     <LinearLayout
         android:id="@+id/activity_chat_user_info_layout"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f53373"
@@ -20,7 +17,6 @@
             android:id="@+id/activity_chat_curr_user_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/orange"
             android:layout_marginBottom="@dimen/activity_general_margin_bottom"
             android:layout_marginLeft="@dimen/activity_general_margin_left"
             android:layout_marginRight="@dimen/activity_general_margin_right"
@@ -94,17 +90,35 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/activity_chat_ppl0_info_layout"
                 android:layout_width="wrap_content"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/head_margin_right"
-                android:orientation="vertical">
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical" >
 
-                <ImageView
-                    android:id="@+id/include_app_topbar_iv_friendhead1"
-                    android:layout_width="@dimen/head_width"
-                    android:layout_height="@dimen/head_height"
-                    android:background="@mipmap/ic_chat_avatar_2"
-                    android:scaleType="fitXY" />
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal"-->
+                    <!-->-->
+
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/include_app_topbar_iv_friendhead1"-->
+                        <!--android:layout_width="@dimen/head_width"-->
+                        <!--android:layout_height="@dimen/head_height"-->
+                        <!--android:background="@mipmap/ic_chat_avatar_2"-->
+                        <!--android:scaleType="fitXY" />-->
+
+
+                    <!--</LinearLayout>-->
+
+
+                <include layout="@layout/include_chat_user_action_item"
+                    android:id="@+id/include_chat_ppl0"
+                    />
+
 
                 <TextView
                     android:id="@+id/include_app_topbar_tv_friendname1"
@@ -121,17 +135,23 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/activity_chat_ppl1_info_layout"
                 android:layout_width="wrap_content"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/head_margin_right"
+                android:layout_toRightOf="@id/activity_chat_ppl0_info_layout"
+                android:layout_toLeftOf="@+id/activity_chat_ppl2_info_layout"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/include_app_topbar_iv_friendhead2"
-                    android:layout_width="@dimen/head_width"
-                    android:layout_height="@dimen/head_height"
-                    android:background="@mipmap/ic_chat_avatar_1"
-                    android:scaleType="fitXY" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/include_app_topbar_iv_friendhead2"-->
+                    <!--android:layout_width="@dimen/head_width"-->
+                    <!--android:layout_height="@dimen/head_height"-->
+                    <!--android:background="@mipmap/ic_chat_avatar_1"-->
+                    <!--android:scaleType="fitXY" />-->
+                <include layout="@layout/include_chat_user_action_item"
+                    android:id="@+id/include_chat_ppl1"
+                    />
 
                 <TextView
                     android:id="@+id/include_app_topbar_tv_friendname2"
@@ -149,17 +169,23 @@
 
 
             <LinearLayout
+                android:id="@+id/activity_chat_ppl2_info_layout"
                 android:layout_width="wrap_content"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/include_app_topbar_iv_friendhead3"
-                    android:layout_width="@dimen/head_width"
-                    android:layout_height="@dimen/head_height"
-                    android:background="@mipmap/ic_chat_avatar_10"
-                    android:scaleType="fitXY" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/include_app_topbar_iv_friendhead3"-->
+                    <!--android:layout_width="@dimen/head_width"-->
+                    <!--android:layout_height="@dimen/head_height"-->
+                    <!--android:background="@mipmap/ic_chat_avatar_10"-->
+                    <!--android:scaleType="fitXY" />-->
+
+                <include layout="@layout/include_chat_user_action_item"
+                         android:id="@+id/include_chat_ppl2"
+                    />
 
                 <TextView
                     android:id="@+id/include_app_topbar_tv_friendname3"
