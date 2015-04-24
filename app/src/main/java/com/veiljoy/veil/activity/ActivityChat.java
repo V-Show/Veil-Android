@@ -23,6 +23,7 @@ import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.android.popupwidows.ChatPopupWindow;
+import com.veiljoy.veil.android.view.LinearProgressBarLayout;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.memory.ImageCache;
@@ -79,9 +80,9 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     private CheckBox mIBPpl1Voice;
     private CheckBox mIBPpl2Voice;
 
-    private boolean misPplOptionShow;
-    private boolean misPpl1ptionShow;
-    private boolean misPpl2ptionShow;
+    private boolean mIsPplOptionShow;
+    private boolean mIsPpl1ptionShow;
+    private boolean mIsPpl2ptionShow;
     /*
     * info for the girl
     * */
@@ -118,7 +119,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     /*
     *
     * */
-
+    LinearProgressBarLayout mLinearProgressBarLayout;
 
      @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +167,8 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mIBPpl0Voice.setOnCheckedChangeListener(new OnPp0VoiceCheckedListener());
         mIBPpl1Voice.setOnCheckedChangeListener(new OnPp1VoiceCheckedListener());
         mIBPpl2Voice.setOnCheckedChangeListener(new OnPp2VoiceCheckedListener());
+
+        mLinearProgressBarLayout.start();
     }
 
     private void initViews() {
@@ -209,6 +212,9 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mIBPpl1Avatar=(ImageButton)mPpl1Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
         mIBPpl2Avatar=(ImageButton)mPpl2Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
 
+        mLinearProgressBarLayout=(LinearProgressBarLayout)this.findViewById(R.id.activity_chat_talk_progressbar_layout);
+
+
         initPopMenu();
 
 
@@ -240,20 +246,39 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onClick(View v) {
+            mIsPplOptionShow=!mIsPplOptionShow;
+            mLinearProgressBarLayout.end();
+            if(mIsPplOptionShow){
+                mIBPpl0Change.setVisibility(View.VISIBLE);
+                mIBPpl0Kick.setVisibility(View.VISIBLE);
+                mIBPpl0Voice.setVisibility(View.VISIBLE);
+            }
+            else{
+                mIBPpl0Change.setVisibility(View.INVISIBLE);
+                mIBPpl0Kick.setVisibility(View.INVISIBLE);
+                mIBPpl0Voice.setVisibility(View.INVISIBLE);
+            }
 
-            mIBPpl0Change.setVisibility(View.VISIBLE);
-            mIBPpl0Kick.setVisibility(View.VISIBLE);
-            mIBPpl0Voice.setVisibility(View.VISIBLE);
         }
+
+
     }
 
     class OnPpl1AvatarClick implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
-            mIBPpl1Change.setVisibility(View.VISIBLE);
-            mIBPpl1Kick.setVisibility(View.VISIBLE);
-            mIBPpl1Voice.setVisibility(View.VISIBLE);
+            mIsPpl1ptionShow=!mIsPpl1ptionShow;
+            if(mIsPpl1ptionShow){
+                mIBPpl1Change.setVisibility(View.VISIBLE);
+                mIBPpl1Kick.setVisibility(View.VISIBLE);
+                mIBPpl1Voice.setVisibility(View.VISIBLE);
+            }
+            else{
+                mIBPpl1Change.setVisibility(View.INVISIBLE);
+                mIBPpl1Kick.setVisibility(View.INVISIBLE);
+                mIBPpl1Voice.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -261,9 +286,19 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onClick(View v) {
-            mIBPpl2Change.setVisibility(View.VISIBLE);
-            mIBPpl2Kick.setVisibility(View.VISIBLE);
-            mIBPpl2Voice.setVisibility(View.VISIBLE);
+            mIsPpl2ptionShow=!mIsPpl2ptionShow;
+            if(mIsPpl2ptionShow){
+                mIBPpl2Change.setVisibility(View.VISIBLE);
+                mIBPpl2Kick.setVisibility(View.VISIBLE);
+                mIBPpl2Voice.setVisibility(View.VISIBLE);
+
+            }
+            else{
+                mIBPpl2Change.setVisibility(View.INVISIBLE);
+                mIBPpl2Kick.setVisibility(View.INVISIBLE);
+                mIBPpl2Voice.setVisibility(View.INVISIBLE);
+            }
+
         }
     }
 
@@ -491,7 +526,8 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mIBPpl0Voice.setChecked(!isChecked);
+
+
         }
     }
 
@@ -499,14 +535,14 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mIBPpl1Voice.setChecked(!isChecked);
+
         }
     }
     class OnPp2VoiceCheckedListener implements CompoundButton.OnCheckedChangeListener{
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mIBPpl2Voice.setChecked(!isChecked);
+
         }
     }
 

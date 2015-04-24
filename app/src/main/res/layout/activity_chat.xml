@@ -207,6 +207,18 @@
 
     </LinearLayout>
 
+    <com.veiljoy.veil.android.view.LinearProgressBarLayout
+        android:id="@+id/activity_chat_talk_progressbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_above="@+id/activity_chat_talk_bar"
+
+
+     />
+
+
+
+
 
     <LinearLayout
         android:id="@+id/activity_chat_talk_bar"
@@ -236,7 +248,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/activity_chat_user_info_layout"
-        android:layout_above="@id/activity_chat_separate_line"
+        android:layout_above="@id/activity_chat_talk_progressbar_layout"
        >
 
         <ListView
