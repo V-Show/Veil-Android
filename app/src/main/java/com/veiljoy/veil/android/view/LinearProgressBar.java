@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.veiljoy.veil.R;
+
 /**
  * Created by zhongqihong on 15/4/24.
  */
@@ -20,8 +22,9 @@ public class LinearProgressBar extends View {
 
     Paint paint = new Paint();
     TickTracker tickTracker;
-    int ticks = 20;
+    float ticks = 20;
     int range = 0;
+    boolean isStarted=false;
 
     public LinearProgressBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -31,6 +34,14 @@ public class LinearProgressBar extends View {
     public LinearProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs,0);
 
+    }
+
+    public void startProgress(){
+        isStarted=true;
+    }
+
+    public void endProgress(){
+        isStarted=false;
     }
 
     public LinearProgressBar(Context context) {
@@ -43,38 +54,44 @@ public class LinearProgressBar extends View {
 
     private void adjustRange() {
         ticks =tickTracker.getTicks();
+
        // if (ticks > 0)
-        range = ticks*getWidth();
+        range = (int)(ticks*getWidth());
     }
 
      private void init(){
        paint.setTypeface(Typeface.DEFAULT_BOLD);
        paint.setFakeBoldText(true);
        paint.setAntiAlias(true);
-       paint.setColor(Color.RED);
+       paint.setColor(getResources().getColor(R.color.voice_progress_line));
        paint.setStrokeWidth((float) 1.0);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        adjustRange();
 
-        Log.v(TAG,"range "+range+",posy"+ this.getY()+this.getHeight());
+        if(isStarted){
+            adjustRange();
 
-        if (range <= this.getWidth()) {
-
+            if (range>0&&range <= this.getWidth()) {
                 canvas.drawLine(0, 0, range, 0, paint);
-
-
+            }
+            Log.v(TAG,"range "+range+",ticks"+ ticks);
         }
         invalidate();
 
 
 
+
+
+
+
+
+
     }
     public static interface TickTracker{
-        int getTicks();
+        float getTicks();
     }
 
 

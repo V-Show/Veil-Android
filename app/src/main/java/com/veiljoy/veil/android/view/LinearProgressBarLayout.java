@@ -19,6 +19,7 @@ import com.veiljoy.veil.R;
  */
 
 public class LinearProgressBarLayout extends FrameLayout implements LinearProgressBar.TickTracker {
+    OnVoiceRecordTimeOut mOnVoiceRecordTimeOut;
     String TAG=this.getClass().getName();
     LinearProgressBar progressBar;
     Context mContext;
@@ -27,6 +28,8 @@ public class LinearProgressBarLayout extends FrameLayout implements LinearProgre
     long beforeTime;
     long afterTime;
     int totalTicks;
+    int rate=100;
+    boolean timeOut=false;
     public LinearProgressBarLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -55,63 +58,73 @@ public class LinearProgressBarLayout extends FrameLayout implements LinearProgre
         progressBar =(LinearProgressBar)this.findViewById(R.id.common_progress_line);
         dot=(ImageView)this.findViewById(R.id.common_progress_line_iv_dot);
 
-        totalTicks= Integer.parseInt(mContext.getString(R.string.talk_time_limited))*100;
+        totalTicks= Integer.parseInt(mContext.getString(R.string.talk_time_limited))*rate;
 
         animation= AnimationUtils.loadAnimation(
                 mContext, R.anim.controller_enter);
         animation.setDuration(totalTicks);
-        animation.setAnimationListener(new DotAnimationListener());
+
         animation.setFillAfter(true);
 
-        dot.setAnimation(animation);
+
         progressBar.setTickListener(this);
 
     }
 
     public void start(){
         Log.v(TAG,"start animation");
-        beforeTime = System.currentTimeMillis();
-        dot.startAnimation(animation);
+        timeOut=false;
+        progressBar.startProgress();
+        beforeTime = System.currentTimeMillis() ;
+        //dot.setAnimation(animation);
+       // dot.startAnimation(animation);
     }
 
     public void end(){
+        timeOut=false;
+        progressBar.endProgress();
         animation.cancel();;
     }
+
     int[]location=new int[2];
-    public int getTicks(){
+    final float VOICE_TIME_RANGE=6*1000;
+    public float getTicks(){
 
-     //   afterTime = System.currentTimeMillis();
+        float delta=(System.currentTimeMillis()-beforeTime);
 
-        //long delta=(afterTime-beforeTime)/1000;
-
-        float rate=(System.currentTimeMillis()-beforeTime)/(float)totalTicks;
-
-        dot.getLocationOnScreen(location);
-        Log.v(TAG,"start animation x "+ rate);
+        float rate=delta/VOICE_TIME_RANGE;///(float)totalTicks;
 
 
-        return (int)rate;
+        Log.v(TAG,"getTicks delta "+ delta+" ,rate "+rate);
+
+
+
+
+        if(rate>1){
+            rate=1;
+            if(timeOut==false){
+                timeOut=true;
+                if(mOnVoiceRecordTimeOut!=null)
+                    mOnVoiceRecordTimeOut.onRecordTimeOut();
+            }
+        }
+
+
+
+
+        return rate;
     }
 
-    class DotAnimationListener implements android.view.animation.Animation.AnimationListener
-    {
+    public static interface OnVoiceRecordTimeOut{
 
-        @Override
-        public void onAnimationStart(Animation animation) {
+        public void onRecordTimeOut();
 
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
     }
 
+
+    public void setOnVoiceRecordTimeOut(OnVoiceRecordTimeOut l){
+        this.mOnVoiceRecordTimeOut=l;
+    }
 
 
 
