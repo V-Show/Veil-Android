@@ -48,7 +48,7 @@ public class LinearProgressBarLayout extends FrameLayout implements LinearProgre
     }
 
     private  void initWidget(Context context){
-        Log.v(TAG,"initWidget ");
+      
         mContext = context;
         LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View layout = inflater.inflate( R.layout.common_progress_line , null );
@@ -95,7 +95,7 @@ public class LinearProgressBarLayout extends FrameLayout implements LinearProgre
         float rate=delta/VOICE_TIME_RANGE;///(float)totalTicks;
 
 
-        Log.v(TAG,"getTicks delta "+ delta+" ,rate "+rate);
+
 
 
 
