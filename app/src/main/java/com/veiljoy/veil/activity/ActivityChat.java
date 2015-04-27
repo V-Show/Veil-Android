@@ -23,6 +23,7 @@ import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.android.popupwidows.ChatPopupWindow;
+import com.veiljoy.veil.android.view.LinearProgressBar;
 import com.veiljoy.veil.android.view.LinearProgressBarLayout;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
@@ -41,7 +42,7 @@ import java.util.Random;
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class ActivityChat extends ActivityChatSupport implements View.OnLongClickListener,View.OnClickListener{
+public class ActivityChat extends ActivityChatSupport implements View.OnLongClickListener,View.OnClickListener,LinearProgressBarLayout.OnVoiceRecordTimeOut {
 
 
     ChatAdapter mChatAdapter;
@@ -167,8 +168,8 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mIBPpl0Voice.setOnCheckedChangeListener(new OnPp0VoiceCheckedListener());
         mIBPpl1Voice.setOnCheckedChangeListener(new OnPp1VoiceCheckedListener());
         mIBPpl2Voice.setOnCheckedChangeListener(new OnPp2VoiceCheckedListener());
+        mLinearProgressBarLayout.setOnVoiceRecordTimeOut(this);
 
-        mLinearProgressBarLayout.start();
     }
 
     private void initViews() {
@@ -241,6 +242,22 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mChatAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onRecordTimeOut() {
+        mBtnTalk.requestFocus();
+        recordStop();
+    }
+
+    public void recordStop(){
+        Log.v("chatActivity", "stop record");
+        afterTime = System.currentTimeMillis();
+        isTalking = false;
+        VoiceUtils.getmInstance().stop();
+        mLinearProgressBarLayout.end();
+    }
+
+
+
 
     class OnPpl0AvatarClick implements View.OnClickListener{
 
@@ -309,6 +326,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         switch (v.getId()) {
             case R.id.activity_chat_btn_talk:
                 if (!isTalking) {
+                    mLinearProgressBarLayout.start();
                     Log.v("chatActivity", "start record");
                     beforeTime = System.currentTimeMillis();
                     isTalking = true;
@@ -348,10 +366,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
             if (isTalking) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_UP: {
-                        Log.v("chatActivity", "stop record");
-                        afterTime = System.currentTimeMillis();
-                        isTalking = false;
-                        VoiceUtils.getmInstance().stop();
+                        recordStop();
                     }
                     break;
                 }
