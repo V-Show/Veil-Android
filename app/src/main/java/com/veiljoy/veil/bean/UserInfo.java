@@ -7,9 +7,8 @@ public class UserInfo {
 
     private String mName;
     private String mPassword;
-    private int mGender;
-    private String mAvatar;
-
+    private int mGender; // men: 0; women: 1
+    private byte[] mAvatar;
 
     public String getmName() {
         return mName;
@@ -23,7 +22,7 @@ public class UserInfo {
         return mGender;
     }
 
-    public String getmAvatar() {
+    public byte[] getmAvatar() {
         return mAvatar;
     }
 
@@ -39,7 +38,7 @@ public class UserInfo {
         this.mGender = mGender;
     }
 
-    public void setmAvatar(String mAvatar) {
+    public void setmAvatar(byte[] mAvatar) {
         this.mAvatar = mAvatar;
     }
 }

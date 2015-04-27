@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.veiljoy.veil.android.BaseActivity;
+import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
+import com.veiljoy.veil.imof.MUCThread;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.CommonUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
@@ -43,6 +46,9 @@ public abstract class ActivityChatSupport extends BaseActivity {
     protected String to;
     protected List<IMMessage> messagePool;
 
+    protected List<UserInfo> userInfoList = new ArrayList<UserInfo>();
+    protected MUCThread mucThread;
+    protected Handler mucHandler = new UMCHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,21 @@ public abstract class ActivityChatSupport extends BaseActivity {
         if (messagePool == null) {
             messagePool = new ArrayList<IMMessage>();
         }
+
+        mucThread = new MUCThread(mMultiUserChat, mucHandler);
+        mucThread.start();
+
+        // wait for mucThread start
+        while (mucThread.getHandler() == null) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+            }
+        }
+
+        android.os.Message message = mucHandler.obtainMessage();
+        message.obj = "#all";
+        mucThread.getHandler().sendMessage(message);
     }
 
     private void registerBroadcast() {
@@ -242,7 +263,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
         @Override
         public void joined(String participant) {
-            System.out.println(StringUtils.parseResource(participant)+ " has joined the room.");
+            LOG(StringUtils.parseResource(participant) + " has joined the room.");
         }
 
         @Override
@@ -253,9 +274,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
         @Override
         public void left(String participant) {
-            // TODO Auto-generated method stub
             LOG(StringUtils.parseResource(participant)+ " has left the room.");
-
         }
 
         @Override
@@ -324,4 +343,16 @@ public abstract class ActivityChatSupport extends BaseActivity {
         return messagePool;
     }
 
+    protected abstract void updateUserInfo();
+
+    class UMCHandler extends Handler {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            userInfoList.clear();
+            userInfoList.addAll((List<UserInfo>)msg.obj);
+
+            // update ui
+            updateUserInfo();
+        }
+    }
 }
