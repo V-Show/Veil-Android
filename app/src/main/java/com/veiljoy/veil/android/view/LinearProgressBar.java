@@ -77,7 +77,7 @@ public class LinearProgressBar extends View {
             if (range>0&&range <= this.getWidth()) {
                 canvas.drawLine(0, 0, range, 0, paint);
             }
-            Log.v(TAG,"range "+range+",ticks"+ ticks);
+
         }
         invalidate();
 
