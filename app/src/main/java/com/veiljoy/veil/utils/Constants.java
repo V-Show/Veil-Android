@@ -137,4 +137,6 @@ public class Constants {
     public final static String USER_CARD_FILED_PHONE="user_phone";
     public final static String USER_CARD_FILED_DESC="user_desc";
 
+    public final static int USER_GENDER_MALE = 0;
+    public final static int USER_GENDER_FEMALE = 1;
  }

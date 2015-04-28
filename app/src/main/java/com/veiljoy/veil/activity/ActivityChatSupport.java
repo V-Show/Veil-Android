@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhongqihong on 15/4/13.
@@ -46,7 +47,6 @@ public abstract class ActivityChatSupport extends BaseActivity {
     protected String to;
     protected List<IMMessage> messagePool;
 
-    protected List<UserInfo> userInfoList = new ArrayList<UserInfo>();
     protected MUCThread mucThread;
     protected Handler mucHandler = new UMCHandler();
 
@@ -77,7 +77,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
         }
 
         android.os.Message message = mucHandler.obtainMessage();
-        message.obj = "#all";
+        message.what = MUCThread.UPDATE_ALL;
         mucThread.getHandler().sendMessage(message);
     }
 
@@ -164,7 +164,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
 
             Message message = (Message) packet;
-             String voiceFileDir=null;
+            String voiceFileDir = null;
             Log.v(TAG, "receive a message: " + message.getBody());
 
             // 接收来自聊天室的聊天信息
@@ -194,7 +194,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
                     msgViewTime = Integer.parseInt(voiceTime);
                     String msgViewLength = "";
 
-                    Log.v(TAG,"voice time "+msgViewTime);
+                    Log.v(TAG, "voice time " + msgViewTime);
 //                    voiceTimeView.setVisibility(View.VISIBLE);
 //                    voiceTimeView.setText(voiceTime + "\"");
                     for (int i = 0; i < msgViewTime; i++) {
@@ -228,7 +228,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
                 newMessage.setmAvatar(SharePreferenceUtil.getAvatar());
                 newMessage.setmVoiceFileName(voiceFileDir);
 
-                Log.v(TAG,"voice file name "+newMessage.getmVoiceFileName());
+                Log.v(TAG, "voice file name " + newMessage.getmVoiceFileName());
                 AppStates.setImMessageVoiceEntity(newMessage);
 
 
@@ -241,6 +241,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
             }
         }
     }
+
     class ParticipantStatus implements ParticipantStatusListener {
 
         @Override
@@ -264,6 +265,10 @@ public abstract class ActivityChatSupport extends BaseActivity {
         @Override
         public void joined(String participant) {
             LOG(StringUtils.parseResource(participant) + " has joined the room.");
+            android.os.Message message = mucHandler.obtainMessage();
+            message.what = MUCThread.ADD_ONE;
+            message.obj = participant;
+            mucThread.getHandler().sendMessage(message);
         }
 
         @Override
@@ -274,7 +279,11 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
         @Override
         public void left(String participant) {
-            LOG(StringUtils.parseResource(participant)+ " has left the room.");
+            LOG(StringUtils.parseResource(participant) + " has left the room.");
+            android.os.Message message = mucHandler.obtainMessage();
+            message.what = MUCThread.REMOVE_ONE;
+            message.obj = participant;
+            mucThread.getHandler().sendMessage(message);
         }
 
         @Override
@@ -303,7 +312,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
         @Override
         public void nicknameChanged(String participant, String newNickname) {
-            LOG(StringUtils.parseResource(participant)+ " is now known as " + newNickname + ".");
+            LOG(StringUtils.parseResource(participant) + " is now known as " + newNickname + ".");
         }
 
         @Override
@@ -343,16 +352,13 @@ public abstract class ActivityChatSupport extends BaseActivity {
         return messagePool;
     }
 
-    protected abstract void updateUserInfo();
+    protected abstract void updateUserInfo(Map<String, UserInfo> userInfoList);
 
     class UMCHandler extends Handler {
         @Override
         public void handleMessage(android.os.Message msg) {
-            userInfoList.clear();
-            userInfoList.addAll((List<UserInfo>)msg.obj);
-
             // update ui
-            updateUserInfo();
+            updateUserInfo((Map<String, UserInfo>) msg.obj);
         }
     }
 }
