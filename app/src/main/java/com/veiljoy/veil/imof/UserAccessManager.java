@@ -27,19 +27,15 @@ import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
  */
 public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.OnUserLogin {
 
-
     private Context context;
     private LoginConfig loginConfig;
 
     public UserAccessManager(Context context) {
-
         this.context = context;
     }
 
-
     @Override
     public void onPreRegister() {
-
     }
 
     @Override
@@ -68,8 +64,6 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
             // Stop queuing results
             collector.cancel();// 停止请求results（是否成功的结果）
 
-          
-
             if (result == null) {
                 return Constants.SERVER_UNAVAILABLE;
             } else if (result.getType() == IQ.Type.ERROR) {
@@ -79,11 +73,8 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
                     return Constants.REGISTER_RESULT_FAIL;
                 }
             } else if (result.getType() == IQ.Type.RESULT) {
-
                 return Constants.REGISTER_RESULT_SUCCESS;
-
             }
-
         } catch (Exception xee) {
             xee.printStackTrace();
             return Constants.SERVER_UNAVAILABLE;
@@ -94,8 +85,6 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
 
     @Override
     public boolean onRegisterResult(int code) {
-
-
         if (code == Constants.REGISTER_RESULT_SUCCESS)
             return true;
         else
@@ -104,13 +93,10 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
 
     @Override
     public void preLogin() {
-
     }
 
     @Override
     public int onLogin(String name, String psw) {
-
-
         String username = name;
         String password = psw;
 
@@ -150,7 +136,7 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
 
                 */
 
-           // IMOFChatImpl.setUserVCard(connection);
+            // IMOFChatImpl.setUserVCard(connection);
             return Constants.LOGIN_SUCCESS;
         } catch (Exception xee) {
 
@@ -178,8 +164,7 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
 
     @Override
     public boolean onLoginResult(int code) {
-
-        if(code==Constants.LOGIN_SUCCESS)
+        if (code == Constants.LOGIN_SUCCESS)
             return true;
         else
             return false;

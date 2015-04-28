@@ -1,5 +1,6 @@
 package com.veiljoy.veil.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
