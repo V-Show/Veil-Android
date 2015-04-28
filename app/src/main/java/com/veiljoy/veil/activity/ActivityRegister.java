@@ -25,6 +25,10 @@ import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.PhotoUtils;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.StringUtils;
+import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
+
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.packet.VCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +65,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     String mAccount;
     RadioGroup mRGGender;
     int mGender = 0;
+    int defaultIcon = 2; // 默认头像选择咖啡杯
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,19 +74,15 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         init();
         initViews();
         initEvents();
-
-
     }
 
     private void init() {
         mUserinfo = new UserInfo();
 
         mUserRegister = new UserAccessManager(this);
-
-    }
+   }
 
     private void initViews() {
-
         mHeaderLayout = (RelativeLayout) this.findViewById(R.id.activity_register_headerbar);
 
         mTVConfirm = (TextView) mHeaderLayout.findViewById(R.id.common_header_right_btn);
@@ -110,7 +111,9 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
                 new int[]{R.id.icon_avatar_image});
         mGridview.setAdapter(saImageItems);
 
-
+        // 默认头像选择咖啡杯
+        mAvatar = BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[defaultIcon]);
+        mGridview.setSelection(defaultIcon);
     }
 
     private void initEvents() {
@@ -128,7 +131,6 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         }
     }
 
-
     //当AdapterView被单击(触摸屏或者键盘)，则返回的Item单击事件
     class ItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(AdapterView<?> arg0,//The AdapterView where the click happened
@@ -136,16 +138,11 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
                                 int arg2,//The position of the view in the adapter
                                 long arg3//The row id of the item that was clicked
         ) {
-            //在本例中arg2=arg3
+            //在本例中arg2 = arg3
             HashMap<String, Object> item = (HashMap<String, Object>) arg0.getItemAtPosition(arg2);
 
-
             mAvatar = BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[arg2]);
-
-
-
         }
-
     }
 
     class OnGenderCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
@@ -164,63 +161,43 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     }
 
     public void register() {
-
         if (validateAccount()) {
-
-
             SharePreferenceUtil.setName(mAccount);
             SharePreferenceUtil.setPasswd(Constants.USER_DEFAULT_PASSWORD);
             SharePreferenceUtil.setGender(mGender);
 
             RegisterTask registerTask = new RegisterTask();
             registerTask.execute(0);
-        } else {
-
         }
-
-
     }
-
 
     class RegisterTask extends AsyncTask<Integer, Integer, Integer> {
 
-
         @Override
         protected void onPreExecute() {
-
-
-
             mUserRegister.onPreRegister();
-
         }
-
 
         @Override
         protected Integer doInBackground(Integer... params) {
-
-
+            assert(mAvatar != null);
             if (mAvatar != null) {
                 String fileName = PhotoUtils.savePhotoToSDCard(mAvatar, Constants.IMAGE_PATH, Bitmap.CompressFormat.PNG);
                 if (fileName != null) {
                     SharePreferenceUtil.setAvatar(fileName);
                 }
                 AppStates.setUserAvatar(mAvatar);
-
-
-
             }
-            return mUserRegister.onRegister(SharePreferenceUtil.getName(), SharePreferenceUtil.getPasswd());
 
-
+            int ret = mUserRegister.onRegister(SharePreferenceUtil.getName(), SharePreferenceUtil.getPasswd());
+            return ret;
 //            if(user==null)
 //                return Constants.REGISTER_RESULT_ERROR;
 //            else return mIMUserBase.login(user.getmName(),user.getmPassword());
-
         }
 
         @Override
         protected void onPostExecute(Integer code) {
-
             String status = "注册失败";
             switch (code) {
                 case Constants.REGISTER_RESULT_SUCCESS: // 注册成功
@@ -244,7 +221,6 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
                 showCustomToast("注册成功，账号：" + SharePreferenceUtil.getName());
                 new MUCJoinTask(null, ActivityRegister.this).execute("");
             }
-
         }
     }
 
@@ -275,11 +251,9 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             return true;
         }
 
-
         showCustomToast("账号格式不正确");
         mETUserName.requestFocus();
         return false;
     }
-
 
 }

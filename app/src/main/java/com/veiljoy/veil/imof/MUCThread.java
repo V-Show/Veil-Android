@@ -50,9 +50,9 @@ public class MUCThread extends Thread {
                         Log.v("suyu", "name@room: " + name);
                         name = name.substring(name.indexOf("/") + 1);
                         user.setmName(name);
-                        // name = name + "@veil";
                         // get vcard
                         try {
+                            name = name + "@veil";
                             VCard vcard = new VCard();
                             vcard.load(XmppConnectionManager.getInstance()
                                     .getConnection(), name);

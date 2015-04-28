@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,20 +14,24 @@ import com.veiljoy.veil.im.IMUserBase;
 import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.init.InitializationTask;
+import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
+import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
+
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.packet.VCard;
 
 /**
  * Created by zhongqihong on 15/3/31.
  */
 public class ActivityHome extends BaseActivity {
 
-
     IMUserBase.OnUserLogin mUserLoginTask;
     ImageView ivLoadingLeft;
     ImageView ivLoadingRight;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,28 +40,20 @@ public class ActivityHome extends BaseActivity {
 
         initViews();
         showWelcomeAnimation();
-
-
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
         LOG("ON RESUME....");
         init();
-
     }
 
     public void init() {
-
         new InitializationTask(new OnInitListener()).execute();
-
     }
 
     public void enter() {
-
-
         if (verifyAccount()) {
 
             Log.v("home", "verify account pass");
@@ -68,60 +65,65 @@ public class ActivityHome extends BaseActivity {
     }
 
     public boolean verifyAccount() {
-
         //新用户检测
         if (SharePreferenceUtil.getName() == null || SharePreferenceUtil.getPasswd() == null) {
-
             return false;
         }
-        //头像检测
-        if (SharePreferenceUtil.getAvatar() == null) {
 
+        //头像检测
+        // FIXME SharePreferenceUtil.getAvatar()函数返回值不可能为null，默认值是"default_image"
+        if (SharePreferenceUtil.getAvatar() == null) {
             return false;
         }
 
         //检测性别
         if (SharePreferenceUtil.getGender() == -1) {
-
             return false;
         }
 
         //账号和密码匹配检测
-
         return true;
     }
 
 
     class UserLoginTask extends AsyncTask<Integer, Integer, Integer> {
 
-
         @Override
         protected void onPreExecute() {
-
             //showCustomToast("正在登录...");
             mUserLoginTask.preLogin();
-
         }
 
         @Override
         protected Integer doInBackground(Integer... params) {
-
-
             String name = SharePreferenceUtil.getName();
             String psw = SharePreferenceUtil.getPasswd();
 
-            return mUserLoginTask.onLogin(name, psw);
-
-
+            int ret = mUserLoginTask.onLogin(name, psw);
+            if (ret == Constants.LOGIN_SUCCESS) {
+                // 上传头像和性别
+                VCard vcard = new VCard();
+                Bitmap bitmap = ImageCache.getAvatar(SharePreferenceUtil.getAvatar());
+                byte[] bytes = FormatTools.Bitmap2Bytes(bitmap);
+                vcard.setAvatar(bytes);
+                vcard.setField(Constants.USER_CARD_FILED_GENDER, SharePreferenceUtil.getGender() + "");
+                try {
+                    vcard.save(XmppConnectionManager.getInstance()
+                            .getConnection());
+                    LOG("upload vcard successed.");
+                } catch (XMPPException e) {
+                    e.printStackTrace();
+                    LOG("upload vcard failed.");
+                }
+            }
+            return ret;
         }
 
         @Override
         protected void onPostExecute(Integer code) {
-
             Log.v("login", "login code " + code);
 
             switch (code) {
-
                 case Constants.LOGIN_SUCCESS: // 登录成功
                     //showCustomToast(R.string.login_success);
                     break;
@@ -148,16 +150,15 @@ public class ActivityHome extends BaseActivity {
                 new MUCJoinTask(null, ActivityHome.this).execute("");
 
             }
-
         }
     }
 
-    private  void initViews(){
-        ivLoadingLeft =(ImageView)this.findViewById(R.id.activity_welcome_iv_loading_left);
-        ivLoadingRight =(ImageView)this.findViewById(R.id.activity_welcome_iv_loading_right);
+    private void initViews() {
+        ivLoadingLeft = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_left);
+        ivLoadingRight = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_right);
     }
-    private void showWelcomeAnimation()
-    {
+
+    private void showWelcomeAnimation() {
         Animation animationLeft = AnimationUtils.loadAnimation(ActivityHome.this, R.anim.common_loading_zoom_left);
 
         ivLoadingLeft.startAnimation(animationLeft);
@@ -167,16 +168,15 @@ public class ActivityHome extends BaseActivity {
         ivLoadingRight.startAnimation(animationRight);
     }
 
-   class OnInitListener implements InitializationTask.InitializationListener {
+    class OnInitListener implements InitializationTask.InitializationListener {
 
-
-       @Override
-       public void onResult(int code) {
-           if(code!=-1){
-               mUserLoginTask = new UserAccessManager(ActivityHome.this);
-               enter();
-           }
-       }
-   }
+        @Override
+        public void onResult(int code) {
+            if (code != -1) {
+                mUserLoginTask = new UserAccessManager(ActivityHome.this);
+                enter();
+            }
+        }
+    }
 
 }
