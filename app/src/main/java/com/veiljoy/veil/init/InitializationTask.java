@@ -96,11 +96,7 @@ public class InitializationTask  extends AsyncTask<Void,Integer,Integer> {
         }
         publishProgress(100);
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         return INIT_CODE_SUCCESS;
     }

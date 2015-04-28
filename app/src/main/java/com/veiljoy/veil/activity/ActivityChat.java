@@ -319,6 +319,8 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
 
+
+
     @Override
     public boolean onLongClick(View v) {
 
