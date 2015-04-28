@@ -1,10 +1,13 @@
 package com.veiljoy.veil.imof;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.StringUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
@@ -18,6 +21,7 @@ import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.packet.VCard;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -278,6 +282,25 @@ public class MUCHelper {
             String password = SharePreferenceUtil.getPasswd();
             connection.login(username, password);
             AppStates. setAlreadyLogined(true);
+
+            // 第一次注册后登录是在这里，而不是UserAccessManager
+            if (true) {
+                // 上传头像和性别
+                VCard vcard = new VCard();
+                Bitmap bitmap = ImageCache.getAvatar(SharePreferenceUtil.getAvatar());
+                byte[] bytes = FormatTools.Bitmap2Bytes(bitmap);
+                vcard.setAvatar(bytes);
+                vcard.setField(Constants.USER_CARD_FILED_GENDER, SharePreferenceUtil.getGender() + "");
+                try {
+                    vcard.save(XmppConnectionManager.getInstance()
+                            .getConnection());
+                    Log.v("vcard", "upload vcard successed.");
+                } catch (XMPPException e) {
+                    e.printStackTrace();
+                    Log.v("vcard", "upload vcard failed.");
+                }
+            }
+
             return connection;
 
         } catch (XMPPException e) {

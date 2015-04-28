@@ -1,6 +1,5 @@
 package com.veiljoy.veil.activity;
 
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,21 +7,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.R;
+import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.im.IMUserBase;
 import com.veiljoy.veil.imof.MUCJoinTask;
 import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.init.InitializationTask;
-import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.AppStates;
 import com.veiljoy.veil.utils.Constants;
-import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
-import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
-
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.packet.VCard;
 
 /**
  * Created by zhongqihong on 15/3/31.
@@ -100,22 +93,6 @@ public class ActivityHome extends BaseActivity {
             String psw = SharePreferenceUtil.getPasswd();
 
             int ret = mUserLoginTask.onLogin(name, psw);
-            if (ret == Constants.LOGIN_SUCCESS) {
-                // 上传头像和性别
-                VCard vcard = new VCard();
-                Bitmap bitmap = ImageCache.getAvatar(SharePreferenceUtil.getAvatar());
-                byte[] bytes = FormatTools.Bitmap2Bytes(bitmap);
-                vcard.setAvatar(bytes);
-                vcard.setField(Constants.USER_CARD_FILED_GENDER, SharePreferenceUtil.getGender() + "");
-                try {
-                    vcard.save(XmppConnectionManager.getInstance()
-                            .getConnection());
-                    LOG("upload vcard successed.");
-                } catch (XMPPException e) {
-                    e.printStackTrace();
-                    LOG("upload vcard failed.");
-                }
-            }
             return ret;
         }
 
