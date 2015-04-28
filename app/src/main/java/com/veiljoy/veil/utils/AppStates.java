@@ -6,6 +6,9 @@ import com.veiljoy.veil.im.IMMessageVoiceEntity;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by zhongqihong on 15/4/15.
  */
@@ -16,6 +19,8 @@ public class AppStates {
     public static boolean alreadyLogined=false;
 
     public static IMMessageVoiceEntity imMessageVoiceEntity;
+
+    public static Map<String,String>avatarMap=new HashMap<>();
 
 
     public static Bitmap getUserAvatar() {
@@ -45,6 +50,15 @@ public class AppStates {
     public static void setAlreadyLogined(boolean alreadyLogined) {
         AppStates.alreadyLogined = alreadyLogined;
     }
+
+    public static void putAvatar(String name,String avatarPath){
+        avatarMap.put(name,avatarPath);
+    }
+
+    public static String getAvatar(String name){
+        return avatarMap.get(name);
+    }
+
 
 
 

@@ -277,7 +277,7 @@ public class MUCHelper {
             String username = SharePreferenceUtil.getName();
             String password = SharePreferenceUtil.getPasswd();
             connection.login(username, password);
-
+            AppStates. setAlreadyLogined(true);
             return connection;
 
         } catch (XMPPException e) {

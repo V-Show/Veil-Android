@@ -48,7 +48,7 @@ public class LinearProgressBarLayout extends FrameLayout implements LinearProgre
     }
 
     private  void initWidget(Context context){
-      
+
         mContext = context;
         LayoutInflater inflater = (LayoutInflater)context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View layout = inflater.inflate( R.layout.common_progress_line , null );
