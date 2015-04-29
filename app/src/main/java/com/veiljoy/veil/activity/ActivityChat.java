@@ -54,7 +54,6 @@ import java.util.Random;
  */
 public class ActivityChat extends ActivityChatSupport implements View.OnLongClickListener, View.OnClickListener, LinearProgressBarLayout.OnVoiceRecordTimeOut {
 
-
     ChatAdapter mChatAdapter;
     RelativeLayout mLayoutHeader;
     BaseApplication application;
@@ -69,7 +68,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     /*
     * 好友
     * */
-
     private LinearLayout mPpl0Layout;
     private LinearLayout mPpl1Layout;
     private LinearLayout mPpl2Layout;
@@ -77,7 +75,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     private ImageButton mIBPpl0Change;
     private ImageButton mIBPpl1Change;
     private ImageButton mIBPpl2Change;
-
 
     private ImageButton mIBPpl0Kick;
     private ImageButton mIBPpl1Kick;
@@ -98,11 +95,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     private boolean mIsPplOptionShow;
     private boolean mIsPpl1ptionShow;
     private boolean mIsPpl2ptionShow;
+
     /*
     * info for the girl
     * */
     private ImageView mIVGirlAvatar;
     private TextView mIVGrilName;
+
     /*
     *监控录音时间
     */
@@ -136,9 +135,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     * */
     LinearProgressBarLayout mLinearProgressBarLayout;
 
-
     private BaseDialog mBaseDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,14 +145,9 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         init();
         initViews();
         initEvents();
-
-
     }
 
-
     private void init() {
-
-
         mUserName = SharePreferenceUtil.getName();
         mPassword = SharePreferenceUtil.getPasswd();
         mRoomName = SharePreferenceUtil.getRoom();
@@ -167,10 +159,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 //        mIsVoiceAllowedPpl1=mIBPpl1Voice.isChecked();
 //        mIsVoiceAllowedPpl2=mIBPpl2Voice.isChecked();
 
-
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
-
-
     }
 
 
@@ -187,7 +176,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mIBPpl1Voice.setOnCheckedChangeListener(new OnPp1VoiceCheckedListener());
         mIBPpl2Voice.setOnCheckedChangeListener(new OnPp2VoiceCheckedListener());
         mLinearProgressBarLayout.setOnVoiceRecordTimeOut(this);
-
     }
 
     private void initViews() {
@@ -205,7 +193,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mLVChat = (ListView) this.findViewById(R.id.activity_chat_list);
         mLVChat.setAdapter(mChatAdapter);
         mBtnMenu = (ImageButton) this.findViewById(R.id.include_app_topbar_ib_menu);
-
 
         mPpl0Layout = (LinearLayout) this.findViewById(R.id.include_chat_ppl0);
         mPpl1Layout = (LinearLayout) this.findViewById(R.id.include_chat_ppl1);
@@ -227,22 +214,16 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mIBPpl1Voice = (CheckBox) mPpl1Layout.findViewById(R.id.include_chat_user_action_voice_allowed);
         mIBPpl2Voice = (CheckBox) mPpl2Layout.findViewById(R.id.include_chat_user_action_voice_allowed);
 
-
         mIBPpl0Avatar = (ImageButton) mPpl0Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
         mIBPpl1Avatar = (ImageButton) mPpl1Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
         mIBPpl2Avatar = (ImageButton) mPpl2Layout.findViewById(R.id.userphoto_avatar_item_iv_cover);
 
         mLinearProgressBarLayout = (LinearProgressBarLayout) this.findViewById(R.id.activity_chat_talk_progressbar_layout);
 
-
         initPopMenu();
-
-
     }
 
     private void initPopMenu() {
-
-
         int[] location = new int[2];
         mBtnMenu.getLocationOnScreen(location);
         mHeaderHeight = location[1] + mBtnMenu.getHeight();
@@ -274,7 +255,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mLinearProgressBarLayout.end();
     }
 
-
     class OnPpl0AvatarClick implements View.OnClickListener {
 
         @Override
@@ -290,9 +270,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                 mIBPpl0Kick.setVisibility(View.INVISIBLE);
                 mIBPpl0Voice.setVisibility(View.INVISIBLE);
             }
-
         }
-
 
     }
 
@@ -332,7 +310,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         }
     }
 
-
     @Override
     public boolean onLongClick(View v) {
 
@@ -352,7 +329,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                 break;
         }
 
-
         return true;
     }
 
@@ -360,15 +336,10 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_chat_user_info_layout:
-
                 break;
             case R.id.include_app_topbar_ib_menu:
-
-
                 mChatPopupWindow.showAsDropDown(mBtnMenu, 0, mHeaderHeight);
-
                 break;
-
         }
     }
 
@@ -376,7 +347,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     class OnTalkBtnTouch implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             if (isTalking) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_UP: {
@@ -384,18 +354,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                     }
                     break;
                 }
-
-
             }
-
             return false;
         }
     }
 
-
     @Override
     protected void receiveNewMessage(IMMessage message) {
-
     }
 
     @Override
@@ -405,7 +370,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
     public IMMessage makeMessage() {
-
         IMMessage o = null;
         IMMessage.Scheme type = IMMessage.Scheme.ofUri(currMsgType);
         switch (type) {
@@ -422,11 +386,9 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         }
 
         return o;
-
     }
 
     @Override
-
     protected void updateUserInfo(Map<String, UserInfo> userInfoList) {
         // clear seat first
         mIBPp10Name.setText("");
@@ -490,18 +452,15 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     /*
     * 发送语音消息
     * */
-
     class OnVoiceRecordListenerImpl implements VoiceUtils.OnVoiceRecordListener {
 
         @Override
         public void onBackgroundRunning() {
-
             Log.v("chatActivity", "onBackgroundRunning");
         }
 
         @Override
         public void onResult(String fileName) {
-
             Log.v("chatActivity", "onResult " + fileName);
             if (fileName != null) {
                 mVoiceFileName = fileName;
@@ -528,39 +487,26 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         }
     }
+
     /*
     * 播放指定的语音项
     *
     * */
-
     class OnChatListItemClick implements ListView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
             IMMessage msg = (IMMessage) getMessages().get(position);
-
             String uri = msg.getmUri();
-
             switch (IMMessage.Scheme.ofUri(uri)) {
-
                 case VOICE:
-
-
                     IMMessageVoiceEntity voiceEntity = (IMMessageVoiceEntity) msg;
                     Log.v("chatActivity", "OnChatListItemClick " + voiceEntity.getmVoiceFileName());
                     VoiceUtils.getmInstance().play(voiceEntity.getmVoiceFileName());
-
-
                     break;
                 case IMAGE:
-
                     break;
-
             }
-
-
         }
     }
 
@@ -568,37 +514,27 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onBtn0Click() {
-
         }
 
         @Override
         public void onBtn1Click() {
-
-
-
-
             mBaseDialog = BaseDialog.getDialog(ActivityChat.this, "提示", "志林姐姐等会就到哦，确认退出吗？",
-
                     "离开", new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog,
                                             int which) {
                             dialog.dismiss();
-                            ( (BaseApplication) ActivityChat.this.getApplication()).exit();
+                            ((BaseApplication) ActivityChat.this.getApplication()).exit();
                             System.exit(0);
-
                         }
 
 
-                    },"等她", new DialogInterface.OnClickListener() {
+                    }, "等她", new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-
-
-
                         }
                     });
             mBaseDialog.setButton1Background(R.drawable.btn_default_submit);
@@ -607,17 +543,13 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onBtn2Click() {
-
         }
     }
-
 
     class OnPp0VoiceCheckedListener implements CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-
         }
     }
 
@@ -625,7 +557,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
         }
     }
 
@@ -633,10 +564,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
         }
     }
-
-
 
 }

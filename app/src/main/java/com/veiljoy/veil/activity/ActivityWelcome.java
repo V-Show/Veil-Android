@@ -24,13 +24,12 @@ public class ActivityWelcome extends BaseActivity {
         showWelcomeAnimation();
     }
 
-    private  void initViews(){
-        ivLoadingLeft =(ImageView)this.findViewById(R.id.activity_welcome_iv_loading_left);
-        ivLoadingRight =(ImageView)this.findViewById(R.id.activity_welcome_iv_loading_right);
+    private void initViews() {
+        ivLoadingLeft = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_left);
+        ivLoadingRight = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_right);
     }
 
-    private void showWelcomeAnimation()
-    {
+    private void showWelcomeAnimation() {
         Animation animationLeft = AnimationUtils.loadAnimation(ActivityWelcome.this, R.anim.common_loading_zoom_left);
 
         ivLoadingLeft.startAnimation(animationLeft);
@@ -39,6 +38,5 @@ public class ActivityWelcome extends BaseActivity {
 
         ivLoadingRight.startAnimation(animationRight);
     }
-
 
 }
