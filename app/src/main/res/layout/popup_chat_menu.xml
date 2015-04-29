@@ -7,21 +7,23 @@
     <!--android:background="@drawable/bg_dropmenu_up"-->
 
 
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:background="@drawable/chat_menu_setting_selector"
-        android:layout_gravity="top"
 
-      />
     <ImageView
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginTop="10dp"
+
         android:background="@drawable/chat_menu_about_selector"
         android:layout_gravity="top"
         />
 
+    <ImageButton
+        android:id="@+id/popup_chat_menu_ibtn1"
+        android:layout_marginTop="10dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/chat_menu_quit_selector"
+        android:layout_gravity="top"
 
+        />
 
 </LinearLayout>

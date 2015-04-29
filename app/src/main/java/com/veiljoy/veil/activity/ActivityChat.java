@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,11 +21,13 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
 
 import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.android.popupwidows.ChatPopupWindow;
+import com.veiljoy.veil.android.view.BaseDialog;
 import com.veiljoy.veil.android.view.LinearProgressBar;
 import com.veiljoy.veil.android.view.LinearProgressBarLayout;
 import com.veiljoy.veil.bean.UserInfo;
@@ -132,6 +135,10 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     *
     * */
     LinearProgressBarLayout mLinearProgressBarLayout;
+
+
+    private BaseDialog mBaseDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +253,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                 133, getResources().getDisplayMetrics());
 
         mChatPopupWindow = new ChatPopupWindow(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mChatPopupWindow.setOnChatMenuBtnSelected(new OnChatMenuBtnClickListenerImpl());
     }
 
     public void refreshAdapter() {
@@ -556,50 +564,49 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         }
     }
 
-    class OnChatMenuBtnSelectedListenerImpl implements ChatPopupWindow.OnChatMenuBtnSelectedListener {
+    class OnChatMenuBtnClickListenerImpl implements ChatPopupWindow.OnChatMenuBtnClickListener {
 
         @Override
-        public void onPpl0TalkAllowed(boolean selected) {
+        public void onBtn0Click() {
 
         }
 
         @Override
-        public void onPpl1TalkAllowed(boolean selected) {
+        public void onBtn1Click() {
 
+
+
+
+            mBaseDialog = BaseDialog.getDialog(ActivityChat.this, "提示", "志林姐姐等会就到哦，确认退出吗？",
+
+                    "离开", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.dismiss();
+                            ( (BaseApplication) ActivityChat.this.getApplication()).exit();
+                            System.exit(0);
+
+                        }
+
+
+                    },"等她", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+
+
+
+                        }
+                    });
+            mBaseDialog.setButton1Background(R.drawable.btn_default_submit);
+            mBaseDialog.show();
         }
 
         @Override
-        public void onPpl2TalkAllowed(boolean selected) {
-
-        }
-
-        @Override
-        public void onPpl0Changed(boolean selected) {
-
-        }
-
-        @Override
-        public void onPpl1Changed(boolean selected) {
-
-        }
-
-        @Override
-        public void onPpl2Changed(boolean selected) {
-
-        }
-
-        @Override
-        public void onPpl0Reserved(boolean selected) {
-
-        }
-
-        @Override
-        public void onPpl1Reserved(boolean selected) {
-
-        }
-
-        @Override
-        public void onPpl2Reserved(boolean selected) {
+        public void onBtn2Click() {
 
         }
     }
@@ -629,5 +636,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         }
     }
+
+
 
 }

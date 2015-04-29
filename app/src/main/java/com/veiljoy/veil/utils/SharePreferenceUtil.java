@@ -3,6 +3,7 @@ package com.veiljoy.veil.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SharePreferenceUtil {
 
@@ -149,6 +150,7 @@ public class SharePreferenceUtil {
         editor.commit();
     }
     public static void setRoom(String name) {
+        Log.v("MUCRoomManager", "name" + name );
         editor.putString("room_name", name);
         editor.commit();
     }

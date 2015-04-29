@@ -48,7 +48,7 @@ public class ActivityHome extends BaseActivity {
     public void init() {
 
 
-        if (AppStates.verifyAccount()) {
+        if (AppStates.verifyAccount()&&AppStates.verifyStates()) {
 
 
             //if(AppStates.verifyStates())

@@ -21,13 +21,11 @@ public class BaseApplication extends Application {
 
     public void exit(){
 
-
-        //SharePreferenceUtil.setStatus(Constants.LOGIN_ERROR);
+        SharePreferenceUtil.setStatus(Constants.LOGIN_ERROR);
+        SharePreferenceUtil.setRoom("null");
     }
 
-    public void runInBackground(){
 
-    }
 
     public void enter(){
         SharePreferenceUtil.setStatus(Constants.LOGIN_SUCCESS);

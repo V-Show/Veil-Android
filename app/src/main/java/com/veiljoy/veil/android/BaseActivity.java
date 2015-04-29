@@ -80,6 +80,6 @@ public class BaseActivity extends Activity implements IActivitySupport{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ((BaseApplication)this.getApplication()).exit();
+        //((BaseApplication)this.getApplication()).exit();
     }
 }

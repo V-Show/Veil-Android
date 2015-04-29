@@ -1,6 +1,7 @@
 package com.veiljoy.veil.imof;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.im.IMRoom;
@@ -53,12 +54,6 @@ public class MUCRoomManager implements IMRoom {
         return null;
     }
 
-    /*
-    *设置当前聊天室的名称
-    * */
-    public void setRoomName(String roomName){
-        SharePreferenceUtil.setRoom(roomName);
-    }
 
     /*
     * 进入一个特定的房间
@@ -106,19 +101,23 @@ public class MUCRoomManager implements IMRoom {
 
     public MultiUserChat enterRoom(){
 
+
+        Log.v("MUCRoomManager","enter room");
         MUCHelper.login(SharePreferenceUtil.getName(),SharePreferenceUtil.getPasswd());
 
         MultiUserChat muc=AppStates.getMultiUserChat();
         //判断是否已经在房间里面了，不需要重新进入
         if(muc==null){
-
+            Log.v("MUCRoomManager","muc"+muc==null?"=null":"!=null");
             String roomJid=getAnyRoom(Constants.DEFAULT_ROOM_JID);
             if(roomJid!=null){
                 muc=MUCHelper.JoinRoom(roomJid);
+                Log.v("MUCRoomManager","roomJid"+roomJid==null?"=null":"!=null");
                 if(muc!=null){
                     ((BaseApplication) mActivity.getApplication()).enter();
                     AppStates.setMultiUserChat(muc);
                     SharePreferenceUtil.setRoom(roomJid);
+
                 }
 
             }
