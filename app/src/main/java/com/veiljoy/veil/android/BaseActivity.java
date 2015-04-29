@@ -15,7 +15,7 @@ import com.veiljoy.veil.R;
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends Activity implements IActivitySupport{
 
 
     /**
@@ -28,6 +28,7 @@ public class BaseActivity extends Activity {
             intent.putExtras(bundle);
         }
         startActivity(intent);
+        this.finish();
     }
 
 
@@ -60,7 +61,25 @@ public class BaseActivity extends Activity {
         toast.show();
     }
 
+
+
     protected void LOG(String log){
         Log.v(this.getClass().getName(),log);
+    }
+
+    @Override
+    public void startService() {
+
+    }
+
+    @Override
+    public void stopService() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((BaseApplication)this.getApplication()).exit();
     }
 }

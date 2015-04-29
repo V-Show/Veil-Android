@@ -136,9 +136,12 @@ public class SharePreferenceUtil {
 
         return sp.getString("photo", "18601709039");
     }
+    /*
+    * status: 0  离开应用， 1 后台运行
+    * */
 
     public static int getStatus() {
-        return sp.getInt("status", 0);
+        return sp.getInt("status", Constants.LOGIN_ERROR);
     }
 
     public static void setStatus(int status) {

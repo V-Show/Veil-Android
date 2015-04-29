@@ -64,7 +64,41 @@ public class AppStates {
 
 
 
+    public static boolean verifyAccount() {
+        //新用户检测
+        if (SharePreferenceUtil.getName() == null || SharePreferenceUtil.getPasswd() == null) {
+            return false;
+        }
 
+        //头像检测
+        if (SharePreferenceUtil.getAvatar().equals("default_image")) {
+            return false;
+        }
+
+        //检测性别
+        if (SharePreferenceUtil.getGender() == -1) {
+            return false;
+        }
+
+        //账号和密码匹配检测
+        return true;
+    }
+
+    public static boolean verifyStates(){
+
+        //上次没有进入房间
+        if(SharePreferenceUtil.getRoom().equals("null")){
+            return false;
+        }
+
+        //表示在后台运行，直接进入聊天室
+       if(SharePreferenceUtil.getStatus()<=Constants.LOGIN_ERROR){
+           return false;
+        }
+
+
+        return true;
+    }
 
     public static void setMultiUserChat(MultiUserChat muc){
         multiUserChat=muc;

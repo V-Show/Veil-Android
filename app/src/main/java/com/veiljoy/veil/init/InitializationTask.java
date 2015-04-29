@@ -31,11 +31,10 @@ public class InitializationTask  extends AsyncTask<Void,Integer,Integer> {
     public static interface   InitializationListener{
 
         void onResult(int code);
+        int inBackground(int code);
     }
 
-    private  void init(){
 
-    }
 
     private boolean initNetwork(){
 
@@ -97,8 +96,9 @@ public class InitializationTask  extends AsyncTask<Void,Integer,Integer> {
         publishProgress(100);
 
 
+        return listener.inBackground(INIT_CODE_SUCCESS);
 
-        return INIT_CODE_SUCCESS;
+
     }
 
     @Override

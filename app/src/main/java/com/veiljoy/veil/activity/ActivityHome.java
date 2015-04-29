@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.widget.ImageView;
 import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.im.IMUserBase;
+import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.imof.MUCJoinTask;
+import com.veiljoy.veil.imof.MUCRoomManager;
 import com.veiljoy.veil.imof.UserAccessManager;
 import com.veiljoy.veil.init.InitializationTask;
 import com.veiljoy.veil.memory.ImageCache;
@@ -37,54 +40,42 @@ public class ActivityHome extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
-        initViews();
         showWelcomeAnimation();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LOG("ON RESUME....");
         init();
+
     }
 
     public void init() {
-        new InitializationTask(new OnInitListener()).execute();
+
+
+        if (AppStates.verifyAccount()) {
+
+
+            //if(AppStates.verifyStates())
+//            if(false)
+//            {
+//                //首先是否后台运行
+//                new InitializationTask(new OnReEnterMUC()).execute();
+//            }
+//            else
+            {
+                new InitializationTask(new OnInitListener()).execute();
+            }
+
+        } else {
+
+             startActivity(ActivityRegister.class, null);
+        }
     }
 
     public void enter() {
-        if (verifyAccount()) {
-
-            Log.v("home", "verify account pass");
-            new UserLoginTask().execute();
-
-        } else {
-            startActivity(ActivityRegister.class, null);
-        }
+        new UserLoginTask().execute();
     }
-
-    public boolean verifyAccount() {
-        //新用户检测
-        if (SharePreferenceUtil.getName() == null || SharePreferenceUtil.getPasswd() == null) {
-            return false;
-        }
-
-        //头像检测
-        // FIXME SharePreferenceUtil.getAvatar()函数返回值不可能为null，默认值是"default_image"
-        if (SharePreferenceUtil.getAvatar() == null) {
-            return false;
-        }
-
-        //检测性别
-        if (SharePreferenceUtil.getGender() == -1) {
-            return false;
-        }
-
-        //账号和密码匹配检测
-        return true;
-    }
-
 
     class UserLoginTask extends AsyncTask<Integer, Integer, Integer> {
 
@@ -110,10 +101,10 @@ public class ActivityHome extends BaseActivity {
                 try {
                     vcard.save(XmppConnectionManager.getInstance()
                             .getConnection());
-                    LOG("upload vcard successed.");
+
                 } catch (XMPPException e) {
                     e.printStackTrace();
-                    LOG("upload vcard failed.");
+
                 }
             }
             return ret;
@@ -121,7 +112,7 @@ public class ActivityHome extends BaseActivity {
 
         @Override
         protected void onPostExecute(Integer code) {
-            Log.v("login", "login code " + code);
+
 
             switch (code) {
                 case Constants.LOGIN_SUCCESS: // 登录成功
@@ -139,26 +130,29 @@ public class ActivityHome extends BaseActivity {
             }
 
             boolean rel = mUserLoginTask.onLoginResult(code);
-            Log.v("home", "home rel " + rel);
+
 
             if (!rel) {
 
                 startActivity(ActivityRegister.class, null);
                 finish();
             } else {
-                AppStates.setAlreadyLogined(true);
+
                 new MUCJoinTask(null, ActivityHome.this).execute("");
 
             }
         }
     }
 
-    private void initViews() {
-        ivLoadingLeft = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_left);
-        ivLoadingRight = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_right);
+    private  void enterChatRoom(){
+        startActivity(ActivityChat.class, null);
+
     }
 
+
     private void showWelcomeAnimation() {
+        ivLoadingLeft = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_left);
+        ivLoadingRight = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_right);
         Animation animationLeft = AnimationUtils.loadAnimation(ActivityHome.this, R.anim.common_loading_zoom_left);
 
         ivLoadingLeft.startAnimation(animationLeft);
@@ -177,6 +171,35 @@ public class ActivityHome extends BaseActivity {
                 enter();
             }
         }
+
+        @Override
+        public int inBackground(int code) {
+
+
+            return code;
+
+        }
     }
+
+//    class OnReEnterMUC implements InitializationTask.InitializationListener {
+//        @Override
+//        public void onResult(int code) {
+//            if (code != -1) {
+//                enterChatRoom();
+//            }
+//        }
+//
+//        @Override
+//        public int inBackground(int code) {
+//
+//
+//            MUCRoomManager.getInstance(ActivityHome.this).enterRoom();
+//            return code;
+//
+//        }
+//
+//    }
+
+
 
 }

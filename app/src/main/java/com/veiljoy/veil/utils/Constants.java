@@ -137,4 +137,12 @@ public class Constants {
     public final static String USER_CARD_FILED_PHONE="user_phone";
     public final static String USER_CARD_FILED_DESC="user_desc";
 
+   /**
+    *
+    *
+    * **/
+
+
+   public static final String XMPP_HOST_NAME_PORT = XMPP_HOST_NAME+":"+XMPP_HOST_PORT;
+
  }

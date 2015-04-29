@@ -1,5 +1,6 @@
 package com.veiljoy.veil.imof;
 
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,6 +13,7 @@ import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.FormField;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
@@ -19,21 +21,24 @@ import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.net.*;
 /**
  * Created by zhongqihong on 15/4/14.
  */
 public class MUCHelper {
 
+    public static final String TAG="MUCHelper";
 
     public static XMPPConnection connection;
-
+    public static String XMPP_SERVER_URL="http://my.openfire.com:9090/plugins/presence/status?jid=user1@my.openfire.com&type=xml";
 
     public static void init(XMPPConnection xmppConnection){
         connection=xmppConnection;
@@ -46,11 +51,11 @@ public class MUCHelper {
      *
      * @param roomName 房间名称
      */
-    public static void createRoom(String roomName) {
+    public static boolean createRoom(String roomName) {
 
 
         if(connection==null){
-           return;
+           return false;
         }
         try {
 
@@ -102,10 +107,14 @@ public class MUCHelper {
             submitForm.setAnswer("muc#roomconfig_passwordprotectedroom", true);
             // 发送已完成的表单（有默认值）到服务器来配置聊天室
             muc.sendConfigurationForm(submitForm);
+
+            return true;
         } catch (XMPPException e) {
             Log.v("MUCHelper","exception:"+e.getMessage());
             e.printStackTrace();
         }
+
+        return false;
     }
 
     /**
@@ -150,7 +159,7 @@ public class MUCHelper {
             XMPPConnection connection ;
 
             if(!AppStates.isAlreadyLogined()){
-                connection=login();
+                connection=login(SharePreferenceUtil.getName(),SharePreferenceUtil.getPasswd());
             }
             else
             {
@@ -187,6 +196,58 @@ public class MUCHelper {
 
 
     }
+
+    /*
+    * 获取任意一个有效房间。
+    * @return Map(key 房间名字 ，value 房间的jid)
+    * */
+
+    public static Map<String,String> getAnyRoom(){
+        HashMap<String,String> anyRoom= new HashMap<>();
+        boolean flag=false;
+        String roomName=null;
+        String roomJid=null;
+
+
+        List<List<Map<String, String>>> childs = new ArrayList<List<Map<String, String>>>();
+        MUCHelper.fetchHostRoom(childs);
+
+
+        for (int i = 0; i < childs.size(); i++) {
+            if (!flag) {
+                //获得上层房间组
+                List<Map<String, String>> roomGroup = childs.get(i);
+                for (int j = 0; j < roomGroup.size(); j++) {
+                    Map<String, String> room = roomGroup.get(j);
+                    if (room.containsKey(Constants.MAP_ROOM_NAME_KEY)) {
+                        if (room.get(Constants.MAP_ROOM_NAME_KEY) != null) {
+                            roomName = room.get(Constants.MAP_ROOM_NAME_KEY);
+                        }
+                    }
+
+                    if (room.containsKey(Constants.MAP_ROOM_JID_KEY)) {
+                        if (room.get(Constants.MAP_ROOM_JID_KEY) != null) {
+                            roomJid = room.get(Constants.MAP_ROOM_JID_KEY);
+                        }
+                    }
+
+                    if (roomName != null && roomJid != null) {
+                        flag = true;
+                        anyRoom.put(roomName,roomJid);
+                        break;
+                    }
+
+                }
+            } else {
+                break;
+            }
+
+        }
+
+
+        return anyRoom;
+    }
+
     // 根据服务器获取房间列表
     private static List<Map<String, String>> GetRoomFromServers(String jid,XMPPConnection connection) {
 
@@ -267,17 +328,21 @@ public class MUCHelper {
     }
 
 
-    public static XMPPConnection login() {
+    public static XMPPConnection login(String username,String password) {
 
         try {
             XMPPConnection connection = XmppConnectionManager.getInstance()
                     .getConnection();
+
+            if(AppStates.isAlreadyLogined()){
+                return connection;
+            }
             if (!connection.isConnected())
                 connection.connect();
-            String username = SharePreferenceUtil.getName();
-            String password = SharePreferenceUtil.getPasswd();
             connection.login(username, password);
+            connection.sendPacket(new Presence(Presence.Type.available));
             AppStates. setAlreadyLogined(true);
+            IsUserOnLine(username);
             return connection;
 
         } catch (XMPPException e) {
@@ -288,6 +353,60 @@ public class MUCHelper {
 
 
 
+    }
+
+    public static String combineCheckingPrecenceUrl(String uid){
+
+        return String.format("http://"+Constants.XMPP_HOST_NAME_PORT+"/plugins/presence/status?" +
+            "jid={0}@"+Constants.XMPP_HOST_NAME+"&type=xml",uid);
+
+    }
+    /**
+     * 判断openfire用户的状态
+     * strUrl : url格式 - http://my.openfire.com:9090/plugins/presence/status?jid=user1@my.openfire.com&type=xml
+     * 返回值 : 0 - 用户不存在; 1 - 用户在线; 2 - 用户离线
+     * 说明   ：必须要求 openfire加载 presence 插件，同时设置任何人都可以访问
+     */
+
+    public  static short IsUserOnLine(String uid)
+    {
+        short            shOnLineState    = 0;    //-不存在-
+        String strUrl=combineCheckingPrecenceUrl(uid);
+
+        Log.v(TAG,"strUrl "+strUrl);
+
+        try
+        {
+            URL             oUrl     = new URL(strUrl);
+            URLConnection     oConn     = oUrl.openConnection();
+            if(oConn!=null)
+            {
+                BufferedReader     oIn = new BufferedReader(new InputStreamReader(oConn.getInputStream()));
+                if(null!=oIn)
+                {
+                    String strFlag = oIn.readLine();
+                    oIn.close();
+
+                    if(strFlag.indexOf("type=\"unavailable\"")>=0)
+                    {
+                        shOnLineState = 2;
+                    }
+                    if(strFlag.indexOf("type=\"error\"")>=0)
+                    {
+                        shOnLineState = 0;
+                    }
+                    else if(strFlag.indexOf("priority")>=0 || strFlag.indexOf("id=\"")>=0)
+                    {
+                        shOnLineState = 1;
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+        }
+
+        return     shOnLineState;
     }
 
 

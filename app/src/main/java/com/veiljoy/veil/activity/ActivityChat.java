@@ -415,7 +415,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
     @Override
     protected void updateUserInfo() {
-        mIBPp10Name.setText(userInfoList.get(0).getmName());
+        //mIBPp10Name.setText(userInfoList.get(0).getmName());
     }
 
     /*

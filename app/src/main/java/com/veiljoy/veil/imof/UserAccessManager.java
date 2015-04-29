@@ -100,43 +100,8 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
         String username = name;
         String password = psw;
 
-        Log.v("login", "trying to login with name :" + name + " ,psw:" + psw);
         try {
-            XMPPConnection connection = XmppConnectionManager.getInstance()
-                    .getConnection();
-
-            Log.v("login", "connection " + connection == null ? "null" : "!=null");
-            if (!connection.isConnected())
-                connection.connect();
-            Log.v("login", "login ...");
-            connection.login(username, password);
-            Log.v("login", "login finished...");
-            // OfflineMsgManager.getInstance(activitySupport).dealOfflineMsg(connection);
-            connection.sendPacket(new Presence(Presence.Type.available));
-
-                /*
-                *
-
-                if (loginConfig.isNovisible()) {// 隐身登录
-                    Presence presence = new Presence(Presence.Type.unavailable);
-                    Collection<RosterEntry> rosters = connection.getRoster()
-                            .getEntries();
-                    for (RosterEntry rosterEntry : rosters) {
-                        presence.setTo(rosterEntry.getUser());
-                        connection.sendPacket(presence);
-                    }
-                }
-                loginConfig.setUsername(username);
-                if (loginConfig.isRemember()) {
-                    loginConfig.setPassword(password);
-                } else {
-                    loginConfig.setPassword("");
-                }
-                loginConfig.setOnline(true);
-
-                */
-
-            // IMOFChatImpl.setUserVCard(connection);
+            MUCHelper.login(name,psw);
             return Constants.LOGIN_SUCCESS;
         } catch (Exception xee) {
 

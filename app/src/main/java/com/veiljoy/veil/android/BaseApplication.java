@@ -18,4 +18,22 @@ public class BaseApplication extends Application {
         SharePreferenceUtil.InitPreferenceUtil(this, Constants.USER_USER_PROFILE_PATH_KEY);
         ImageCache.init(this);
     }
+
+    public void exit(){
+
+
+        //SharePreferenceUtil.setStatus(Constants.LOGIN_ERROR);
+    }
+
+    public void runInBackground(){
+
+    }
+
+    public void enter(){
+        SharePreferenceUtil.setStatus(Constants.LOGIN_SUCCESS);
+    }
+
+
+
+
 }
