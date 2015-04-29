@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,10 +27,13 @@ import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.android.popupwidows.ChatPopupWindow;
 import com.veiljoy.veil.android.view.LinearProgressBar;
 import com.veiljoy.veil.android.view.LinearProgressBarLayout;
+import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.CommonUtils;
+import com.veiljoy.veil.utils.Constants;
+import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.VoiceUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
@@ -37,7 +41,9 @@ import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import org.jivesoftware.smack.XMPPConnection;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -198,9 +204,9 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
         mPpl1Layout = (LinearLayout) this.findViewById(R.id.include_chat_ppl1);
         mPpl2Layout = (LinearLayout) this.findViewById(R.id.include_chat_ppl2);
 
-        mIBPp10Name = (TextView)this.findViewById(R.id.include_app_topbar_tv_friendname1);
-        mIBPp11Name = (TextView)this.findViewById(R.id.include_app_topbar_tv_friendname2);
-        mIBPp12Name = (TextView)this.findViewById(R.id.include_app_topbar_tv_friendname3);
+        mIBPp10Name = (TextView) this.findViewById(R.id.include_app_topbar_tv_friendname1);
+        mIBPp11Name = (TextView) this.findViewById(R.id.include_app_topbar_tv_friendname2);
+        mIBPp12Name = (TextView) this.findViewById(R.id.include_app_topbar_tv_friendname3);
 
         mIBPpl0Change = (ImageButton) mPpl0Layout.findViewById(R.id.include_chat_user_action_change);
         mIBPpl1Change = (ImageButton) mPpl1Layout.findViewById(R.id.include_chat_user_action_change);
@@ -319,8 +325,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
 
-
-
     @Override
     public boolean onLongClick(View v) {
 
@@ -414,8 +418,65 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
     }
 
     @Override
-    protected void updateUserInfo() {
-        //mIBPp10Name.setText(userInfoList.get(0).getmName());
+
+    protected void updateUserInfo(Map<String, UserInfo> userInfoList) {
+        // clear seat first
+        mIBPp10Name.setText("");
+        mIBPp11Name.setText("");
+        mIBPp12Name.setText("");
+        mIBPpl0Avatar.setImageResource(R.drawable.bg_vipavatar_cover);
+        mIBPpl1Avatar.setImageResource(R.drawable.bg_vipavatar_cover);
+        mIBPpl2Avatar.setImageResource(R.drawable.bg_vipavatar_cover);
+
+        // clear women info
+        mIVGrilName.setText("");
+        mIVGirlAvatar.setImageResource(R.drawable.bg_vipavatar_cover);
+
+        Iterator it = userInfoList.entrySet().iterator();
+        String name;
+        UserInfo user;
+        int seat = 0;
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            name = (String) entry.getKey();
+            user = (UserInfo) entry.getValue();
+            Log.v("suyu", "user info list " + seat + " - name: " + name + ", gender = " + user.getmGender());
+            Bitmap bm = null;
+            byte[] avatar = user.getmAvatar();
+            if (avatar != null) {
+                bm = FormatTools.Bytes2Bitmap(avatar);
+            }
+
+            if (user.getmGender() == Constants.USER_GENDER_FEMALE) {
+                mIVGrilName.setText(name);
+                if (bm != null) {
+                    mIVGirlAvatar.setImageBitmap(bm);
+                }
+            } else {
+                switch (seat) {
+                    case 0:
+                        mIBPp10Name.setText(name);
+                        if (bm != null) {
+                            mIBPpl0Avatar.setImageBitmap(bm);
+                        }
+                        break;
+                    case 1:
+                        mIBPp11Name.setText(name);
+                        if (bm != null) {
+                            mIBPpl1Avatar.setImageBitmap(bm);
+                        }
+                        break;
+                    case 2:
+                        mIBPp12Name.setText(name);
+                        if (bm != null) {
+                            mIBPpl2Avatar.setImageBitmap(bm);
+                        }
+                        break;
+                }
+
+                seat++;
+            }
+        }
     }
 
     /*

@@ -92,6 +92,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
         mETUserName = (EditText) findViewById(R.id.activity_register_et_name);
 
         mRGGender = (RadioGroup) findViewById(R.id.activity_register_radiogroup_gender);
+        mRGGender.setOnCheckedChangeListener(new OnGenderCheckedChangeListener());
 
         for (int i = 0; i < 12; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();

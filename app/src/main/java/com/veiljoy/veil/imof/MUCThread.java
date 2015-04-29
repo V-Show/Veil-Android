@@ -13,8 +13,8 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.packet.VCard;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by suyu on 2015/4/27.
@@ -24,7 +24,11 @@ public class MUCThread extends Thread {
     MultiUserChat muc;
     Handler handler;
     Handler callerHandler;
-    List<UserInfo> userInfoList = new ArrayList<UserInfo>();
+    Map<String, UserInfo> userInfoList = new HashMap<String, UserInfo>();
+
+    public static int UPDATE_ALL = 0;
+    public static int ADD_ONE = 1;
+    public static int REMOVE_ONE = 2;
 
     public MUCThread(MultiUserChat muc, Handler callerHandler) {
         super();
@@ -40,7 +44,7 @@ public class MUCThread extends Thread {
             @Override
             public void handleMessage(Message msg) {
                 // process incoming messages here
-                if (msg.obj.equals("#all")) {
+                if (msg.what == UPDATE_ALL) {
                     userInfoList.clear();
 
                     java.util.Iterator<java.lang.String> it = muc.getOccupants();
@@ -66,10 +70,53 @@ public class MUCThread extends Thread {
                         } catch (XMPPException e) {
                             e.printStackTrace();
                         }
-                        userInfoList.add(user);
+                        userInfoList.put(user.getmName(), user);
                     }
 
-                    // get all participants
+                    // notify caller
+                    Message message = handler.obtainMessage();
+                    message.obj = userInfoList;
+                    callerHandler.sendMessage(message);
+                } else if (msg.what == ADD_ONE) {
+                    // add the one to userInfoList
+                    String name = (String)msg.obj;
+                    // turn participant jid to node
+                    name = name.substring(name.indexOf("/") + 1);
+                    if (!userInfoList.containsKey(name)) {
+                        UserInfo user = new UserInfo();
+                        user.setmName(name);
+                        // get vcard
+                        try {
+                            name = name + "@veil";
+                            VCard vcard = new VCard();
+                            vcard.load(XmppConnectionManager.getInstance()
+                                    .getConnection(), name);
+                            Log.v("suyu", "name: " + name);
+                            String gender = vcard.getField(Constants.USER_CARD_FILED_GENDER);
+                            if (gender != null) {
+                                user.setmGender(Integer.parseInt(gender));
+                            }
+                            Log.v("suyu", "gender: " + gender);
+                            byte[] avatar = vcard.getAvatar();
+                            user.setmAvatar(avatar);
+                        } catch (XMPPException e) {
+                            e.printStackTrace();
+                        }
+                        userInfoList.put(user.getmName(), user);
+
+                        // notify caller
+                        Message message = handler.obtainMessage();
+                        message.obj = userInfoList;
+                        callerHandler.sendMessage(message);
+                    }
+                } else if (msg.what == REMOVE_ONE) {
+                    // add the one to userInfoList
+                    String name = (String)msg.obj;
+                    // turn participant jid to node
+                    name = name.substring(name.indexOf("/") + 1);
+                    userInfoList.remove(name);
+
+                    // notify caller
                     Message message = handler.obtainMessage();
                     message.obj = userInfoList;
                     callerHandler.sendMessage(message);

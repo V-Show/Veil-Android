@@ -101,7 +101,7 @@ public class FormatTools {
     }
 
     // byte[]转换成Bitmap
-    public Bitmap Bytes2Bitmap(byte[] b) {
+    public static Bitmap Bytes2Bitmap(byte[] b) {
         if (b.length != 0) {
             return BitmapFactory.decodeByteArray(b, 0, b.length);
         }
