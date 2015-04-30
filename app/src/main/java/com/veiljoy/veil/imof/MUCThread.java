@@ -9,9 +9,10 @@ import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.jivesoftware.smackx.packet.VCard;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class MUCThread extends Thread {
                 if (msg.what == UPDATE_ALL) {
                     userInfoList.clear();
 
-                    java.util.Iterator<java.lang.String> it = muc.getOccupants();
+                    java.util.Iterator<java.lang.String> it = muc.getOccupants().iterator();
                     while (it.hasNext()) {
                         String name = it.next();
                         UserInfo user = new UserInfo();
@@ -67,7 +68,7 @@ public class MUCThread extends Thread {
                             }
                             Log.v("suyu", "gender: " + gender);
                             user.setmAvatar(vcard.getAvatar());
-                        } catch (XMPPException e) {
+                        } catch (SmackException | XMPPException.XMPPErrorException e) {
                             e.printStackTrace();
                         }
                         userInfoList.put(user.getmName(), user);
@@ -79,7 +80,7 @@ public class MUCThread extends Thread {
                     callerHandler.sendMessage(message);
                 } else if (msg.what == ADD_ONE) {
                     // add the one to userInfoList
-                    String name = (String)msg.obj;
+                    String name = (String) msg.obj;
                     // turn participant jid to node
                     name = name.substring(name.indexOf("/") + 1);
                     if (!userInfoList.containsKey(name)) {
@@ -99,7 +100,7 @@ public class MUCThread extends Thread {
                             Log.v("suyu", "gender: " + gender);
                             byte[] avatar = vcard.getAvatar();
                             user.setmAvatar(avatar);
-                        } catch (XMPPException e) {
+                        } catch (XMPPException | SmackException.NotConnectedException | SmackException.NoResponseException e) {
                             e.printStackTrace();
                         }
                         userInfoList.put(user.getmName(), user);
@@ -111,7 +112,7 @@ public class MUCThread extends Thread {
                     }
                 } else if (msg.what == REMOVE_ONE) {
                     // add the one to userInfoList
-                    String name = (String)msg.obj;
+                    String name = (String) msg.obj;
                     // turn participant jid to node
                     name = name.substring(name.indexOf("/") + 1);
                     userInfoList.remove(name);

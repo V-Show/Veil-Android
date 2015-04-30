@@ -21,10 +21,14 @@ import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.DateUtils;
 import com.veiljoy.veil.xmpp.base.MessageManager;
 
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
@@ -54,7 +58,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMultiUserChat = AppStates.getMultiUserChat();
-        mMultiUserChat.addMessageListener(new MUCPackageListener());
+        mMultiUserChat.addMessageListener(new MUCMessageListener());
         mMultiUserChat.addParticipantStatusListener(new ParticipantStatus());
         // 第一次查询
         messagePool = MessageManager.getInstance(this)
@@ -82,15 +86,12 @@ public abstract class ActivityChatSupport extends BaseActivity {
     }
 
     private void registerBroadcast() {
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.NEW_MESSAGE_ACTION);
         registerReceiver(receiver, filter);
-
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -105,16 +106,12 @@ public abstract class ActivityChatSupport extends BaseActivity {
                 refreshMessage(messagePool);
             }
         }
-
     };
 
     @Override
     protected void onResume() {
-
         super.onResume();
         registerBroadcast();
-
-
     }
 
     @Override
@@ -124,25 +121,21 @@ public abstract class ActivityChatSupport extends BaseActivity {
     }
 
     protected void sendMessage(String content) {
-
         Log.v("ChatActivity", "prepare to send message....");
 
         String time = DateUtils.date2Str(Calendar.getInstance(),
                 Constants.MS_FORMART);
         IMMessage newMessage = makeMessage();
         Message message = new Message();
-        message.setProperty(IMMessage.KEY_TIME, time);
         message.setBody(newMessage.getmContent());
 
         try {
-
             Log.v("ChatActivity", "start  sending....");
             mMultiUserChat.sendMessage(content);
             Log.v("ChatActivity", "start  sent success!");
-        } catch (XMPPException e) {
-            Log.v("ChatActivity", e.getMessage());
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
         }
-
 
         newMessage.setmMessageType(IMMessage.SEND);
         newMessage.setmFrom(mMultiUserChat.getNickname());
@@ -153,17 +146,13 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
         // 刷新视图
         refreshMessage(messagePool);
-
     }
 
     /**
      */
-    public class MUCPackageListener implements PacketListener {
+    public class MUCMessageListener implements MessageListener {
         @Override
-        public void processPacket(Packet packet) {
-
-
-            Message message = (Message) packet;
+        public void processMessage(Message message) {
             String voiceFileDir = null;
             Log.v(TAG, "receive a message: " + message.getBody());
 
@@ -247,24 +236,21 @@ public abstract class ActivityChatSupport extends BaseActivity {
         @Override
         public void adminGranted(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void adminRevoked(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void banned(String arg0, String arg1, String arg2) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void joined(String participant) {
-            LOG(StringUtils.parseResource(participant) + " has joined the room.");
+            LOG(participant + " has joined the room.");
             android.os.Message message = mucHandler.obtainMessage();
             message.what = MUCThread.ADD_ONE;
             message.obj = participant;
@@ -274,12 +260,11 @@ public abstract class ActivityChatSupport extends BaseActivity {
         @Override
         public void kicked(String arg0, String arg1, String arg2) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void left(String participant) {
-            LOG(StringUtils.parseResource(participant) + " has left the room.");
+            LOG(participant + " has left the room.");
             android.os.Message message = mucHandler.obtainMessage();
             message.what = MUCThread.REMOVE_ONE;
             message.obj = participant;
@@ -289,58 +274,49 @@ public abstract class ActivityChatSupport extends BaseActivity {
         @Override
         public void membershipGranted(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void membershipRevoked(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void moderatorGranted(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void moderatorRevoked(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void nicknameChanged(String participant, String newNickname) {
-            LOG(StringUtils.parseResource(participant) + " is now known as " + newNickname + ".");
+            LOG(participant + " is now known as " + newNickname + ".");
         }
 
         @Override
         public void ownershipGranted(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void ownershipRevoked(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void voiceGranted(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void voiceRevoked(String arg0) {
             // TODO Auto-generated method stub
-
         }
 
     }
-
 
     protected abstract void receiveNewMessage(IMMessage message);
 

@@ -42,29 +42,19 @@ public class ActivityHome extends BaseActivity {
     protected void onResume() {
         super.onResume();
         init();
-
     }
 
     public void init() {
-
-
-        if (AppStates.verifyAccount()&&AppStates.verifyStates()) {
-
-
-            //if(AppStates.verifyStates())
-//            if(false)
-//            {
-//                //首先是否后台运行
-//                new InitializationTask(new OnReEnterMUC()).execute();
-//            }
-//            else
-            {
-                new InitializationTask(new OnInitListener()).execute();
-            }
-
+        if (AppStates.verifyAccount() && AppStates.verifyStates()) {
+            if (AppStates.verifyStates())
+                if (false) {
+                    // 首先是否后台运行
+//                    new InitializationTask(new OnReEnterMUC()).execute();
+                } else {
+                    new InitializationTask(new OnInitListener()).execute();
+                }
         } else {
-
-             startActivity(ActivityRegister.class, null);
+            startActivity(ActivityRegister.class, null);
         }
     }
 
@@ -86,14 +76,11 @@ public class ActivityHome extends BaseActivity {
             String psw = SharePreferenceUtil.getPasswd();
 
             int ret = mUserLoginTask.onLogin(name, psw);
-
             return ret;
         }
 
         @Override
         protected void onPostExecute(Integer code) {
-
-
             switch (code) {
                 case Constants.LOGIN_SUCCESS: // 登录成功
                     //showCustomToast(R.string.login_success);
@@ -110,25 +97,18 @@ public class ActivityHome extends BaseActivity {
             }
 
             boolean rel = mUserLoginTask.onLoginResult(code);
-
-
             if (!rel) {
-
                 startActivity(ActivityRegister.class, null);
                 finish();
             } else {
-
                 new MUCJoinTask(null, ActivityHome.this).execute("");
-
             }
         }
     }
 
-    private  void enterChatRoom(){
+    private void enterChatRoom() {
         startActivity(ActivityChat.class, null);
-
     }
-
 
     private void showWelcomeAnimation() {
         ivLoadingLeft = (ImageView) this.findViewById(R.id.activity_welcome_iv_loading_left);
@@ -143,21 +123,17 @@ public class ActivityHome extends BaseActivity {
     }
 
     class OnInitListener implements InitializationTask.InitializationListener {
-
         @Override
         public void onResult(int code) {
             if (code != -1) {
-                mUserLoginTask = new UserAccessManager(ActivityHome.this);
+                mUserLoginTask = new UserAccessManager();
                 enter();
             }
         }
 
         @Override
         public int inBackground(int code) {
-
-
             return code;
-
         }
     }
 
@@ -179,7 +155,6 @@ public class ActivityHome extends BaseActivity {
 //        }
 //
 //    }
-
 
 
 }

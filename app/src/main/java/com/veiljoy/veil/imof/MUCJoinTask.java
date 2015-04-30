@@ -29,7 +29,6 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
         void onResult(MultiUserChat muc);
     }
 
-
     public MUCJoinTask(OnJoinMUCListener l, BaseActivity activity) {
         mActivity = activity;
         this.mOnJoinMUCListener = l;
@@ -37,13 +36,11 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
 
     @Override
     protected void onPreExecute() {
-
-      //  mActivity.showCustomToast("请求服务器房间号...");
+        //  mActivity.showCustomToast("请求服务器房间号...");
     }
 
     @Override
     protected MultiUserChat doInBackground(String... params) {
-
 //        boolean flag = false;
 //
 //        MUCHelper.createRoom(Constants.DEFAULT_ROOM_JID);
@@ -72,12 +69,10 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
 //                        flag = true;
 //                        break;
 //                    }
-//
 //                }
 //            } else {
 //                break;
 //            }
-//
 //        }
 //
 //        MultiUserChat muc=MUCHelper.JoinRoom(roomJid);
@@ -86,25 +81,20 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
 //            ((BaseApplication) mActivity.getApplication()).enter();
 //        }
 //        return muc;
-       return   MUCRoomManager.getInstance(mActivity).enterRoom();
-
+        return MUCRoomManager.getInstance(mActivity).enterRubRoom();
     }
 
     @Override
     protected void onPostExecute(MultiUserChat muc) {
-
         if (mOnJoinMUCListener != null)
             mOnJoinMUCListener.onResult(muc);
         else {
             if (muc != null) {
-
                 mActivity.startActivity(ActivityChat.class, null);
                 mActivity.finish();
-            }
-            else{
+            } else {
                 mActivity.showCustomToast("获得房间异常");
             }
         }
-
     }
 }

@@ -27,8 +27,7 @@ import com.veiljoy.veil.utils.SharePreferenceUtil;
 import com.veiljoy.veil.utils.StringUtils;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.packet.VCard;
+import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ import java.util.HashMap;
  * Created by zhongqihong on 15/3/31.
  */
 public class ActivityRegister extends BaseActivity implements View.OnClickListener {
-
 
     private UserInfo mUserinfo = null;
     private IMUserBase.OnUserRegister mUserRegister;
@@ -79,7 +77,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     private void init() {
         mUserinfo = new UserInfo();
 
-        mUserRegister = new UserAccessManager(this);
+        mUserRegister = new UserAccessManager();
    }
 
     private void initViews() {
@@ -126,8 +124,7 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.common_header_right_btn:
-
-                register();
+                    register();
                 break;
         }
     }
@@ -147,7 +144,6 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     }
 
     class OnGenderCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
-
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
@@ -213,13 +209,14 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
                 case Constants.SERVER_UNAVAILABLE:// 服务器没有返回结果
                     status = "服务器没有返回结果";
                     break;
+                case Constants.LOGIN_ERROR:// 注册成功，登录失败
+                    status = "注册成功 ,账号为：" + SharePreferenceUtil.getName() + "，但是登录失败";
+                    break;
             }
             showCustomToast(status);
 
             boolean rel = mUserRegister.onRegisterResult(code);
-
             if (rel) {
-                showCustomToast("注册成功，账号：" + SharePreferenceUtil.getName());
                 new MUCJoinTask(null, ActivityRegister.this).execute("");
             }
         }
