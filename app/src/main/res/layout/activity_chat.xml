@@ -128,6 +128,7 @@
                     android:gravity="center_horizontal"
                     android:ellipsize="end"
                     android:maxEms="6"
+                    android:visibility="invisible"
                     android:singleLine="true"
                     android:textSize="@dimen/text_size_friend"
                     android:text="Perter"
@@ -162,6 +163,7 @@
                     android:ellipsize="end"
                     android:maxEms="6"
                     android:singleLine="true"
+                    android:visibility="invisible"
                     android:textSize="@dimen/text_size_friend"
                     android:text="Joe"
                     android:textColor="@android:color/white" />
@@ -198,6 +200,7 @@
                     android:textSize="@dimen/text_size_friend"
                     android:singleLine="true"
                     android:text="AnYe"
+                    android:visibility="invisible"
                     android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
@@ -210,10 +213,8 @@
     <com.veiljoy.veil.android.view.LinearProgressBarLayout
         android:id="@+id/activity_chat_talk_progressbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="2px"
         android:layout_above="@+id/activity_chat_talk_bar"
-
-
      />
 
 
