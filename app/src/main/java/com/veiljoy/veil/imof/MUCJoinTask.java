@@ -81,7 +81,7 @@ public class MUCJoinTask extends AsyncTask<String, Integer, MultiUserChat> {
 //            ((BaseApplication) mActivity.getApplication()).enter();
 //        }
 //        return muc;
-        return MUCRoomManager.getInstance(mActivity).enterRubRoom();
+        return MUCRoomManager.getInstance(mActivity).enterRoom();
     }
 
     @Override

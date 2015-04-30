@@ -68,6 +68,8 @@ public class MUCHelper {
             // 创建一个MultiUserChat
             MultiUserChat muc = mucManager.getMultiUserChat(roomName
                     + "@conference." + connection.getServiceName());
+
+            Log.v(TAG,"roomName "+roomName+" mucName "+muc.getRoom());
             // 创建聊天室
             muc.create(roomName); // roomName房间的名字
             // 获得聊天室的配置表单

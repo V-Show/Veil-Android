@@ -43,7 +43,7 @@ public class XmppConnectionManager {
                 .setPort(loginConfig.getXmppPort())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setSendPresence(true)  // 允许登陆成功后更新在线状态
-                .setDebuggerEnabled(true) // 打开debug输出
+                //.setDebuggerEnabled(true) // 打开debug输出
                 .build();
 
         // 收到好友邀请后manual表示需要经过同意,accept_all表示不经同意自动为好友
@@ -64,7 +64,7 @@ public class XmppConnectionManager {
     public AbstractXMPPConnection getConnection() {
         if (connection == null) {
             init(getLoginConfig());
-            Log.v("xmpp", "connection " + connection == null ? "=null" : "!=null");
+
         }
         return connection;
     }

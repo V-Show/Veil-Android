@@ -1,13 +1,19 @@
 package com.veiljoy.veil.activity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -31,6 +37,8 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhongqihong on 15/3/31.
@@ -64,7 +72,8 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     RadioGroup mRGGender;
     int mGender = 0;
     int defaultIcon = 2; // 默认头像选择咖啡杯
-
+    View oldView;
+    AvatarGridAdapter saImageItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,17 +108,15 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
             lstImageItem.add(map);
         }
 
-        //生成适配器的ImageItem <====> 动态数组的元素，两者一一对应
-        SimpleAdapter saImageItems = new SimpleAdapter(this, //没什么解释
-                lstImageItem,//数据来源
-                R.layout.icon_avatar_selection,//night_item的XML实现
-                //动态数组与ImageItem对应的子项
+        saImageItems= new AvatarGridAdapter(this,
+                lstImageItem,
+                R.layout.icon_avatar_selection,
                 new String[]{"ItemImage"},
-
-                //ImageItem的XML文件里面的一个ImageView,两个TextView ID
                 new int[]{R.id.icon_avatar_image});
-        mGridview.setAdapter(saImageItems);
 
+        mGridview.setAdapter(saImageItems);
+        mGridview.setLongClickable(false);
+        mGridview.setBackgroundDrawable(new BitmapDrawable() );
         // 默认头像选择咖啡杯
         mAvatar = BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[defaultIcon]);
         mGridview.setSelection(defaultIcon);
@@ -132,16 +139,69 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     //当AdapterView被单击(触摸屏或者键盘)，则返回的Item单击事件
     class ItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(AdapterView<?> arg0,//The AdapterView where the click happened
-                                View arg1,//The view within the AdapterView that was clicked
-                                int arg2,//The position of the view in the adapter
+                                View view,//The view within the AdapterView that was clicked
+                                int position,//The position of the view in the adapter
                                 long arg3//The row id of the item that was clicked
         ) {
-            //在本例中arg2 = arg3
-            HashMap<String, Object> item = (HashMap<String, Object>) arg0.getItemAtPosition(arg2);
 
-            mAvatar = BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[arg2]);
+            saImageItems.setSelectedPosition(position);
+
+            saImageItems.notifyDataSetInvalidated();
+
+            //在本例中arg2 = arg3
+            HashMap<String, Object> item = (HashMap<String, Object>) arg0.getItemAtPosition(position);
+
+            mAvatar = BitmapFactory.decodeResource(ActivityRegister.this.getResources(), icons[position]);
         }
     }
+
+    class AvatarGridAdapter extends SimpleAdapter{
+
+
+        LayoutInflater inflater;
+        public AvatarGridAdapter(Context context, List<? extends Map<String, ?>> data,
+                              int resource, String[] from, int[] to) {
+            super(context, data, resource, from, to);
+            inflater=LayoutInflater.from(context);
+        }
+
+        private int selectedPosition = 0;// 选中的位置
+
+        public void setSelectedPosition(int position) {
+            selectedPosition = position;
+        }
+
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if(convertView==null){
+                convertView=inflater.inflate(R.layout.register_avatar_icon,null);
+                holder=new ViewHolder();
+                holder.icon=(ImageView)convertView.findViewById(R.id.register_avatar_icon);
+                holder.icon.setImageResource(icons[position]);
+                holder.icon.setLongClickable(false);
+                convertView.setTag(holder);
+            }
+            else{
+                holder=(ViewHolder)convertView.getTag();
+            }
+
+            if (position == selectedPosition) {
+                holder.icon.setBackgroundResource(R.drawable.bg_register_avatar_selector);
+            }
+            else{
+                holder.icon.setBackgroundResource(0);
+            }
+            return convertView;
+        }
+
+        class ViewHolder{
+            ImageView icon;
+        }
+
+    }
+
+
 
     class OnGenderCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
         @Override

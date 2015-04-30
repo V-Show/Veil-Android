@@ -261,7 +261,6 @@
             android:divider="#00000000"
             android:dividerHeight="0dip"
             android:fadingEdge="none"
-            android:listSelector="@drawable/list_selector_transition"
             android:paddingLeft="4dip"
             android:paddingRight="4dip"
             android:scrollbars="none"

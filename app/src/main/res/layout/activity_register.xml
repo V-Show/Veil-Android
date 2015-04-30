@@ -114,8 +114,8 @@
                 android:layout_marginTop="@dimen/head_margin_top"
                 android:gravity="center"
                 android:horizontalSpacing="1dp"
-                android:listSelector="@drawable/bg_register_avatar_selector"
                 android:numColumns="4"
+                android:listSelector="#00000000"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="14dp">
 

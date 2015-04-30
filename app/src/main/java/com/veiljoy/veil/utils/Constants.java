@@ -102,8 +102,8 @@ public class Constants {
     /*
     * 默认房间jid
     * */
-    public static final String DEFAULT_ROOM_JID = "veilgroup@conference.veil";
-
+    //public static final String DEFAULT_ROOM_JID = "veilgroup@conference.veil";
+    public static final String DEFAULT_ROOM_JID = "veilgroup";
     /*
     *
     * */

@@ -120,13 +120,16 @@ public class MUCRoomManager implements IMRoom {
         Log.v("suyu", "enter rub room");
         MultiUserChat muc = null;
         RubInfo info = getRubRoom();
+        Log.v("suyu", "info "+info==null?"=null":"!=null");
         if (info.isCreate()) {
             muc = MUCHelper.createRoom(info.getRoom());
         } else {
             muc = MUCHelper.JoinRoom(info.getRoom());
         }
         if (muc != null) {
+            ((BaseApplication) mActivity.getApplication()).enter();
             AppStates.setMultiUserChat(muc);
+            SharePreferenceUtil.setRoom(muc.getRoom());
         }
         return muc;
     }
