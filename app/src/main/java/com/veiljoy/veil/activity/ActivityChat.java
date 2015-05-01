@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -564,8 +565,15 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onBtn1Click() {
-            mBaseDialog = BaseDialog.getDialog(ActivityChat.this, "提示", "志林姐姐等会就到哦，确认退出吗？",
-                    "离开", new DialogInterface.OnClickListener() {
+
+            Context c=ActivityChat.this;
+            String exit=c.getString(R.string.exit);
+            String exitMessage=c.getString(R.string.exit_message);
+            String exitOk=c.getString(R.string.exit_yes);
+            String exitCancel=c.getString(R.string.exit_cancel);
+
+            mBaseDialog = BaseDialog.getDialog(ActivityChat.this, exit,exitMessage,
+                    exitOk, new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog,
@@ -578,7 +586,7 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                         }
 
 
-                    }, "等她", new DialogInterface.OnClickListener() {
+                    }, exitCancel, new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

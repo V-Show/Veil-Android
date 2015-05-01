@@ -2,6 +2,7 @@ package com.veiljoy.veil.activity;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.android.BaseActivity;
+import com.veiljoy.veil.android.BaseApplication;
+import com.veiljoy.veil.android.view.BaseDialog;
 import com.veiljoy.veil.im.IMUserBase;
 import com.veiljoy.veil.imof.MUCHelper;
 import com.veiljoy.veil.imof.MUCJoinTask;
@@ -35,12 +38,13 @@ public class ActivityHome extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        showWelcomeAnimation();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        showWelcomeAnimation();
         init();
     }
 

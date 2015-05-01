@@ -26,8 +26,16 @@
     <string name="confirm">Confirm</string>
     <string name="register">Register</string>
     <string name="vacant">Vacant</string>
-
     <string name="talk_time_limited">60</string>
+    <string name="ok">OK</string>
+
+    <!--退出应用提示-->
+
+    <string name="exit">Exit</string>
+    <string name="exit_message">are you sure to exit?</string>
+    <string name="exit_yes">Yes</string>
+    <string name="exit_cancel">Cancel</string>
+
 
 
 

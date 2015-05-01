@@ -104,7 +104,7 @@
                 android:id="@+id/dialog_generic_btn_button1"
                 style="@style/Style_Dialog_Button"
                 android:layout_width="0.0dip"
-                android:layout_height="wrap_content"
+                android:layout_height="54dp"
                 android:layout_weight="1.0"
                 android:text="Button" 
                 android:visibility="gone"/>
@@ -113,16 +113,16 @@
                 android:id="@+id/dialog_generic_btn_button2"
                 style="@style/Style_Dialog_Button"
                 android:layout_width="0dip"
-                android:layout_height="wrap_content"
+                android:layout_height="54dp"
                 android:layout_weight="1"
-                android:text="Button" 
+                android:text="Button"
                 android:visibility="gone"/>
 
             <Button
                 android:id="@+id/dialog_generic_btn_button3"
                 style="@style/Style_Dialog_Button"
                 android:layout_width="0dip"
-                android:layout_height="wrap_content"
+                android:layout_height="54dp"
                 android:layout_weight="1"
                 android:text="Button"
                 android:visibility="gone" />
