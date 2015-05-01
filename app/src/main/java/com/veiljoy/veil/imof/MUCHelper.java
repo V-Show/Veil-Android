@@ -24,6 +24,7 @@ import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
@@ -69,7 +70,7 @@ public class MUCHelper {
             MultiUserChat muc = mucManager.getMultiUserChat(roomName
                     + "@conference." + connection.getServiceName());
 
-            Log.v(TAG,"roomName "+roomName+" mucName "+muc.getRoom());
+            Log.v(TAG, "roomName " + roomName + ", mucName " + muc.getRoom());
             // 创建聊天室
             muc.create(roomName); // roomName房间的名字
             // 获得聊天室的配置表单
@@ -274,6 +275,8 @@ public class MUCHelper {
             jid = Constants.DEFAULT_ROOM_JID;
         }
 
+        jid += "@conference.veil";
+
         MultiUserChat muc = null;
         try {
             AbstractXMPPConnection connection = XmppConnectionManager.getInstance()
@@ -333,24 +336,6 @@ public class MUCHelper {
             connection.login(username, password);
             connection.sendPacket(new Presence(Presence.Type.available));
             AppStates.setAlreadyLogined(true);
-
-            // 第一次注册后登录是在这里，而不是UserAccessManager
-            if (true) {
-                // 上传头像和性别
-                VCard vcard = new VCard();
-                Bitmap bitmap = ImageCache.getAvatar(SharePreferenceUtil.getAvatar());
-                byte[] bytes = FormatTools.Bitmap2Bytes(bitmap);
-                vcard.setAvatar(bytes);
-                vcard.setField(Constants.USER_CARD_FILED_GENDER, SharePreferenceUtil.getGender() + "");
-                try {
-                    vcard.save(XmppConnectionManager.getInstance()
-                            .getConnection());
-                    Log.v("vcard", "upload vcard successed.");
-                } catch (XMPPException e) {
-                    e.printStackTrace();
-                    Log.v("vcard", "upload vcard failed.");
-                }
-            }
             return connection;
         } catch (XMPPException | SmackException | IOException e) {
             e.printStackTrace();

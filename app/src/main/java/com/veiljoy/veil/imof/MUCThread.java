@@ -12,6 +12,7 @@ import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.util.HashMap;
@@ -58,9 +59,11 @@ public class MUCThread extends Thread {
                         // get vcard
                         try {
                             name = name + "@veil";
-                            VCard vcard = new VCard();
-                            vcard.load(XmppConnectionManager.getInstance()
-                                    .getConnection(), name);
+                            VCardManager vCardManager = VCardManager.getInstanceFor(XmppConnectionManager.getInstance()
+                                    .getConnection());
+                            boolean isSupported = vCardManager.isSupported(name);
+                            VCard vcard = vCardManager.loadVCard();
+                            Log.v("vcard", "isSupported:" + isSupported);
                             Log.v("suyu", "name: " + name);
                             String gender = vcard.getField(Constants.USER_CARD_FILED_GENDER);
                             if (gender != null) {

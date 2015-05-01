@@ -1,10 +1,13 @@
 package com.veiljoy.veil.imof;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.veiljoy.veil.im.IMUserBase;
+import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.AppStates;
+import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -21,6 +24,8 @@ import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.iqregister.packet.Registration;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
@@ -41,18 +46,20 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
         int code = Constants.REGISTER_RESULT_SUCCESS;
         String username = SharePreferenceUtil.getName();
         String password = SharePreferenceUtil.getPasswd();
+        AbstractXMPPConnection connection = null;
 
         try {
-            AbstractXMPPConnection connection = XmppConnectionManager.getInstance()
-                    .getConnection();
+            connection = XmppConnectionManager.getInstance().getConnection();
             if (!connection.isConnected()) {
                 connection.connect();
             }
+            Log.v("suyu", "start create account");
             AccountManager accountManager = AccountManager.getInstance(connection);
             // allow sensitive operations like account creation or password changes
             // over an insecure (e.g. unencrypted) connections.
             accountManager.sensitiveOperationOverInsecureConnection(true);
             accountManager.createAccount(username, password);
+            Log.v("suyu", "create account succeed");
         } catch (XMPPException e) {
             e.printStackTrace();
             code = Constants.REGISTER_RESULT_FAIL;
@@ -73,9 +80,11 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
         // login after create account
         if (code == Constants.REGISTER_RESULT_SUCCESS) {
             // make a new connection for login
-            AbstractXMPPConnection connection = XmppConnectionManager.getInstance().refresh();
+//            AbstractXMPPConnection connection = XmppConnectionManager.getInstance().refresh();
             try {
+                Log.v("suyu", "start login");
                 connection.login(username, password);
+                Log.v("suyu", "login succeed");
             } catch (XMPPException e) {
                 code = Constants.LOGIN_ERROR;
                 e.printStackTrace();
@@ -88,6 +97,28 @@ public class UserAccessManager implements IMUserBase.OnUserRegister, IMUserBase.
             }
 
             if (code == Constants.REGISTER_RESULT_SUCCESS) {
+                // upload vCard after login
+                try {
+                    // 上传头像和性别
+                    Log.v("suyu", "start vCard stuff");
+                    VCardManager vCardManager = VCardManager.getInstanceFor(connection);
+                    boolean isSupported = vCardManager.isSupported(username + "@veil");
+                    Log.v("vCard", "isSupported: " + isSupported);
+                    VCard vCard = new VCard();
+                    Bitmap bitmap = ImageCache.getAvatar(SharePreferenceUtil.getAvatar());
+                    byte[] bytes = FormatTools.Bitmap2Bytes(bitmap);
+                    vCard.setAvatar(bytes);
+                    vCard.setField(Constants.USER_CARD_FILED_GENDER, SharePreferenceUtil.getGender() + "");
+                    vCardManager.saveVCard(vCard);
+                    Log.v("vCard", "upload vCard succeeded.");
+                } catch (SmackException.NoResponseException e) {
+                    e.printStackTrace();
+                } catch (XMPPException.XMPPErrorException e) {
+                    e.printStackTrace();
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                }
+
                 AppStates.setAlreadyLogined(true);
 
                 MUCHelper.init(connection);

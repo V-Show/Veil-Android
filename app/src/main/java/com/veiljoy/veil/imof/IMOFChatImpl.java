@@ -66,6 +66,10 @@ public class IMOFChatImpl implements IMChatBase {
         return FormatTools.getInstance().InputStream2Drawable(bais);
     }
 
+    /**
+     * @deprecated
+     */
+    @java.lang.Deprecated
     public static void setUserVCard(XMPPConnection connection)
             throws SmackException.NotConnectedException, SmackException.NoResponseException, XMPPException.XMPPErrorException {
         VCard vCard = new VCard();

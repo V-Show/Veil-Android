@@ -150,7 +150,7 @@ public class SharePreferenceUtil {
         editor.commit();
     }
     public static void setRoom(String name) {
-        Log.v("MUCRoomManager", "name" + name );
+        Log.v("MUCRoomManager", "name: " + name );
         editor.putString("room_name", name);
         editor.commit();
     }
