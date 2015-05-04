@@ -43,9 +43,9 @@ public class Constants {
     public static final String IS_REMEMBER = "isRemember";// 是否记住账户密码
     public static final String IS_FIRSTSTART = "isFirstStart";// 是否首次启动
 
-//    public static final String XMPP_HOST_IP = "115.28.231.161";
+    public static final String XMPP_HOST_IP = "115.28.231.161";
 //    public static final String XMPP_HOST_IP = "10.0.0.107";
-    public static final String XMPP_HOST_IP = "192.168.0.102";
+  //  public static final String XMPP_HOST_IP = "192.168.0.102";
     public static final String XMPP_HOST_NAME = "veiljoy.com";
     public static final String XMPP_HOST_PORT = "5222";
     public static final String XMPP_SERVICE_NAME = "veil";

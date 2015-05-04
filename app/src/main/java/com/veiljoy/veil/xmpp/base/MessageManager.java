@@ -155,7 +155,7 @@ public class MessageManager {
 				.getCount(
 						"select _id,content,msg_from msg_type  from im_msg_his where msg_from=?",
 						new String[] { "" + fromUser });
-3
+
 	}
 
 	/**
