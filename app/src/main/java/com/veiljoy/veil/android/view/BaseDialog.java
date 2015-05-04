@@ -55,7 +55,7 @@ public class BaseDialog extends Dialog implements
 		mBtnButton2 = (Button) findViewById(R.id.dialog_generic_btn_button2);
 		mBtnButton3 = (Button) findViewById(R.id.dialog_generic_btn_button3);
 		mLayoutRoot.setVisibility(View.VISIBLE);
-		setTitleLineVisibility(View.VISIBLE);
+		//setTitleLineVisibility(View.VISIBLE);
 
 	}
 

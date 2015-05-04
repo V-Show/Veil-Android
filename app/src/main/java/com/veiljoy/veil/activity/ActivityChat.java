@@ -593,7 +593,8 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
                             dialog.cancel();
                         }
                     });
-            mBaseDialog.setButton1Background(R.drawable.btn_default_submit);
+           // mBaseDialog.setButton1Background(R.drawable.btn_bg_confirm);
+            mBaseDialog.setButton2Background(R.drawable.btn_bg_confirm);
             mBaseDialog.show();
         }
 

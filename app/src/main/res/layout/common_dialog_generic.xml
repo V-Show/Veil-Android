@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="215dp"
     android:layout_height="fill_parent"
-    android:layout_gravity="top"
-    android:gravity="top"
-    android:paddingLeft="10dip"
-    android:paddingRight="10dip" >
-
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    >
     <LinearLayout
         android:id="@+id/dialog_generic_layout_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dip"
         android:background="@drawable/bg_popwindow"
+        android:paddingTop="20dp"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical" >
@@ -22,6 +20,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -45,7 +45,8 @@
                     android:shadowDy="-1.0"
                     android:shadowRadius="1.0"
                     android:soundEffectsEnabled="true"
-                    android:textColor="@color/blue"
+                    android:textColor="#ff1ebaff"
+                    android:text="Exit"
                     android:textSize="20sp" />
 
                 <View
@@ -53,6 +54,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
                     android:layout_marginBottom="10dip"
+                    android:visibility="gone"
                     android:background="@color/blue" />
             </LinearLayout>
 
@@ -81,8 +83,9 @@
                             android:id="@+id/dialog_generic_htv_message"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp" />
+                            android:textColor="#ff7d8a9c"
+                            android:text="are you sure to exit ?"
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
@@ -94,38 +97,39 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="12dip"
-            android:paddingLeft="6dip"
-            android:paddingRight="6dip"
+            android:paddingBottom="13dip"
+            android:paddingLeft="13dip"
+            android:paddingRight="13dip"
             android:paddingTop="0dip"
-            android:visibility="gone" >
-
+            android:visibility="visible" >
             <Button
                 android:id="@+id/dialog_generic_btn_button1"
                 style="@style/Style_Dialog_Button"
                 android:layout_width="0.0dip"
-                android:layout_height="54dp"
+                android:layout_height="40dp"
                 android:layout_weight="1.0"
-                android:text="Button" 
-                android:visibility="gone"/>
+                android:text="Button"
+                android:gravity="center"
+                android:visibility="visible"/>
 
             <Button
                 android:id="@+id/dialog_generic_btn_button2"
                 style="@style/Style_Dialog_Button"
                 android:layout_width="0dip"
-                android:layout_height="54dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="Button"
-                android:visibility="gone"/>
+                android:gravity="center"
+                android:visibility="visible"/>
 
             <Button
                 android:id="@+id/dialog_generic_btn_button3"
                 style="@style/Style_Dialog_Button"
                 android:layout_width="0dip"
-                android:layout_height="54dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="Button"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 

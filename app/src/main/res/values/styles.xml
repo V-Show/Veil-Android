@@ -11,12 +11,13 @@
     </style>
 
     <style name="Style_Dialog_Button">
-        <item name="android:textSize">16.0dip</item>
-        <item name="android:textColor">#ff425968</item>
+        <item name="android:textSize">10.0sp</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:background">@drawable/btn_default</item>
-        <item name="android:layout_marginLeft">6.0dip</item>
-        <item name="android:layout_marginRight">6.0dip</item>
-        <item name="android:minHeight">40.0dip</item>
+        <item name="android:layout_marginLeft">5.0dip</item>
+        <item name="android:layout_marginRight">5.0dip</item>
+        <item name="android:gravity">left</item>
+        <item name="android:minHeight">30.0dip</item>
     </style>
     <style name="BaseDialog" parent="@android:style/Theme.Dialog" />
     <style name="Theme.Light.FullScreenDialogAct" parent="@style/BaseDialog">
